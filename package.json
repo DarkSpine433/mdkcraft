@@ -5,8 +5,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
-    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build --turbopack",
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev --turbopack",
     "dev:prod": "cross-env NODE_OPTIONS=--no-deprecation rm -rf .next && pnpm build && pnpm start",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@payloadcms/admin-bar": "3.75.0",
+    "@payloadcms/db-mongodb": "3.75.0",
     "@payloadcms/email-nodemailer": "3.75.0",
     "@payloadcms/live-preview-react": "3.75.0",
     "@payloadcms/next": "3.75.0",
@@ -33,6 +34,8 @@
     "@payloadcms/translations": "3.75.0",
     "@payloadcms/ui": "3.75.0",
     "@radix-ui/react-accordion": "1.2.11",
+    "@radix-ui/react-alert-dialog": "^1.1.15",
+    "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-checkbox": "^1.1.4",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-label": "^2.1.2",
@@ -51,6 +54,7 @@
     "graphql": "^16.8.2",
     "jsonwebtoken": "9.0.1",
     "lucide-react": "^0.477.0",
+    "motion": "^12.33.0",
     "next": "15.4.11",
     "next-themes": "0.4.6",
     "payload": "3.75.0",
@@ -62,8 +66,7 @@
     "sharp": "0.34.2",
     "sonner": "^1.7.2",
     "stripe": "18.5.0",
-    "tailwind-merge": "^3.4.0",
-    "@payloadcms/db-mongodb": "3.75.0"
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
