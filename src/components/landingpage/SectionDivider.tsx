@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/utilities/cn'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 
 interface SectionDividerProps {
   className?: string

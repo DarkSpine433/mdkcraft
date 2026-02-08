@@ -1,9 +1,6 @@
 import { Media } from '@/components/Media'
-import { OrderStatus } from '@/components/OrderStatus'
 import { Price } from '@/components/Price'
-import { Button } from '@/components/ui/button'
-import { Media as MediaType, Order, Product, Variant } from '@/payload-types'
-import { formatDateTime } from '@/utilities/formatDateTime'
+import { Product, Variant, VariantOption } from '@/payload-types'
 import Link from 'next/link'
 
 type Props = {
@@ -37,12 +34,12 @@ export const ProductItem: React.FC<Props> = ({
   const isVariant = Boolean(variant) && typeof variant === 'object'
 
   if (isVariant) {
-    const imageVariant = product.gallery?.find((item) => {
+    const imageVariant = product.gallery?.find((item: NonNullable<Product['gallery']>[number]) => {
       if (!item.variantOption) return false
       const variantOptionID =
         typeof item.variantOption === 'object' ? item.variantOption.id : item.variantOption
 
-      const hasMatch = variant?.options?.some((option) => {
+      const hasMatch = variant?.options?.some((option: string | VariantOption) => {
         if (typeof option === 'object') return option.id === variantOptionID
         else return option === variantOptionID
       })
@@ -75,7 +72,7 @@ export const ProductItem: React.FC<Props> = ({
           {variant && (
             <p className="text-sm font-mono text-primary/50 tracking-widest">
               {variant.options
-                ?.map((option) => {
+                ?.map((option: string | VariantOption) => {
                   if (typeof option === 'object') return option.label
                   return null
                 })
