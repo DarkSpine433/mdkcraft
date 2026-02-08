@@ -20,28 +20,33 @@ import MagneticButton from '../ui/magneticBotton'
 
 // --- TYPY ---
 
-
-
-
 // --- KOMPONENT 2: INTERAKTNYWNY LOGOTYP (Spójność z Twoim stylem) ---
 const FooterBrand = () => {
   const text = 'MDKcraft'
   return (
     <div className="group cursor-default space-y-4">
-      <div className="inline-block p-3 bg-white/5 border border-white/10 rounded-2xl">
-        <Logo />
-      </div>
+      <MagneticButton
+        margin="mx-0"
+        icon={<Logo />}
+        className="inline-block p-3 bg-white/5 border border-white/10 rounded-2xl"
+      >
+        <></>
+      </MagneticButton>
       <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-white">
-        {text.split('').map((char, i) => (char === ' ') ? '\u00A0' : (
-          <motion.span
-            key={i}
-            whileHover={{ y: -8, color: '#8b5cf6' }}
-            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-            className="inline-block"
-          >
-            {char}
-          </motion.span>
-        ))}
+        {text.split('').map((char, i) =>
+          char === ' ' ? (
+            '\u00A0'
+          ) : (
+            <motion.span
+              key={i}
+              whileHover={{ y: -8, color: '#8b5cf6' }}
+              transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+              className="inline-block"
+            >
+              {char}
+            </motion.span>
+          ),
+        )}
       </h2>
       <div className="relative mt-2 w-full max-w-[200px]">
         <hr className="shadow-2xl shadow-primary w-full border-none h-[0.1rem] bg-primary p-0" />
@@ -116,7 +121,7 @@ export default function FooterClient() {
               Tworzymy cyfrową przyszłość, łącząc estetykę z technologiczną precyzją. Twój sukces w
               sieci zaczyna się tutaj.
             </p>
-            <div className="flex  flex-wrap w-fit gap-4">
+            {/* <div className="flex  flex-wrap w-fit gap-4">
               {socialLinks.map((social, i) => (
                 <MagneticButton
                   key={i}
@@ -126,7 +131,7 @@ export default function FooterClient() {
                   <Link href={social.href}>{social.icon}</Link>
                 </MagneticButton>
               ))}
-            </div>
+            </div> */}
           </div>
 
           {/* KOLUMNA 2: MENU */}
@@ -194,10 +199,18 @@ export default function FooterClient() {
             </span>
             <div className="h-4 w-px bg-white/10 hidden md:block" />
             <div className="flex gap-6 text-[10px] font-mono tracking-widest uppercase text-neutral-500">
-              <Link href="#" className="hover:text-primary transition-colors">
+              <Link
+                href="polityka-prywatności"
+                className="hover:text-primary transition-colors"
+                target="_blank"
+              >
                 Polityka Prywatności
               </Link>
-              <Link href="#" className="hover:text-primary transition-colors">
+              <Link
+                href="regulamin"
+                className="hover:text-primary transition-colors"
+                target="_blank"
+              >
                 Regulamin
               </Link>
             </div>

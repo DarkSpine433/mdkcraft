@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 24 24">
-  <rect width="24" rx="5" ry="5" height="24" fill="rgba(34,0,41,0.233)" stroke-width="1"/>
+  <rect width="24"  height="24" fill="#000000"/>
   <g transform="translate(2, 2) scale(0.85)">
     <g fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-git-compare-arrows-icon lucide-git-compare-arrows">
       <circle cx="5" cy="6" r="3" stroke="#fff"/>

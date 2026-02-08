@@ -8,7 +8,6 @@ import { Footer } from '@/components/Footer'
 import { VisualEngine } from '@/components/Visual/VisualEngine'
 import BrandFooter from '@/components/landingpage/BrandFooter'
 
-
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'https://twoja-strona.pl'),
   title: {
@@ -20,15 +19,15 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'pl_PL',
     url: '/',
-    siteName: 'MDKCraft', 
+    siteName: 'MDKCraft',
     images: [
-    {
-      url: '/logo.svg',
-      width: 1200,
-      height: 630,
-      alt: 'MDKCraft | Modern Dev Agency | Production Ready',
-    },
-  ],
+      {
+        url: '/logo.svg',
+        width: 1200,
+        height: 630,
+        alt: 'MDKCraft | Modern Dev Agency | Production Ready',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',

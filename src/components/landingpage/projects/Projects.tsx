@@ -263,7 +263,7 @@ const Projects = () => {
       {/* 5. PROJECT CARDS STACK */}
       <div className="relative z-10 pb-48">
         <AnimatePresence mode="popLayout">
-          {PROJECTS_DATA.map((project, index) => (
+          {PROJECTS_DATA.slice(0, 6).map((project, index) => (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, y: 20 }}

@@ -1,18 +1,17 @@
 import type { CollectionConfig } from 'payload'
 
-import { Banner } from '@/blocks/Banner/config'
-import { Carousel } from '@/blocks/Carousel/config'
-import { ThreeItemGrid } from '@/blocks/ThreeItemGrid/config'
-import { generatePreviewPath } from '@/utilities/generatePreviewPath'
 import { adminOnly } from '@/access/adminOnly'
+import { adminOrPublishedStatus } from '@/access/adminOrPublishedStatus'
 import { Archive } from '@/blocks/ArchiveBlock/config'
+import { Banner } from '@/blocks/Banner/config'
 import { CallToAction } from '@/blocks/CallToAction/config'
+import { Carousel } from '@/blocks/Carousel/config'
 import { Content } from '@/blocks/Content/config'
 import { FormBlock } from '@/blocks/Form/config'
 import { MediaBlock } from '@/blocks/MediaBlock/config'
+import { ThreeItemGrid } from '@/blocks/ThreeItemGrid/config'
 import { hero } from '@/fields/hero'
-import { slugField } from 'payload'
-import { adminOrPublishedStatus } from '@/access/adminOrPublishedStatus'
+import { generatePreviewPath } from '@/utilities/generatePreviewPath'
 import {
   MetaDescriptionField,
   MetaImageField,
@@ -20,7 +19,8 @@ import {
   OverviewField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
-import { revalidatePage, revalidateDelete } from './hooks/revalidatePage'
+import { slugField } from 'payload'
+import { revalidateDelete, revalidatePage } from './hooks/revalidatePage'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -131,7 +131,23 @@ export const Pages: CollectionConfig = {
         },
       ],
     },
-    slugField(),
+    slugField({
+      useAsSlug: 'title',
+      slugify: ({ valueToSlugify }) => {
+        if (!valueToSlugify) return ''
+        const base = valueToSlugify
+          .toString()
+          .toLowerCase()
+          .trim()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/[^\w-]+/g, '')
+          .replace(/--+/g, '-')
+        const randomSuffix = Math.floor(1000000000 + Math.random() * 9000000000)
+        return `${base}-${randomSuffix}`
+      },
+    }),
   ],
   hooks: {
     afterChange: [revalidatePage],

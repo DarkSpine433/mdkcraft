@@ -40,7 +40,10 @@ export function HeaderClient({ header: _header }: Props) {
       )}
     >
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold tracking-tighter flex items-center gap-2 group">
+        <Link
+          href="/"
+          className="text-2xl font-bold tracking-tighter flex items-center gap-2 group"
+        >
           <Logo />
           <span className="group-hover:text-violet-400 transition-colors">MDKcraft</span>
         </Link>

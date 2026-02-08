@@ -1,9 +1,9 @@
 'use client'
 
 import { ArrowUpRight, Globe, ShieldCheck, Sparkles, Zap } from 'lucide-react'
-import { motion, useMotionTemplate, useMotionValue, useSpring } from 'motion/react'
-import Link from 'next/link'
+import { motion, useMotionTemplate, useMotionValue } from 'motion/react'
 import React, { useEffect, useRef } from 'react'
+import MagneticButton from '../ui/magneticBotton'
 
 // --- KOMPONENT 1: INTERAKTYWNE TŁO CZĄSTECZKOWE (Canvas) ---
 const BrandParticles = () => {
@@ -82,60 +82,6 @@ const BrandParticles = () => {
   return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-40" />
 }
 
-// --- KOMPONENT 2: MAGNETYCZNE LOGO ---
-const MagneticBrand = ({ text }: { text: string }) => {
-  const ref = useRef<HTMLDivElement>(null)
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-  const springX = useSpring(x, { stiffness: 100, damping: 10 })
-  const springY = useSpring(y, { stiffness: 100, damping: 10 })
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const { clientX, clientY } = e
-    const { left, top, width, height } = ref.current?.getBoundingClientRect() || {
-      left: 0,
-      top: 0,
-      width: 0,
-      height: 0,
-    }
-    x.set((clientX - (left + width / 2)) * 0.2)
-    y.set((clientY - (top + height / 2)) * 0.2)
-  }
-
-  const handleMouseLeave = () => {
-    x.set(0)
-    y.set(0)
-  }
-
-  return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ x: springX, y: springY }}
-      className="relative cursor-pointer group"
-    >
-      <Link href="/">
-        <h2 className="text-7xl md:text-[10rem] font-black tracking-tighter leading-none select-none">
-          {text.split('').map((char, i) => (
-            <motion.span
-              key={i}
-              className="inline-block transition-all duration-300 group-hover:text-primary group-hover:drop-shadow-[0_0_30px_rgba(var(--primary-rgb),0.5)]"
-              style={{ color: char === ' ' ? 'transparent' : 'white' }}
-              whileHover={{ scale: 1.1, rotate: i % 2 === 0 ? 5 : -5 }}
-            >
-              {char === ' ' ? '\u00A0' : char}
-            </motion.span>
-          ))}
-        </h2>
-      </Link>
-
-      {/* Dynamiczna poświata pod tekstem */}
-      <div className="absolute inset-0 bg-primary blur-[120px] opacity-0 group-hover:opacity-20 transition-opacity duration-1000" />
-    </motion.div>
-  )
-}
-
 // --- GŁÓWNY KOMPONENT: BRAND FOOTER ---
 const BrandFooter = () => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -207,10 +153,16 @@ const BrandFooter = () => {
 
         {/* Brand Name */}
         <div className="flex flex-col items-center">
-          <MagneticBrand text="MDK CRAFT" />
+          <MagneticButton
+            className="text-7xl md:text-[10rem] font-black tracking-tighter leading-none select-none bg-transparent hover:bg-transparent hover:text-white"
+            margin="mx-0"
+            icon={<></>}
+          >
+            MDK CRAFT
+          </MagneticButton>
 
           {/* TWOJA CHARAKTERYSTYCZNA LINIA Z TitleHero */}
-          <div className="relative mt-2 w-full max-w-md">
+          <div className="relative mt-10 w-full max-w-md">
             <motion.hr
               initial={{ width: 0 }}
               whileInView={{ width: '100%' }}
@@ -248,7 +200,9 @@ const BrandFooter = () => {
 
       {/* Side Decorative Text */}
       <div className="absolute -right-16 top-1/2 -rotate-90 origin-center opacity-5 pointer-events-none hidden xl:block">
-        <span className="text-9xl font-black tracking-tighter text-white">EST. {new Date().getFullYear()}</span>
+        <span className="text-9xl font-black tracking-tighter text-white">
+          EST. {new Date().getFullYear()}
+        </span>
       </div>
     </section>
   )
