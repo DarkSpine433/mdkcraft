@@ -2,17 +2,18 @@
 
 import { Header } from '@/payload-types'
 import { cn } from '@/utilities/cn'
-import { GitCompareArrows, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { Logo } from '../Logo/Logo'
 import GlowingButton from '../landingpage/GlowingButton'
 
 type Props = {
   header: Header
 }
 
-export function HeaderClient({ header }: Props) {
+export function HeaderClient({ header: _header }: Props) {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenu, setMobileMenu] = useState(false)
 
@@ -39,11 +40,9 @@ export function HeaderClient({ header }: Props) {
       )}
     >
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold tracking-tighter flex items-center gap-2">
-          <div className="w-8 h-8 bg-background border border-violet-400 rounded-lg flex items-center justify-center text-white font-extrabold shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]">
-            <GitCompareArrows/>
-          </div>
-          MDKcraft
+        <Link href="/" className="text-2xl font-bold tracking-tighter flex items-center gap-2 group">
+          <Logo />
+          <span className="group-hover:text-violet-400 transition-colors">MDKcraft</span>
         </Link>
 
         {/* Desktop Menu */}

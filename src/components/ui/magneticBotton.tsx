@@ -17,6 +17,7 @@ icon,
 onClick,
 
 variant = 'primary',
+margin = 'mx-auto',
 
 }: {
 
@@ -29,6 +30,8 @@ icon?: React.ReactNode
 onClick?: () => void
 
 variant?: 'primary' | 'outline'
+
+margin?: 'mx-auto' | 'mx-0'
 
 }) => {
 
@@ -134,7 +137,7 @@ onMouseLeave={onMouseLeave}
 
 style={{ x: springX, y: springY }}
 
-className="relative z-10 w-fit mx-auto"
+className={`relative z-10 w-fit ${margin}`}
 
 >
 

@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next'
 import { ReactNode } from 'react'
 
 import { AdminBar } from '@/components/AdminBar'
-import { Header } from '@/components/Header'
 
 import { Footer } from '@/components/Footer'
 import { VisualEngine } from '@/components/Visual/VisualEngine'
@@ -20,8 +19,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'pl_PL',
     url: '/',
-    siteName: 'MDKCraft', 
-    images: [
+    siteName: 'MDKCraft',
+  images: [
     {
       url: '/logo.svg',
       width: 1200,
@@ -30,6 +29,7 @@ export const metadata: Metadata = {
     },
   ],
   },
+  
   twitter: {
     card: 'summary_large_image',
   },
@@ -52,9 +52,9 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
       <VisualEngine />
 
       <AdminBar />
-      <Header />
+ 
 
-      <main className="w-full max-w-[100vw]">{children}</main>
+      {children}
       <BrandFooter />
 
       <Footer />

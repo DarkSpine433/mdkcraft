@@ -76,6 +76,7 @@ export interface Config {
     pages: Page;
     categories: Category;
     media: Media;
+    showcases: Showcase;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -109,6 +110,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    showcases: ShowcasesSelect<false> | ShowcasesSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -1018,6 +1020,121 @@ export interface Address {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "showcases".
+ */
+export interface Showcase {
+  id: string;
+  title: string;
+  client: string;
+  tagline: string;
+  year: string;
+  category: 'E-commerce' | 'FinTech' | 'Healthcare' | 'AI/ML' | 'Blockchain' | 'IoT' | 'SaaS' | 'Social';
+  status: 'completed' | 'in-progress' | 'maintenance' | 'deprecated';
+  description: {
+    overview: string;
+    challenge: string;
+    solution: string;
+    impact: string;
+  };
+  thumbnail: string | Media;
+  gallery?:
+    | {
+        image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  techStack?:
+    | {
+        name: string;
+        /**
+         * Lucide icon name (e.g., Cpu, Zap, Box)
+         */
+        icon: string;
+        category: 'frontend' | 'backend' | 'devops' | 'mobile' | 'cloud' | 'core';
+        version?: string | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  team?:
+    | {
+        name: string;
+        role: string;
+        /**
+         * URL or path to avatar
+         */
+        avatar?: string | null;
+        contribution?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  milestones?:
+    | {
+        date: string;
+        title: string;
+        description?: string | null;
+        completed?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  stats: {
+    commits: number;
+    hoursSpent: number;
+    performanceScore: number;
+    uptime?: string | null;
+    users?: string | null;
+  };
+  links?: {
+    live?: string | null;
+    github?: string | null;
+    caseStudy?: string | null;
+  };
+  features?:
+    | {
+        title: string;
+        description: string;
+        id?: string | null;
+      }[]
+    | null;
+  techDetails?: {
+    architecture?: string | null;
+    language?: string | null;
+    database?: string | null;
+    hosting?: string | null;
+  };
+  testimonial?: {
+    quote?: string | null;
+    author?: string | null;
+    role?: string | null;
+  };
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  theme: {
+    /**
+     * Hex color (e.g., #8B5CF6)
+     */
+    primary: string;
+    /**
+     * Hex color
+     */
+    secondary?: string | null;
+    /**
+     * Hex color
+     */
+    accent?: string | null;
+  };
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -1072,6 +1189,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'showcases';
+        value: string | Showcase;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1383,6 +1504,116 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "showcases_select".
+ */
+export interface ShowcasesSelect<T extends boolean = true> {
+  title?: T;
+  client?: T;
+  tagline?: T;
+  year?: T;
+  category?: T;
+  status?: T;
+  description?:
+    | T
+    | {
+        overview?: T;
+        challenge?: T;
+        solution?: T;
+        impact?: T;
+      };
+  thumbnail?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  techStack?:
+    | T
+    | {
+        name?: T;
+        icon?: T;
+        category?: T;
+        version?: T;
+        description?: T;
+        id?: T;
+      };
+  team?:
+    | T
+    | {
+        name?: T;
+        role?: T;
+        avatar?: T;
+        contribution?: T;
+        id?: T;
+      };
+  milestones?:
+    | T
+    | {
+        date?: T;
+        title?: T;
+        description?: T;
+        completed?: T;
+        id?: T;
+      };
+  stats?:
+    | T
+    | {
+        commits?: T;
+        hoursSpent?: T;
+        performanceScore?: T;
+        uptime?: T;
+        users?: T;
+      };
+  links?:
+    | T
+    | {
+        live?: T;
+        github?: T;
+        caseStudy?: T;
+      };
+  features?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  techDetails?:
+    | T
+    | {
+        architecture?: T;
+        language?: T;
+        database?: T;
+        hosting?: T;
+      };
+  testimonial?:
+    | T
+    | {
+        quote?: T;
+        author?: T;
+        role?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  theme?:
+    | T
+    | {
+        primary?: T;
+        secondary?: T;
+        accent?: T;
+      };
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -15,6 +15,7 @@ import {
 import { motion, useMotionTemplate, useMotionValue } from 'motion/react'
 import Link from 'next/link'
 import React, { useRef } from 'react'
+import { Logo } from '../Logo/Logo'
 import MagneticButton from '../ui/magneticBotton'
 
 // --- TYPY ---
@@ -24,18 +25,21 @@ import MagneticButton from '../ui/magneticBotton'
 
 // --- KOMPONENT 2: INTERAKTNYWNY LOGOTYP (Spójność z Twoim stylem) ---
 const FooterBrand = () => {
-  const text = 'MDK craft'
+  const text = 'MDKcraft'
   return (
-    <div className="group cursor-default">
+    <div className="group cursor-default space-y-4">
+      <div className="inline-block p-3 bg-white/5 border border-white/10 rounded-2xl">
+        <Logo />
+      </div>
       <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-white">
-        {text.split('').map((char, i) => (
+        {text.split('').map((char, i) => (char === ' ') ? '\u00A0' : (
           <motion.span
             key={i}
-            whileHover={{ y: -8, color: 'rgb(var(--primary-rgb))' }}
+            whileHover={{ y: -8, color: '#8b5cf6' }}
             transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             className="inline-block"
           >
-            {char === ' ' ? '\u00A0' : char}
+            {char}
           </motion.span>
         ))}
       </h2>

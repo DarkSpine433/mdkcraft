@@ -1,5 +1,6 @@
 'use client'
 
+import MagneticButton from '@/components/ui/magneticBotton'
 import { cn } from '@/utilities/cn'
 import {
   Box,
@@ -7,6 +8,7 @@ import {
   Database,
   Globe,
   Layers,
+  LucideIcon,
   Network,
   Search,
   Server,
@@ -43,7 +45,7 @@ interface Particle {
 interface TechStackItem {
   name: string
   category: 'frontend' | 'backend' | 'devops' | 'mobile'
-  icon: React.ElementType
+  icon: LucideIcon
   description: string
   proficiency: number // 0-100
 }
@@ -53,7 +55,7 @@ interface ProcessStep {
   title: string
   subtitle: string
   description: string
-  icon: React.ElementType
+  icon: LucideIcon
   features: string[]
 }
 
@@ -664,9 +666,9 @@ const FinalCTA = () => {
           Masz wizję, która wymaga technicznej perfekcji? Jesteśmy gotowi podjąć wyzwanie.
         </p>
 
-        <button className="px-10 py-5 bg-white text-black font-bold text-lg rounded-full hover:scale-105 transition-transform shadow-[0_0_50px_-10px_rgba(255,255,255,0.3)]">
+        <MagneticButton className="px-10 py-5 bg-white text-black font-bold text-lg rounded-full hover:scale-105 transition-transform shadow-[0_0_50px_-10px_rgba(255,255,255,0.3)]">
           Umów Się Na Konsultację
-        </button>
+        </MagneticButton>
       </div>
     </section>
   )

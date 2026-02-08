@@ -5,18 +5,17 @@ import { ArrowRight, Globe, Layers, MousePointer2, Sparkles } from "lucide-react
 import {
   AnimatePresence,
   motion,
-  useMotionValue,
   useScroll,
-  useSpring,
   useTransform
 } from "motion/react";
 import Link from "next/link";
-import React, {
+import {
   ReactNode,
   useEffect,
   useRef,
   useState
 } from "react";
+import MagneticButton from "../ui/magneticBotton";
 
 // --- GLOBALNE TYPY I UTILS (wklej to do utils.ts jeśli wolisz, tu dla wygody) ---
 
@@ -133,64 +132,6 @@ const ParticlesBackground = () => {
     >
       <canvas ref={canvasRef} />
     </div>
-  );
-};
-
-// --- KOMPONENT 2: MAGNETIC BUTTON ---
-// Przycisk, który "przykleja" się do kursora
-const MagneticButton = ({
-  children,
-  className,
-  variant = "primary",
-  ...props
-}: {
-  children: ReactNode;
-  className?: string;
-  variant?: "primary" | "outline";
-  [x: string]: any;
-}) => {
-  const ref = useRef<HTMLButtonElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const mouseX = useSpring(x, { stiffness: 150, damping: 15, mass: 0.1 });
-  const mouseY = useSpring(y, { stiffness: 150, damping: 15, mass: 0.1 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const { clientX, clientY } = e;
-    const { height, width, left, top } = ref.current!.getBoundingClientRect();
-    const middleX = clientX - (left + width / 2);
-    const middleY = clientY - (top + height / 2);
-    x.set(middleX * 0.2); // Siła przyciągania
-    y.set(middleY * 0.2);
-  };
-
-  const reset = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return (
-    <motion.button
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={reset}
-      style={{ x: mouseX, y: mouseY }}
-      className={cn(
-        "relative flex items-center justify-center overflow-hidden rounded-full transition-all duration-300",
-        variant === "primary"
-          ? "bg-primary text-primary-foreground hover:shadow-[0_0_40px_-10px_rgba(var(--primary-rgb),0.6)]"
-          : "bg-transparent border border-primary/50 text-foreground hover:bg-primary/10",
-        className
-      )}
-      {...props}
-    >
-      <span className="relative z-10 flex items-center gap-2 px-8 py-4 font-semibold tracking-wide uppercase text-sm md:text-base">
-        {children}
-      </span>
-      {/* Efekt lśnienia (Sheen) */}
-      <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent z-0" />
-    </motion.button>
   );
 };
 
@@ -411,13 +352,13 @@ const HeroSection = () => {
           transition={{ delay: 0.7, duration: 0.8 }}
           className="flex flex-col sm:flex-row gap-6 mt-8 w-full justify-center items-center"
         >
-          <MagneticButton variant="primary">
-            Rozpocznij Projekt <ArrowRight className="w-4 h-4" />
+          <MagneticButton margin='mx-0' icon={<ArrowRight className="w-4 h-4" />} variant="primary" className="w-fit text-background">
+            Rozpocznij Projekt 
           </MagneticButton>
 
           <Link href="#about">
-            <MagneticButton variant="outline">
-              Więcej o Nas <MousePointer2 className="w-4 h-4 ml-2 opacity-50" />
+            <MagneticButton margin='mx-0' icon={<MousePointer2 className="w-4 h-4 ml-2 opacity-50" />} variant="outline" className="w-fit">
+              Więcej o Nas 
             </MagneticButton>
           </Link>
         </motion.div>
