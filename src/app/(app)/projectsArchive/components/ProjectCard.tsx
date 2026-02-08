@@ -3,7 +3,7 @@
 import { cn } from '@/utilities/cn'
 import { Activity, BarChart, Cloud, Cpu, Lock, Network, Package, Search, Sparkles, Terminal, Zap } from 'lucide-react'
 import { motion, useMotionValueEvent, useScroll, useTransform } from 'motion/react'
-import { useMemo, useRef, useState } from 'react'
+import { memo, useMemo, useRef, useState } from 'react'
 import { Project, getIcon } from '../types/project'
 import { ProjectStatsCard } from './ProjectStatsCard'
 
@@ -15,7 +15,7 @@ import { ProjectStatsCard } from './ProjectStatsCard'
  * Generates a unique "Digital Schematic" for each project using SVG.
  * This is much more flexible than static images and looks amazing.
  */
-const ProjectVisualizer = ({ project }: { project: Project }) => {
+const ProjectVisualizer = memo(({ project }: { project: Project }) => {
     const seed = useMemo(() => {
         let h = 0
         for (let i = 0; i < project.id.length; i++) {
@@ -206,20 +206,22 @@ const ProjectVisualizer = ({ project }: { project: Project }) => {
             </div>
         </div>
     )
-}
+})
+ProjectVisualizer.displayName = 'ProjectVisualizer'
 
-const Boxes = ({ category, color }: { category: string, color: string }) => {
+const Boxes = memo(({ category, color }: { category: string, color: string }) => {
     if (category === 'IoT') return <Network x="85" y="60" size={30} color={color} />
     if (category === 'Healthcare') return <Activity x="85" y="60" size={30} color={color} />
     if (category === 'SaaS') return <Cloud x="85" y="60" size={30} color={color} />
     return <Zap x="85" y="60" size={30} color={color} />
-}
+})
+Boxes.displayName = 'Boxes'
 
 // -----------------------------------------------------------------------------
 // 2. PROJECT CARD SUB-COMPONENTS (Timeline & Specs)
 // -----------------------------------------------------------------------------
 
-const ProjectMilestones = ({ project }: { project: Project }) => {
+const ProjectMilestones = memo(({ project }: { project: Project }) => {
     return (
         <div className="space-y-6">
             <h4 className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest flex items-center gap-2">
@@ -257,9 +259,10 @@ const ProjectMilestones = ({ project }: { project: Project }) => {
             </div>
         </div>
     )
-}
+})
+ProjectMilestones.displayName = 'ProjectMilestones'
 
-const ProjectSpecs = ({ project }: { project: Project }) => {
+const ProjectSpecs = memo(({ project }: { project: Project }) => {
     // Deterministic seeded random for telemetry consistency
     const seededHash = useMemo(() => {
         let h = 0
@@ -305,7 +308,8 @@ const ProjectSpecs = ({ project }: { project: Project }) => {
              </div>
         </div>
     )
-}
+})
+ProjectSpecs.displayName = 'ProjectSpecs'
 
 // -----------------------------------------------------------------------------
 // 3. PROJECT CARD COMPONENT
@@ -618,7 +622,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
     )
 }
 
-const HUDElement = ({ position, label, value, color, seed }: { position: string, label: string, value: string, color: string, seed: number }) => {
+const HUDElement = memo(({ position, label, value, color, seed }: { position: string, label: string, value: string, color: string, seed: number }) => {
     const posClasses: Record<string, string> = {
         'top-right': 'top-10 right-10',
         'bottom-right': 'bottom-10 right-10',
@@ -648,11 +652,13 @@ const HUDElement = ({ position, label, value, color, seed }: { position: string,
             </div>
         </div>
     )
-}
+})
+HUDElement.displayName = 'HUDElement'
 
-const TechDetail = ({ label, value }: { label: string, value: string }) => (
+const TechDetail = memo(({ label, value }: { label: string, value: string }) => (
     <div className="flex flex-col gap-0.5">
         <span className="text-[7px] font-mono text-neutral-600 tracking-tighter uppercase">{label}</span>
         <span className="text-[10px] font-bold text-neutral-400">{value}</span>
     </div>
-)
+))
+TechDetail.displayName = 'TechDetail'

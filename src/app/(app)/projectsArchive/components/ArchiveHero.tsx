@@ -2,6 +2,7 @@
 
 import { Activity, ChevronDown, Cpu, Network, Shield, Sparkles, Terminal } from 'lucide-react'
 import { motion } from 'motion/react'
+import { memo } from 'react'
 import { Scene3D } from './Scene3D'
 
 interface ArchiveHeroProps {
@@ -12,7 +13,7 @@ interface ArchiveHeroProps {
  * A cinematic hero section for the projects archive.
  * Focuses on scale, technical depth, and visual polish.
  */
-export const ArchiveHero = ({ projectCount }: ArchiveHeroProps) => {
+export const ArchiveHero = memo(({ projectCount }: ArchiveHeroProps) => {
     return (
         <section className="relative h-dvh md:h-screen flex flex-col items-center justify-center pt-24 overflow-hidden">
             
@@ -84,11 +85,13 @@ export const ArchiveHero = ({ projectCount }: ArchiveHeroProps) => {
             <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         </section>
     )
-}
+})
+ArchiveHero.displayName = 'ArchiveHero'
 
-const TechTag = ({ icon: Icon, label }: { icon: any, label: string }) => (
+const TechTag = memo(({ icon: Icon, label }: { icon: React.ElementType, label: string }) => (
     <div className="flex items-center gap-2 text-[10px] font-mono text-neutral-400 uppercase tracking-widest border border-white/10 px-4 py-1.5 rounded-full">
         <Icon size={12} />
         {label}
     </div>
-)
+))
+TechTag.displayName = 'TechTag'

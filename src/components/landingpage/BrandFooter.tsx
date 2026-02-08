@@ -248,7 +248,7 @@ const BrandFooter = () => {
 
       {/* Side Decorative Text */}
       <div className="absolute -right-16 top-1/2 -rotate-90 origin-center opacity-5 pointer-events-none hidden xl:block">
-        <span className="text-9xl font-black tracking-tighter text-white">EST. 2024</span>
+        <span className="text-9xl font-black tracking-tighter text-white">EST. {new Date().getFullYear()}</span>
       </div>
     </section>
   )

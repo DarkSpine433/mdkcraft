@@ -1,16 +1,16 @@
 'use client'
 
 import {
-    ArrowUpRight,
-    Facebook,
-    Github,
-    Instagram,
-    Linkedin,
-    Mail,
-    MapPin,
-    MousePointer2,
-    Phone,
-    Sparkles,
+  ArrowUpRight,
+  Facebook,
+  Github,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  MousePointer2,
+  Phone,
+  Sparkles,
 } from 'lucide-react'
 import { motion, useMotionTemplate, useMotionValue } from 'motion/react'
 import Link from 'next/link'

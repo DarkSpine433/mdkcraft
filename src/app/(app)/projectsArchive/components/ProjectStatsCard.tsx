@@ -1,11 +1,12 @@
 import { cn } from '@/utilities/cn'
 import {
-     Clock,
-     GitBranch,
-     TrendingUp,
-     Users
+    Clock,
+    GitBranch,
+    TrendingUp,
+    Users
 } from 'lucide-react'
 import { motion } from 'motion/react'
+import { memo } from 'react'
 import { Project } from '../types/project'
 
 interface ProjectStatsCardProps {
@@ -16,7 +17,7 @@ interface ProjectStatsCardProps {
  * A highly detailed metrics dashboard for a specific project.
  * Designed to look like a high-end dev tool interface.
  */
-export const ProjectStatsCard = ({ project }: ProjectStatsCardProps) => {
+export const ProjectStatsCard = memo(({ project }: ProjectStatsCardProps) => {
     // Generate some consistent but unique-looking secondary metrics
 
 
@@ -70,9 +71,10 @@ export const ProjectStatsCard = ({ project }: ProjectStatsCardProps) => {
        
         </div>
     )
-}
+})
+ProjectStatsCard.displayName = 'ProjectStatsCard'
 
-const StatItem = ({ icon: Icon, value, label, color, delay }: { icon: any, value: string, label: string, color: string, delay: number }) => (
+const StatItem = memo(({ icon: Icon, value, label, color, delay }: { icon: React.ElementType, value: string, label: string, color: string, delay: number }) => (
     <motion.div 
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -86,7 +88,8 @@ const StatItem = ({ icon: Icon, value, label, color, delay }: { icon: any, value
         <span className="text-2xl font-black text-white tracking-tighter mb-1">{value}</span>
         <span className="text-[9px] text-neutral-500 uppercase tracking-widest font-mono">{label}</span>
     </motion.div>
-)
+))
+StatItem.displayName = 'StatItem'
 
 const _MiniStat = ({ label, value }: { label: string, value: string }) => (
     <div className="flex flex-col gap-0.5">

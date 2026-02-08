@@ -4,18 +4,14 @@ import { ProjectCard } from '@/app/(app)/projectsArchive/components/ProjectCard'
 import { PROJECTS_DATA } from '@/app/(app)/projectsArchive/data/projects'
 import { ProjectCategory } from '@/app/(app)/projectsArchive/types/project'
 import MagneticButton from '@/components/ui/magneticBotton'
-import {
-  ArrowRight,
-  LucideIcon,
-  Monitor
-} from 'lucide-react'
+import { ArrowRight, LucideIcon, Monitor } from 'lucide-react'
+import { AnimatePresence, motion } from 'motion/react'
 import Link from 'next/link'
 import { useRef } from 'react'
 
 // -----------------------------------------------------------------------------
 // 1. TYPES & INTERFACES (Extensive for 2000+ lines support)
 // -----------------------------------------------------------------------------
-
 
 interface TechStackItem {
   name: string
@@ -212,44 +208,40 @@ const NebulaShader = {
       
       gl_FragColor = vec4(finalColor * vignette, 1.0);
     }
-  `
+  `,
 }
-
-
-
-
-
-
-
 
 // -----------------------------------------------------------------------------
 // 6. UI SUB-COMPONENTS (DOM Animations)
 // -----------------------------------------------------------------------------
 
-
-
 const TechBadge = ({ item }: { item: TechStackItem }) => (
   <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-violet-500/50 hover:bg-violet-500/10 transition-all duration-300 group cursor-default">
     <item.icon className="size-3 text-neutral-400 group-hover:text-violet-400 transition-colors" />
-    <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-300 group-hover:text-white">{item.name}</span>
+    <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-300 group-hover:text-white">
+      {item.name}
+    </span>
   </div>
 )
 
 const StatCard = ({ stat }: { stat: ProjectStat }) => (
   <div className="flex flex-col p-4 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors">
-     <div className="flex items-center gap-3 mb-2">
-       <div className="p-2 rounded-lg bg-neutral-900 text-violet-400">
-         <stat.icon size={16} />
-       </div>
-       <span className="text-xs font-mono text-neutral-400 uppercase tracking-wider">{stat.label}</span>
-     </div>
-     <div className="flex items-end gap-2">
-       <span className="text-2xl font-bold text-white tracking-tight">{stat.value}</span>
-       {stat.trend === 'up' && <span className="text-[10px] text-green-400 mb-1">↑ {stat.trendValue}</span>}
-     </div>
+    <div className="flex items-center gap-3 mb-2">
+      <div className="p-2 rounded-lg bg-neutral-900 text-violet-400">
+        <stat.icon size={16} />
+      </div>
+      <span className="text-xs font-mono text-neutral-400 uppercase tracking-wider">
+        {stat.label}
+      </span>
+    </div>
+    <div className="flex items-end gap-2">
+      <span className="text-2xl font-bold text-white tracking-tight">{stat.value}</span>
+      {stat.trend === 'up' && (
+        <span className="text-[10px] text-green-400 mb-1">↑ {stat.trendValue}</span>
+      )}
+    </div>
   </div>
 )
-
 
 // -----------------------------------------------------------------------------
 // 7. MAIN COMPONENT
@@ -258,65 +250,78 @@ const StatCard = ({ stat }: { stat: ProjectStat }) => (
 const Projects = () => {
   const containerRef = useRef<HTMLDivElement>(null)
 
-
-
-
-
   return (
-    <section ref={containerRef} id="projects" className="relative min-h-[500vh] w-full bg-[#050505] text-white ">
-        
-
-      
-    
-      
+    <section
+      ref={containerRef}
+      id="projects"
+      className="relative min-h-[500vh] w-full bg-[#050505] text-white "
+    >
       {/* BACKGROUND ELEMENTS (DOM) */}
       <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-900/10 via-black to-black pointer-events-none" />
       <div className="absolute inset-0 z-0 bg-[url('/img/grid.svg')] bg-center opacity-[0.03] pointer-events-none" />
 
-   {/* 5. PROJECT CARDS STACK */}
+      {/* 5. PROJECT CARDS STACK */}
       <div className="relative z-10 pb-48">
-          {PROJECTS_DATA.slice(0, 5).map((project, index) => (
-              <ProjectCard key={project.id} project={project} index={index} />
+        <AnimatePresence mode="popLayout">
+          {PROJECTS_DATA.map((project, index) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative"
+            >
+              <ProjectCard project={project} index={index} />
+            </motion.div>
           ))}
-          
-         
+        </AnimatePresence>
       </div>
 
       {/* 3. FINAL CTA: THE TERMINUS */}
       <div className="relative min-h-[120vh] w-full flex flex-col items-center justify-center overflow-hidden bg-dot-white/[0.05]">
         <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
-        
+
         <div className="container mx-auto px-6 relative z-10">
-           <div className="grid lg:grid-cols-2 lg:gap-24 items-center">
-              <div className="space-y-12">
-                 <div className="space-y-4">
-                   <span className="font-mono text-xs text-violet-500 uppercase tracking-[0.4em]">Project_Inbound</span>
-                   <h3 className="text-6xl md:text-9xl font-black text-white tracking-tighter leading-none">
-                      YOUR VISION.<br />
-                      <span className="text-neutral-500">OUR EXECUTION.</span>
-                   </h3>
-                 </div>
+          <div className="grid lg:grid-cols-2 lg:gap-24 items-center">
+            <div className="space-y-12">
+              <div className="space-y-4">
+                <span className="font-mono text-xs text-violet-500 uppercase tracking-[0.4em]">
+                  Project_Inbound
+                </span>
+                <h3 className="text-6xl md:text-9xl font-black text-white tracking-tighter leading-none">
+                  YOUR VISION.
+                  <br />
+                  <span className="text-neutral-500">OUR EXECUTION.</span>
+                </h3>
+              </div>
 
-                 <p className="text-xl md:text-2xl text-neutral-400 font-light leading-relaxed max-w-xl">
-                   Oferujemy kompleksowe podejście od strategii po wdrożenie. Twój projekt zasługuje na najlepszą technologię i design.
-                 </p>
+              <p className="text-xl md:text-2xl text-neutral-400 font-light leading-relaxed max-w-xl">
+                Oferujemy kompleksowe podejście od strategii po wdrożenie. Twój projekt zasługuje na
+                najlepszą technologię i design.
+              </p>
 
-                 <div className="flex flex-col gap-8">
-                   <MagneticButton className="px-12 py-7 bg-violet-600 text-white rounded-[2rem] font-black text-xl hover:scale-105 hover:bg-white hover:text-black transition-all duration-700 shadow-[0_0_50px_-10px_rgba(139,92,246,0.6)] flex items-center justify-center gap-4 w-max" margin='mx-0' icon={<ArrowRight className="size-6" />} >
-                        ZACZNIJMY WSPÓŁPRACĘ
-                   </MagneticButton>
-                  <Link href="/projectsArchive">
-                   <MagneticButton icon={<Monitor className="size-5 ml-1" />} className="px-12 py-7 border border-white/10 rounded-[2rem] font-bold text-xl hover:bg-white/5 transition-all text-white  bg-white/5  text-neutral-500 hover:text-white flex items-center justify-center gap-3 hover:[text-shadow:1px_1px_2px_rgba(255,255,255,1)] w-max" margin='mx-0'>
-                      ZOBACZ WSZYSTKIE PROJEKTY
-                      
-                    </MagneticButton>
-                  </Link>
-                 </div>
+              <div className="flex flex-col gap-8">
+                <MagneticButton
+                  className="px-12 py-7 bg-violet-600 text-white rounded-[2rem] font-black text-xl hover:scale-105 hover:bg-white hover:text-black transition-all duration-700 shadow-[0_0_50px_-10px_rgba(139,92,246,0.6)] flex items-center justify-center gap-4 w-max"
+                  margin="mx-0"
+                  icon={<ArrowRight className="size-6" />}
+                >
+                  ZACZNIJMY WSPÓŁPRACĘ
+                </MagneticButton>
+                <Link href="/projectsArchive" target="_blank">
+                  <MagneticButton
+                    icon={<Monitor className="size-5 ml-1" />}
+                    className="px-12 py-7 border border-white/10 rounded-[2rem] font-bold text-xl hover:bg-white/5 transition-all text-white  bg-white/5  text-neutral-500 hover:text-white flex items-center justify-center gap-3 hover:[text-shadow:1px_1px_2px_rgba(255,255,255,1)] w-max"
+                    margin="mx-0"
+                  >
+                    ZOBACZ WSZYSTKIE PROJEKTY
+                  </MagneticButton>
+                </Link>
               </div>
             </div>
           </div>
+        </div>
       </div>
-
     </section>
   )
 }

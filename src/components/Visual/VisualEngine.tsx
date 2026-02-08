@@ -1,28 +1,9 @@
 "use client";
 
 import { motion, useMotionValue, useSpring } from 'motion/react';
-import { useEffect } from 'react';
+import { memo, useEffect } from 'react';
 
-export const VisualEngine = () => {
-const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springConfig = { damping: 25, stiffness: 250 };
-  const smoothX = useSpring(mouseX, springConfig);
-  const smoothY = useSpring(mouseY, springConfig);
-  
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
-
-  return (
-    <>
+const GlobalStyles = () => (
 <style jsx global>{`
   /* 1. DEFINICJA ANIMACJI KIERESZOWANIA KSZTAŁTU (BLOB) */
   @keyframes blob-morph {
@@ -67,23 +48,42 @@ const mouseX = useMotionValue(0);
     box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
   }
 `}</style>
-<>
-  {/* 1. SOCZEWKA / SPOTLIGHT (Tło) */}
-  <motion.div
-    id="cursorBg"
-    className="pointer-events-none fixed top-0 left-0 z-[9998] flex items-center justify-center transition-all  rounded-full opacity-20"
-    style={{
-      x: smoothX,
-      y: smoothY,
-      translateX: '-50%',
-      translateY: '-50%',
-   background: 'radial-gradient(circle at center, rgba(124, 58, 237, 0.2) 20%, rgba(124, 58, 237, 0.5) 20%, rgba(124, 58, 237, 0) 30%)',
-    }}
-  />
+)
 
-      
-    </>
+export const VisualEngine = memo(() => {
+const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
+  const springConfig = { damping: 25, stiffness: 250 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+  
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  return (
+    <>
+      <GlobalStyles />
+      <motion.div
+        id="cursorBg"
+        className="pointer-events-none fixed top-0 left-0 z-[9998] flex items-center justify-center transition-all  rounded-full opacity-20"
+        style={{
+          x: smoothX,
+          y: smoothY,
+          translateX: '-50%',
+          translateY: '-50%',
+          background: 'radial-gradient(circle at center, rgba(124, 58, 237, 0.2) 20%, rgba(124, 58, 237, 0.5) 20%, rgba(124, 58, 237, 0) 30%)',
+        }}
+      />
     </>
   );
-};
+});
+
+VisualEngine.displayName = 'VisualEngine';

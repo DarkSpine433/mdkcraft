@@ -13,8 +13,9 @@ export default async function ProjectsArchivePage() {
   
   const showcases = await payload.find({
     collection: 'showcases',
-    limit: 100,
+    limit: 6,
     depth: 1,
+    sort: '-year',
   })
 
   // Map Payload data to Project interface
@@ -101,7 +102,7 @@ export default async function ProjectsArchivePage() {
       <ArchiveHeader />
 
       {/* 3. CLIENT CONTENT (Hero, Filters, Cards) */}
-      <ShowcaseArchiveClient projects={projects} />
+      <ShowcaseArchiveClient initialProjects={projects} totalDocs={showcases.totalDocs} />
 
     </main>
   )
