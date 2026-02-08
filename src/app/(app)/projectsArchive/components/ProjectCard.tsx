@@ -345,9 +345,9 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
                 scale,
                 display: isVisible ? 'flex' : 'none'
             }}
-            className="min-h-screen sticky top-0 flex items-center justify-center py-20 px-10 lg:px-20 will-change-transform"
+            className="min-h-screen sticky top-0 flex items-center justify-center py-10 md:py-20 px-4 md:px-10 lg:px-20 will-change-transform"
         >
-            <div className="relative w-full max-w-7xl mx-auto bg-[#0a0a0a]/95 border border-white/10 rounded-[4rem] overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
+            <div className="relative w-full max-w-7xl mx-auto bg-[#0a0a0a]/95 border border-white/10 rounded-[2.5rem] md:rounded-[4rem] overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
                 
                 {/* DECORATIVE LIGHTING */}
                 <div 
@@ -355,10 +355,10 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
                     style={{ background: `radial-gradient(circle, ${project.theme.primary}, transparent 70%)` }}
                 />
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 h-[85vh]">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:h-[85vh] overflow-y-auto lg:overflow-hidden">
                     
                     {/* LEFT PANEL - RICH INFORMATION (The 2000 lines goal contributor) */}
-                    <div className="lg:col-span-5 p-10 md:p-14 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-white/5 relative z-10 overflow-y-auto no-scrollbar">
+                    <div className="lg:col-span-5 p-6 md:p-14 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-white/5 relative z-10 overflow-y-auto no-scrollbar order-2 lg:order-1">
                         <div className="space-y-10">
                              <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-4">
@@ -372,10 +372,10 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
                              </div>
 
                              <div className="space-y-4">
-                                 <h2 className="text-5xl md:text-6xl font-black text-white leading-[0.85] tracking-tighter">
+                                 <h2 className="text-3xl md:text-6xl font-black text-white leading-[0.85] tracking-tighter">
                                     {project.title.toUpperCase()}
                                  </h2>
-                                 <p className="text-xl text-violet-400 font-mono font-medium tracking-tight">
+                                 <p className="text-lg md:text-xl text-violet-400 font-mono font-medium tracking-tight">
                                     {'>'} {project.client}
                                  </p>
                              </div>
@@ -533,7 +533,7 @@ export const ProjectCard = ({ project }: ProjectCardProps) => {
                     </div>
 
                     {/* RIGHT PANEL - SVG MOCKUPS & VISUAL ENGINE */}
-                    <div className="lg:col-span-7 relative bg-black overflow-hidden group">
+                    <div className="lg:col-span-7 relative bg-black overflow-hidden group order-1 lg:order-2 h-[40vh] lg:h-full">
                         
                         {/* THE DYNAMIC PREVIEW COMPONENT */}
                         <div className="absolute inset-0 z-0">

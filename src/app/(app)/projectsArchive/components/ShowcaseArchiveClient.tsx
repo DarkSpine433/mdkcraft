@@ -27,9 +27,9 @@ export const ShowcaseArchiveClient = ({ projects }: ShowcaseArchiveClientProps) 
             <ArchiveHero projectCount={projects.length} />
 
             {/* 2. FILTER BAR */}
-            <div className="sticky top-[88%]  z-40 py-3 pointer-events-none r">
-                <div className="px-10 mx-auto flex  pointer-events-auto">
-                    <div className="p-2 bg-black/50 backdrop-blur-xl border border-white/10 rounded-md flex overflow-auto  gap-2 max-w-4xl shadow-2xl  mx-auto ">
+            <div className="sticky top-[88%] z-40 py-3 pointer-events-none">
+                <div className="px-6 md:px-10 mx-auto flex pointer-events-auto">
+                    <div className="p-2 bg-black/50 backdrop-blur-xl border border-white/10 rounded-xl flex overflow-x-auto overflow-y-hidden no-scrollbar gap-2 max-w-4xl shadow-2xl mx-auto items-center">
                         {categories.map((cat) => (
                             <FilterChip 
                                 key={cat} 

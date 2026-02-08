@@ -14,7 +14,7 @@ interface ArchiveHeroProps {
  */
 export const ArchiveHero = ({ projectCount }: ArchiveHeroProps) => {
     return (
-        <section className="relative h-screen flex flex-col items-center justify-center pt-24 overflow-hidden">
+        <section className="relative h-dvh md:h-screen flex flex-col items-center justify-center pt-24 overflow-hidden">
             
             {/* SCENE 3D - NOW CONFINED TO HERO */}
             <Scene3D />
@@ -48,7 +48,7 @@ export const ArchiveHero = ({ projectCount }: ArchiveHeroProps) => {
 
                 {/* MAIN TITLES */}
                 <div className="space-y-2">
-                    <h1 className="text-[12vw] md:text-[8vw] font-black text-transparent bg-clip-text bg-linear-to-b from-white via-white/80 to-neutral-700 tracking-tighter leading-[0.8]">
+                    <h1 className="text-7xl md:text-[8vw] font-black text-transparent bg-clip-text bg-linear-to-b from-white via-white/80 to-neutral-700 tracking-tighter leading-[0.8]">
                         UNIFIED<br/>ARCHIVE
                     </h1>
                     <div className="flex items-center justify-center gap-4 py-4">
@@ -64,7 +64,7 @@ export const ArchiveHero = ({ projectCount }: ArchiveHeroProps) => {
                 </p>
 
                 {/* TECH TAGS CLOUD */}
-                <div className="flex flex-wrap justify-center gap-6 opacity-30">
+                <div className="flex flex-wrap justify-center gap-3 md:gap-6 opacity-30">
                     <TechTag icon={Cpu} label="Edge Computing" />
                     <TechTag icon={Shield} label="End-to-End Encryption" />
                     <TechTag icon={Network} label="Distributed Systems" />
