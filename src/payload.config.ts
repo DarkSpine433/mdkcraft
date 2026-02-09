@@ -19,9 +19,20 @@ import { Categories } from '@/collections/Categories'
 import { Media } from '@/collections/Media'
 import { Pages } from '@/collections/Pages'
 import { Users } from '@/collections/Users'
+import { Showcases } from './collections/Showcases'
+
+// Analytics Collections
+import { ContactInquiries } from '@/collections/ContactInquiries'
+import { ConversionFunnels } from '@/collections/ConversionFunnels'
+import { HeatmapData } from '@/collections/HeatmapData'
+import { NewsletterSubscribers } from '@/collections/NewsletterSubscribers'
+import { PageViews } from '@/collections/PageViews'
+import { ProjectViews } from '@/collections/ProjectViews'
+import { UserBehaviorEvents } from '@/collections/UserBehaviorEvents'
+import { UserSessions } from '@/collections/UserSessions'
+
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
-import { Showcases } from './collections/Showcases'
 import { plugins } from './plugins'
 
 const filename = fileURLToPath(import.meta.url)
@@ -39,7 +50,24 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [Users, Pages, Categories, Media, Showcases],
+  collections: [
+    Users,
+    Pages,
+    Categories,
+    Media,
+    Showcases,
+    // Analytics Collections
+    UserBehaviorEvents,
+    UserSessions,
+    PageViews,
+    HeatmapData,
+    // Engagement Collections
+    ProjectViews,
+    ConversionFunnels,
+    // Leads Collections
+    ContactInquiries,
+    NewsletterSubscribers,
+  ],
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
   }),

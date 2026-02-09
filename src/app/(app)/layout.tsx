@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 
+import { AnalyticsProvider } from '@/providers/AnalyticsProvider'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
@@ -36,7 +37,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html
       className={[GeistSans.variable, GeistMono.variable].filter(Boolean).join(' ')}
-      lang="en"
+      lang="pl"
       suppressHydrationWarning
     >
       <head>
@@ -44,7 +45,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
-      <body>{children}</body>
+      <body>
+        <AnalyticsProvider enabled={true}>{children}</AnalyticsProvider>
+      </body>
     </html>
   )
 }

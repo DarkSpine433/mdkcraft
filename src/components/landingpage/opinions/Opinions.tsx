@@ -1,21 +1,8 @@
 'use client'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import {
-  Award,
-  Quote,
-  Sparkles,
-  Star,
-  TrendingUp,
-  Users
-} from 'lucide-react'
-import {
-  motion,
-  useMotionValue,
-  useScroll,
-  useSpring,
-  useTransform
-} from 'motion/react'
+import { Award, Quote, Sparkles, Star, TrendingUp, Users } from 'lucide-react'
+import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react'
 import React, { useRef } from 'react'
 
 // -----------------------------------------------------------------------------
@@ -24,138 +11,138 @@ import React, { useRef } from 'react'
 
 const OPINIONS = [
   {
-    id: "01",
+    id: '01',
     name: 'Piotr Wójcik',
     role: 'CEO TechFlow',
     text: 'Zespół MDKCraft jest niezwykle profesjonalny. Zaprojektowali dla nas stronę, która przekroczyła oczekiwania. Ich zrozumienie potrzeb biznesowych jest unikalne na rynku.',
     stars: 5,
     img: '/img/clients/client-1.png',
-    accent: '#8b5cf6'
+    accent: '#8b5cf6',
   },
   {
-    id: "02",
+    id: '02',
     name: 'Karolina Lewandowska',
     role: 'Marketing Manager',
     text: 'Innowacyjne rozwiązania i pełna elastyczność. Efekt końcowy sprawił, że nasza marka zyskała zupełnie nową, profesjonalną tożsamość online.',
     stars: 5,
     img: '/img/clients/client-3.png',
-    accent: '#ffffff'
+    accent: '#ffffff',
   },
   {
-    id: "03",
+    id: '03',
     name: 'Michał Kaczmarek',
     role: 'Founder of Pulse',
     text: 'Zdecydowanie najlepszy wybór. Ich podejście do architektury systemów i czystość kodu to standard enterprise, którego szukaliśmy.',
     stars: 4,
     img: '/img/clients/client-2.png',
-    accent: '#8b5cf6'
+    accent: '#8b5cf6',
   },
   {
-    id: "04",
+    id: '04',
     name: 'Anna Zielińska',
     role: 'E-commerce Specialist',
     text: 'Współpraca przebiegła błyskawicznie. System sprzedaży zoptymalizował nasze zyski o 40% w pierwszym kwartale. Polecam każdemu!',
     stars: 5,
     img: '/img/clients/client-4.png',
-    accent: '#ffffff'
+    accent: '#ffffff',
   },
   {
-    id: "05",
+    id: '05',
     name: 'Tomasz Nowak',
     role: 'Software Architect',
     text: 'Doceniam czystość architektury. To nie tylko nowoczesny design, ale przede wszystkim solidny i bezpieczny fundament pod skalowalny biznes.',
     stars: 5,
     img: '/img/clients/client-5.png',
-    accent: '#8b5cf6'
+    accent: '#8b5cf6',
   },
   {
-    id: "06",
+    id: '06',
     name: 'Marta Kowalczyk',
     role: 'Art Director',
     text: 'Design, który czuje markę. Zespół MDKCraft od razu uchwycił minimalistyczny vibe premium, na którym mi zależało. Perfekcja w każdym pikselu.',
     stars: 5,
     img: '/img/clients/client-6.png',
-    accent: '#ffffff'
+    accent: '#ffffff',
   },
   {
-    id: "07",
+    id: '07',
     name: 'Jakub Mazur',
     role: 'CTO FinNet',
     text: 'Szybkość działania i dbałość o detale to wizytówka MDKCraft. Nasza nowa aplikacja bankowa zbiera świetne opinie od użytkowników.',
     stars: 5,
     img: '/img/clients/client-1.png',
-    accent: '#8b5cf6'
+    accent: '#8b5cf6',
   },
   {
-    id: "08",
+    id: '08',
     name: 'Patrycja Szymańska',
     role: 'Founder of Bloom',
     text: 'Niesamowita atmosfera współpracy. MDKCraft to partner, który słucha i doradza, a nie tylko wykonuje zlecenia. Efekt zapiera dech.',
     stars: 5,
     img: '/img/clients/client-3.png',
-    accent: '#ffffff'
+    accent: '#ffffff',
   },
   {
-    id: "09",
+    id: '09',
     name: 'Robert Kłos',
     role: 'Director of Logistics',
     text: 'Optymalizacja procesów przez dedykowane narzędzia stworzone przez MDKCraft skróciła czas operacyjny o połowę. Genialna robota.',
     stars: 5,
     img: '/img/clients/client-2.png',
-    accent: '#8b5cf6'
+    accent: '#8b5cf6',
   },
   {
-    id: "10",
+    id: '10',
     name: 'Alicja Bąk',
     role: 'UX Researcher',
     text: 'Z perspektywy UX, MDKCraft dostarcza rozwiązania, które są nie tylko piękne, ale przede wszystkim intuicyjne i dostępne dla każdego.',
     stars: 4,
     img: '/img/clients/client-4.png',
-    accent: '#ffffff'
+    accent: '#ffffff',
   },
   {
-    id: "11",
+    id: '11',
     name: 'Sebastian Dudek',
     role: 'E-gaming Enthusiast',
     text: 'Portal społecznościowy dla graczy, który zbudowali, wytrzymuje ogromne obciążenia bez najmniejszego laga. To jest ta jakość.',
     stars: 5,
     img: '/img/clients/client-5.png',
-    accent: '#8b5cf6'
+    accent: '#8b5cf6',
   },
   {
-    id: "12",
+    id: '12',
     name: 'Magdalena Król',
     role: 'Marketing Lead',
     text: 'Praca z MDKCraft to czysta przyjemność. Profesjonalizm w każdym calu i terminowość, która na tym rynku jest rzadkością.',
     stars: 5,
     img: '/img/clients/client-6.png',
-    accent: '#ffffff'
+    accent: '#ffffff',
   },
   {
-    id: "13",
+    id: '13',
     name: 'Paweł Wiśniewski',
     role: 'Product Owner',
     text: 'MDKCraft dowozi projekty, które po prostu zarabiają. Nasz ROI wzrósł o 25% w miesiąc po rebrandingu i wdrożeniu nowej strony.',
     stars: 5,
     img: '/img/clients/client-1.png',
-    accent: '#8b5cf6'
+    accent: '#8b5cf6',
   },
   {
-    id: "14",
+    id: '14',
     name: 'Natalia Woźniak',
     role: 'Creative Director',
     text: 'Minimalizm z klasą. MDKCraft rozumie estetykę nowoczesnego internetu jak nikt inny. Polecam każdemu domowi mody.',
     stars: 5,
     img: '/img/clients/client-3.png',
-    accent: '#ffffff'
+    accent: '#ffffff',
   },
-];
+]
 
 const METRICS = [
   { label: 'Client Satisfaction', value: '98%', icon: TrendingUp },
   { label: 'Projects Completed', value: '150+', icon: Award },
   { label: 'Active Partnerships', value: '45+', icon: Users },
-];
+]
 
 // -----------------------------------------------------------------------------
 // SUB-COMPONENTS
@@ -172,44 +159,49 @@ const PixelGrid = () => (
       <rect width="100%" height="100%" fill="url(#pixel-pattern)" />
     </svg>
   </div>
-);
+)
 
-const FloatingCard = ({ opinion, index }: { opinion: typeof OPINIONS[0], index: number }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const rotateX = useSpring(useTransform(mouseY, [-1, 1], [20, -20]));
-  const rotateY = useSpring(useTransform(mouseX, [-1, 1], [-20, 20]));
+const FloatingCard = ({ opinion, index }: { opinion: (typeof OPINIONS)[0]; index: number }) => {
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const rotateX = useSpring(useTransform(mouseY, [-1, 1], [20, -20]))
+  const rotateY = useSpring(useTransform(mouseX, [-1, 1], [-20, 20]))
 
   const { scrollYProgress } = useScroll({
     target: cardRef,
-    offset: ["start end", "end start"]
-  });
+    offset: ['start end', 'end start'],
+  })
 
-  const translateY = useTransform(scrollYProgress, [0, 1], [50 * (index % 3 + 1), -50 * (index % 3 + 1)]);
+  const translateY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [50 * ((index % 3) + 1), -50 * ((index % 3) + 1)],
+  )
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = cardRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
-    mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
-  };
+    const rect = cardRef.current?.getBoundingClientRect()
+    if (!rect) return
+    mouseX.set((e.clientX - rect.left) / rect.width - 0.5)
+    mouseY.set((e.clientY - rect.top) / rect.height - 0.5)
+  }
 
   return (
     <motion.div
       ref={cardRef}
       style={{ y: translateY, rotateX, rotateY, transformStyle: 'preserve-3d' }}
       onMouseMove={handleMouseMove}
-      onMouseLeave={() => { mouseX.set(0); mouseY.set(0); }}
-      initial={{  scale: 0.9 }}
-      whileInView={{  scale: 1 }}
-    
-    
+      onMouseLeave={() => {
+        mouseX.set(0)
+        mouseY.set(0)
+      }}
+      initial={{ scale: 0.9 }}
+      whileInView={{ scale: 1 }}
       className="relative group p-8 rounded-4xl bg-white/5 border border-white/10 backdrop-blur-xl hover:bg-white/8 hover:border-violet-500/30 transition-all duration-500"
     >
       <Quote className="absolute -top-4 -right-4 size-20 text-white/3 group-hover:text-violet-500/10 transition-colors" />
-      
+
       <div className="relative z-10 space-y-6" style={{ transform: 'translateZ(30px)' }}>
         <div className="flex items-center gap-4">
           <Avatar className="h-14 w-14 border border-violet-500/30 p-1">
@@ -218,7 +210,9 @@ const FloatingCard = ({ opinion, index }: { opinion: typeof OPINIONS[0], index: 
           </Avatar>
           <div>
             <h4 className="text-white font-bold">{opinion.name}</h4>
-            <p className="text-violet-400 font-mono text-[10px] uppercase tracking-widest">{opinion.role}</p>
+            <p className="text-violet-400 font-mono text-[10px] uppercase tracking-widest">
+              {opinion.role}
+            </p>
           </div>
         </div>
 
@@ -228,37 +222,39 @@ const FloatingCard = ({ opinion, index }: { opinion: typeof OPINIONS[0], index: 
           ))}
         </div>
 
-        <p className="text-slate-400 text-lg leading-relaxed italic">
-          &quot;{opinion.text}&quot;
-        </p>
+        <p className="text-slate-400 text-lg leading-relaxed italic">&quot;{opinion.text}&quot;</p>
 
         <div className="pt-4 flex items-center gap-2">
           <div className="h-px w-8 bg-violet-500/50" />
-          <span className="text-[10px] font-mono text-slate-500 uppercase tracking-tighter">Verified Client Engagement</span>
+          <span className="text-[10px] font-mono text-slate-500 uppercase tracking-tighter">
+            Verified Client Engagement
+          </span>
         </div>
       </div>
     </motion.div>
-  );
-};
+  )
+}
 
 // -----------------------------------------------------------------------------
 // MAIN COMPONENT
 // -----------------------------------------------------------------------------
 
 const Opinions = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end end"]
-  });
+    offset: ['start start', 'end end'],
+  })
 
-  const half = Math.ceil(OPINIONS.length / 2);
+  const half = Math.ceil(OPINIONS.length / 2)
 
   return (
-    <section id='testimonials' ref={containerRef} className="relative bg-[#050505] min-h-[350vh] py-[15vh] overflow-hidden border-y border-violet-500/20">
+    <section
+      id="testimonials"
+      ref={containerRef}
+      className="relative bg-[#050505] min-h-[350vh] py-[15vh] overflow-hidden border-y border-violet-500/20"
+    >
       <PixelGrid />
-
-
 
       <div className="container mx-auto px-6 relative z-10">
         {/* --- HEADER --- */}
@@ -282,7 +278,9 @@ const Opinions = () => {
           <div className="h-1 w-40 bg-linear-to-r from-transparent via-violet-500 to-transparent mx-auto mb-12" />
 
           <p className="text-slate-400 text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed">
-            Nie budujemy tylko oprogramowania. Budujemy <span className="text-white font-semibold">trwałe fundamenty sukcesu</span> naszych partnerów biznesowych.
+            Nie budujemy tylko oprogramowania. Budujemy{' '}
+            <span className="text-white font-semibold">trwałe fundamenty sukcesu</span> naszych
+            partnerów biznesowych.
           </p>
         </div>
 
@@ -299,8 +297,12 @@ const Opinions = () => {
               <div className="w-16 h-16 rounded-2xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
                 <metric.icon className="text-violet-500" size={32} />
               </div>
-              <div className="text-5xl font-black text-white mb-2 tracking-tighter">{metric.value}</div>
-              <div className="text-xs text-slate-500 uppercase tracking-[0.3em] font-bold">{metric.label}</div>
+              <div className="text-5xl font-black text-white mb-2 tracking-tighter">
+                {metric.value}
+              </div>
+              <div className="text-xs text-slate-500 uppercase tracking-[0.3em] font-bold">
+                {metric.label}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -318,13 +320,9 @@ const Opinions = () => {
             ))}
           </div>
         </div>
-
-  
       </div>
-
-     
     </section>
-  );
-};
+  )
+}
 
-export default Opinions;
+export default Opinions

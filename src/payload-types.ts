@@ -77,6 +77,14 @@ export interface Config {
     categories: Category;
     media: Media;
     showcases: Showcase;
+    'user-behavior-events': UserBehaviorEvent;
+    'user-sessions': UserSession;
+    'page-views': PageView;
+    'heatmap-data': HeatmapDatum;
+    'project-views': ProjectView;
+    'conversion-funnels': ConversionFunnel;
+    'contact-inquiries': ContactInquiry;
+    'newsletter-subscribers': NewsletterSubscriber;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -111,6 +119,14 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     showcases: ShowcasesSelect<false> | ShowcasesSelect<true>;
+    'user-behavior-events': UserBehaviorEventsSelect<false> | UserBehaviorEventsSelect<true>;
+    'user-sessions': UserSessionsSelect<false> | UserSessionsSelect<true>;
+    'page-views': PageViewsSelect<false> | PageViewsSelect<true>;
+    'heatmap-data': HeatmapDataSelect<false> | HeatmapDataSelect<true>;
+    'project-views': ProjectViewsSelect<false> | ProjectViewsSelect<true>;
+    'conversion-funnels': ConversionFunnelsSelect<false> | ConversionFunnelsSelect<true>;
+    'contact-inquiries': ContactInquiriesSelect<false> | ContactInquiriesSelect<true>;
+    'newsletter-subscribers': NewsletterSubscribersSelect<false> | NewsletterSubscribersSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -1134,6 +1150,635 @@ export interface Showcase {
   createdAt: string;
 }
 /**
+ * Tracks all user interactions and behavior events
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-behavior-events".
+ */
+export interface UserBehaviorEvent {
+  id: string;
+  /**
+   * Links to user session for grouping events
+   */
+  sessionId: string;
+  eventType:
+    | 'click'
+    | 'hover'
+    | 'scroll'
+    | 'focus'
+    | 'blur'
+    | 'submit'
+    | 'navigation'
+    | 'page_load'
+    | 'page_exit'
+    | 'video_play'
+    | 'video_pause'
+    | 'download'
+    | 'error';
+  eventCategory: 'button' | 'link' | 'form' | 'project' | 'navigation' | 'media' | 'cta' | 'social' | 'other';
+  /**
+   * HTML element ID or unique identifier
+   */
+  elementId?: string | null;
+  /**
+   * Text content of the interacted element
+   */
+  elementText?: string | null;
+  /**
+   * X/Y coordinates of the element or click position
+   */
+  elementPosition?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Current page URL where event occurred
+   */
+  pageUrl: string;
+  /**
+   * Previous page URL
+   */
+  referrerUrl?: string | null;
+  timestamp: string;
+  /**
+   * Time in milliseconds user spent on page before this action
+   */
+  decisionTime?: number | null;
+  /**
+   * Time in milliseconds user hovered before clicking
+   */
+  hoverDuration?: number | null;
+  /**
+   * Percentage of page scrolled (0-100)
+   */
+  scrollDepth?: number | null;
+  /**
+   * Window dimensions {width, height}
+   */
+  viewportSize?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Flexible JSON field for additional context
+   */
+  metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Tracks complete user sessions from entry to exit
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-sessions".
+ */
+export interface UserSession {
+  id: string;
+  /**
+   * Unique session identifier (UUID)
+   */
+  sessionId: string;
+  /**
+   * Linked user if logged in
+   */
+  userId?: (string | null) | User;
+  /**
+   * Full user agent string
+   */
+  userAgent?: string | null;
+  /**
+   * User IP address (consider privacy implications)
+   */
+  ipAddress?: string | null;
+  deviceType?: ('desktop' | 'mobile' | 'tablet' | 'unknown') | null;
+  browserName?: string | null;
+  browserVersion?: string | null;
+  /**
+   * Operating system
+   */
+  os?: string | null;
+  /**
+   * Screen dimensions {width, height}
+   */
+  screenResolution?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Browser language preference
+   */
+  language?: string | null;
+  /**
+   * User timezone
+   */
+  timezone?: string | null;
+  /**
+   * First page visited in session
+   */
+  entryPage: string;
+  /**
+   * Last page visited before session ended
+   */
+  exitPage?: string | null;
+  /**
+   * UTM source, referrer domain, or direct
+   */
+  landingSource?: string | null;
+  utmParams?: {
+    source?: string | null;
+    medium?: string | null;
+    campaign?: string | null;
+    term?: string | null;
+    content?: string | null;
+  };
+  sessionStart: string;
+  sessionEnd?: string | null;
+  /**
+   * Total session duration in seconds
+   */
+  sessionDuration?: number | null;
+  /**
+   * Total number of pages viewed
+   */
+  pageViews?: number | null;
+  /**
+   * User left after viewing only one page
+   */
+  bounced?: boolean | null;
+  /**
+   * User completed a desired action (form, newsletter, etc.)
+   */
+  converted?: boolean | null;
+  /**
+   * Type of conversion if converted
+   */
+  conversionType?: ('contact_form' | 'newsletter' | 'project_inquiry' | 'download' | 'other') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Individual page view tracking with performance metrics
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-views".
+ */
+export interface PageView {
+  id: string;
+  /**
+   * Links to user session
+   */
+  sessionId: string;
+  /**
+   * Full URL of the page
+   */
+  pageUrl: string;
+  /**
+   * Page title from document.title
+   */
+  pageTitle?: string | null;
+  timestamp: string;
+  /**
+   * Duration spent on page in seconds
+   */
+  timeOnPage?: number | null;
+  /**
+   * Maximum scroll percentage reached (0-100)
+   */
+  scrollDepth?: number | null;
+  /**
+   * Whether this was the exit page for the session
+   */
+  exitPage?: boolean | null;
+  performanceMetrics?: {
+    /**
+     * Page load time in milliseconds
+     */
+    loadTime?: number | null;
+    /**
+     * Time to interactive (TTI) in milliseconds
+     */
+    timeToInteractive?: number | null;
+    /**
+     * LCP metric in milliseconds
+     */
+    largestContentfulPaint?: number | null;
+    /**
+     * FID metric in milliseconds
+     */
+    firstInputDelay?: number | null;
+    /**
+     * CLS metric (score)
+     */
+    cumulativeLayoutShift?: number | null;
+  };
+  /**
+   * Referrer URL within the site
+   */
+  previousPage?: string | null;
+  /**
+   * Next page visited (if any)
+   */
+  nextPage?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Aggregated click and scroll heatmap data for visualization
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "heatmap-data".
+ */
+export interface HeatmapDatum {
+  id: string;
+  /**
+   * Page identifier for heatmap
+   */
+  pageUrl: string;
+  /**
+   * CSS selector for the element
+   */
+  elementSelector?: string | null;
+  elementType?: ('button' | 'link' | 'image' | 'text' | 'form_field' | 'other') | null;
+  /**
+   * Total number of clicks on this element
+   */
+  clickCount?: number | null;
+  /**
+   * Total number of hovers
+   */
+  hoverCount?: number | null;
+  /**
+   * Average hover time in milliseconds
+   */
+  averageHoverDuration?: number | null;
+  /**
+   * Date for time-series analysis (aggregated by day)
+   */
+  date: string;
+  /**
+   * Click counts by device type
+   */
+  deviceBreakdown?: {
+    desktop?: number | null;
+    mobile?: number | null;
+    tablet?: number | null;
+  };
+  /**
+   * Individual click coordinates for heatmap visualization
+   */
+  clickPositions?:
+    | {
+        x: number;
+        y: number;
+        timestamp?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Distribution of scroll depths for this page
+   */
+  scrollDepthDistribution?: {
+    /**
+     * Users who scrolled 0-25%
+     */
+    depth_0_25?: number | null;
+    /**
+     * Users who scrolled 25-50%
+     */
+    depth_25_50?: number | null;
+    /**
+     * Users who scrolled 50-75%
+     */
+    depth_50_75?: number | null;
+    /**
+     * Users who scrolled 75-100%
+     */
+    depth_75_100?: number | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Specific tracking for project showcase interactions
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "project-views".
+ */
+export interface ProjectView {
+  id: string;
+  /**
+   * Links to user session
+   */
+  sessionId: string;
+  /**
+   * Link to the actual project if available in CMS
+   */
+  project?: (string | null) | Showcase;
+  /**
+   * Project identifier (for projects not in CMS)
+   */
+  projectId: string;
+  /**
+   * Project title (denormalized for quick access)
+   */
+  projectTitle: string;
+  projectCategory?:
+    | ('E-commerce' | 'FinTech' | 'Healthcare' | 'AI/ML' | 'Blockchain' | 'IoT' | 'SaaS' | 'Social')
+    | null;
+  viewTimestamp: string;
+  /**
+   * Time spent viewing project in seconds
+   */
+  viewDuration?: number | null;
+  interactionType?:
+    | ('homepage_click' | 'direct_link' | 'category_filter' | 'search_result' | 'related_project' | 'archive_browse')
+    | null;
+  /**
+   * Which sections of the project were viewed
+   */
+  sectionsViewed?:
+    | {
+        section:
+          | 'overview'
+          | 'challenge'
+          | 'solution'
+          | 'impact'
+          | 'tech_stack'
+          | 'team'
+          | 'milestones'
+          | 'gallery'
+          | 'testimonial';
+        /**
+         * Time spent in this section (seconds)
+         */
+        timeSpent?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Whether user clicked any call-to-action
+   */
+  ctaClicked?: boolean | null;
+  /**
+   * Which CTA was clicked
+   */
+  ctaType?: ('live_link' | 'github' | 'case_study' | 'contact' | 'download') | null;
+  /**
+   * Previous project viewed (if any)
+   */
+  previousProject?: string | null;
+  /**
+   * Next project viewed (if any)
+   */
+  nextProject?: string | null;
+  /**
+   * Which technologies user clicked for more info
+   */
+  techStackClicked?:
+    | {
+        technology?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Track conversion funnel steps and drop-off rates
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "conversion-funnels".
+ */
+export interface ConversionFunnel {
+  id: string;
+  funnelName:
+    | 'contact_form'
+    | 'project_to_inquiry'
+    | 'newsletter_signup'
+    | 'homepage_to_contact'
+    | 'archive_to_inquiry'
+    | 'blog_to_newsletter';
+  /**
+   * Links to user session
+   */
+  sessionId: string;
+  steps?:
+    | {
+        stepName: string;
+        /**
+         * URL or page identifier for this step
+         */
+        stepUrl?: string | null;
+        stepOrder: number;
+        /**
+         * What user needs to do at this step
+         */
+        requiredAction?: string | null;
+        completed?: boolean | null;
+        completedAt?: string | null;
+        /**
+         * Time spent on this step in seconds
+         */
+        timeSpent?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Current step number (where user is in funnel)
+   */
+  currentStep: number;
+  /**
+   * Whether the entire funnel was completed
+   */
+  completed?: boolean | null;
+  /**
+   * Step number where user abandoned the funnel
+   */
+  droppedOffAt?: number | null;
+  startedAt: string;
+  completedAt?: string | null;
+  /**
+   * Total time to complete funnel in seconds
+   */
+  totalDuration?: number | null;
+  /**
+   * How user entered this funnel
+   */
+  entrySource?: string | null;
+  /**
+   * Reason for abandoning the funnel
+   */
+  dropoffReason?: ('navigation_away' | 'timeout' | 'form_error' | 'load_issue' | 'unknown') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Contact form submissions with tracking context
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-inquiries".
+ */
+export interface ContactInquiry {
+  id: string;
+  /**
+   * Links to user session
+   */
+  sessionId?: string | null;
+  name: string;
+  email: string;
+  phone?: string | null;
+  company?: string | null;
+  projectType:
+    | 'ecommerce'
+    | 'ai_ml'
+    | 'blockchain'
+    | 'custom_app'
+    | 'mobile'
+    | 'design'
+    | 'consulting'
+    | 'maintenance'
+    | 'other';
+  budget?: ('under_10k' | '10k_50k' | '50k_100k' | '100k_250k' | 'over_250k' | 'not_sure') | null;
+  timeline?: ('urgent' | '1_3_months' | '3_6_months' | '6_plus_months' | 'flexible') | null;
+  message: string;
+  submittedAt: string;
+  /**
+   * Lead status in the sales pipeline
+   */
+  status: 'new' | 'contacted' | 'qualified' | 'proposal_sent' | 'negotiating' | 'converted' | 'rejected' | 'spam';
+  /**
+   * Page where they submitted the form
+   */
+  source?: string | null;
+  /**
+   * If contacted from a specific project page
+   */
+  referringProject?: (string | null) | Showcase;
+  /**
+   * Time spent filling out the form in seconds
+   */
+  formInteractionTime?: number | null;
+  /**
+   * For spam prevention and rate limiting
+   */
+  ipAddress?: string | null;
+  /**
+   * Internal notes about this inquiry
+   */
+  notes?: string | null;
+  /**
+   * Sales rep or team member assigned to this lead
+   */
+  assignedTo?: (string | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Newsletter subscription management with preferences
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-subscribers".
+ */
+export interface NewsletterSubscriber {
+  id: string;
+  email: string;
+  name?: string | null;
+  subscribedAt: string;
+  status: 'pending' | 'active' | 'unsubscribed' | 'bounced' | 'complained';
+  /**
+   * Where they subscribed from
+   */
+  source?:
+    | ('homepage_footer' | 'blog' | 'project_page' | 'popup' | 'contact_form' | 'landing_page' | 'manual_import')
+    | null;
+  /**
+   * Subscriber segments for targeted campaigns
+   */
+  tags?:
+    | {
+        tag?: ('client' | 'prospect' | 'partner' | 'developer' | 'designer' | 'entrepreneur' | 'student') | null;
+        id?: string | null;
+      }[]
+    | null;
+  preferences?: {
+    frequency?: ('daily' | 'weekly' | 'biweekly' | 'monthly' | 'major_updates') | null;
+    interests?:
+      | {
+          interest?:
+            | (
+                | 'web_dev'
+                | 'ai_ml'
+                | 'blockchain'
+                | 'ecommerce'
+                | 'design'
+                | 'mobile'
+                | 'devops'
+                | 'case_studies'
+                | 'news'
+              )
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+    language?: ('pl' | 'en') | null;
+  };
+  /**
+   * When they unsubscribed
+   */
+  unsubscribedAt?: string | null;
+  unsubscribeReason?: ('too_frequent' | 'not_relevant' | 'never_subscribed' | 'other') | null;
+  /**
+   * Email confirmation verified
+   */
+  doubleOptInConfirmed?: boolean | null;
+  confirmationSentAt?: string | null;
+  /**
+   * Unique token for email confirmation
+   */
+  confirmationToken?: string | null;
+  /**
+   * Last newsletter sent to this subscriber
+   */
+  lastEmailSent?: string | null;
+  /**
+   * Total emails sent to this subscriber
+   */
+  emailsSent?: number | null;
+  /**
+   * Total emails opened
+   */
+  emailsOpened?: number | null;
+  /**
+   * Total links clicked in emails
+   */
+  linksClicked?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
@@ -1193,6 +1838,38 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'showcases';
         value: string | Showcase;
+      } | null)
+    | ({
+        relationTo: 'user-behavior-events';
+        value: string | UserBehaviorEvent;
+      } | null)
+    | ({
+        relationTo: 'user-sessions';
+        value: string | UserSession;
+      } | null)
+    | ({
+        relationTo: 'page-views';
+        value: string | PageView;
+      } | null)
+    | ({
+        relationTo: 'heatmap-data';
+        value: string | HeatmapDatum;
+      } | null)
+    | ({
+        relationTo: 'project-views';
+        value: string | ProjectView;
+      } | null)
+    | ({
+        relationTo: 'conversion-funnels';
+        value: string | ConversionFunnel;
+      } | null)
+    | ({
+        relationTo: 'contact-inquiries';
+        value: string | ContactInquiry;
+      } | null)
+    | ({
+        relationTo: 'newsletter-subscribers';
+        value: string | NewsletterSubscriber;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1612,6 +2289,258 @@ export interface ShowcasesSelect<T extends boolean = true> {
       };
   generateSlug?: T;
   slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-behavior-events_select".
+ */
+export interface UserBehaviorEventsSelect<T extends boolean = true> {
+  sessionId?: T;
+  eventType?: T;
+  eventCategory?: T;
+  elementId?: T;
+  elementText?: T;
+  elementPosition?: T;
+  pageUrl?: T;
+  referrerUrl?: T;
+  timestamp?: T;
+  decisionTime?: T;
+  hoverDuration?: T;
+  scrollDepth?: T;
+  viewportSize?: T;
+  metadata?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-sessions_select".
+ */
+export interface UserSessionsSelect<T extends boolean = true> {
+  sessionId?: T;
+  userId?: T;
+  userAgent?: T;
+  ipAddress?: T;
+  deviceType?: T;
+  browserName?: T;
+  browserVersion?: T;
+  os?: T;
+  screenResolution?: T;
+  language?: T;
+  timezone?: T;
+  entryPage?: T;
+  exitPage?: T;
+  landingSource?: T;
+  utmParams?:
+    | T
+    | {
+        source?: T;
+        medium?: T;
+        campaign?: T;
+        term?: T;
+        content?: T;
+      };
+  sessionStart?: T;
+  sessionEnd?: T;
+  sessionDuration?: T;
+  pageViews?: T;
+  bounced?: T;
+  converted?: T;
+  conversionType?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-views_select".
+ */
+export interface PageViewsSelect<T extends boolean = true> {
+  sessionId?: T;
+  pageUrl?: T;
+  pageTitle?: T;
+  timestamp?: T;
+  timeOnPage?: T;
+  scrollDepth?: T;
+  exitPage?: T;
+  performanceMetrics?:
+    | T
+    | {
+        loadTime?: T;
+        timeToInteractive?: T;
+        largestContentfulPaint?: T;
+        firstInputDelay?: T;
+        cumulativeLayoutShift?: T;
+      };
+  previousPage?: T;
+  nextPage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "heatmap-data_select".
+ */
+export interface HeatmapDataSelect<T extends boolean = true> {
+  pageUrl?: T;
+  elementSelector?: T;
+  elementType?: T;
+  clickCount?: T;
+  hoverCount?: T;
+  averageHoverDuration?: T;
+  date?: T;
+  deviceBreakdown?:
+    | T
+    | {
+        desktop?: T;
+        mobile?: T;
+        tablet?: T;
+      };
+  clickPositions?:
+    | T
+    | {
+        x?: T;
+        y?: T;
+        timestamp?: T;
+        id?: T;
+      };
+  scrollDepthDistribution?:
+    | T
+    | {
+        depth_0_25?: T;
+        depth_25_50?: T;
+        depth_50_75?: T;
+        depth_75_100?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "project-views_select".
+ */
+export interface ProjectViewsSelect<T extends boolean = true> {
+  sessionId?: T;
+  project?: T;
+  projectId?: T;
+  projectTitle?: T;
+  projectCategory?: T;
+  viewTimestamp?: T;
+  viewDuration?: T;
+  interactionType?: T;
+  sectionsViewed?:
+    | T
+    | {
+        section?: T;
+        timeSpent?: T;
+        id?: T;
+      };
+  ctaClicked?: T;
+  ctaType?: T;
+  previousProject?: T;
+  nextProject?: T;
+  techStackClicked?:
+    | T
+    | {
+        technology?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "conversion-funnels_select".
+ */
+export interface ConversionFunnelsSelect<T extends boolean = true> {
+  funnelName?: T;
+  sessionId?: T;
+  steps?:
+    | T
+    | {
+        stepName?: T;
+        stepUrl?: T;
+        stepOrder?: T;
+        requiredAction?: T;
+        completed?: T;
+        completedAt?: T;
+        timeSpent?: T;
+        id?: T;
+      };
+  currentStep?: T;
+  completed?: T;
+  droppedOffAt?: T;
+  startedAt?: T;
+  completedAt?: T;
+  totalDuration?: T;
+  entrySource?: T;
+  dropoffReason?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-inquiries_select".
+ */
+export interface ContactInquiriesSelect<T extends boolean = true> {
+  sessionId?: T;
+  name?: T;
+  email?: T;
+  phone?: T;
+  company?: T;
+  projectType?: T;
+  budget?: T;
+  timeline?: T;
+  message?: T;
+  submittedAt?: T;
+  status?: T;
+  source?: T;
+  referringProject?: T;
+  formInteractionTime?: T;
+  ipAddress?: T;
+  notes?: T;
+  assignedTo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-subscribers_select".
+ */
+export interface NewsletterSubscribersSelect<T extends boolean = true> {
+  email?: T;
+  name?: T;
+  subscribedAt?: T;
+  status?: T;
+  source?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  preferences?:
+    | T
+    | {
+        frequency?: T;
+        interests?:
+          | T
+          | {
+              interest?: T;
+              id?: T;
+            };
+        language?: T;
+      };
+  unsubscribedAt?: T;
+  unsubscribeReason?: T;
+  doubleOptInConfirmed?: T;
+  confirmationSentAt?: T;
+  confirmationToken?: T;
+  lastEmailSent?: T;
+  emailsSent?: T;
+  emailsOpened?: T;
+  linksClicked?: T;
   updatedAt?: T;
   createdAt?: T;
 }
