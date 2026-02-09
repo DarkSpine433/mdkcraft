@@ -29,22 +29,13 @@ interface ImageChallengeResponse {
 }
 
 interface VerificationRequest {
-  // Behavioral biometrics
   trajectory?: TrajectoryPoint[]
   deviceData: DeviceFingerprint
-
-  // Image challenge
   imageChallenge?: ImageChallengeResponse
   challengeId?: string
-
-  // Math challenge
   mathAnswer?: number
   mathChallengeId?: string
-
-  // Honeypot fields
   honeypot?: string
-
-  // Timing analysis
   pageLoadTime: number
   interactionStartTime: number
 }
@@ -57,10 +48,18 @@ interface ChallengeData {
   category?: string
 }
 
-// In-memory storage for challenges (w produkcji użyj Redis)
-const activeChallenges = new Map<string, ChallengeData>()
+interface StoredToken {
+  token: string
+  verified: boolean
+  trustScore: number
+  createdAt: number
+  expiresAt: number
+  used: boolean
+}
 
-// Czyszczenie starych wyzwań (starszych niż 5 minut)
+const activeChallenges = new Map<string, ChallengeData>()
+const validTokens = new Map<string, StoredToken>()
+
 setInterval(() => {
   const now = Date.now()
   for (const [id, data] of activeChallenges.entries()) {
@@ -68,11 +67,13 @@ setInterval(() => {
       activeChallenges.delete(id)
     }
   }
+  for (const [token, data] of validTokens.entries()) {
+    if (now > data.expiresAt) {
+      validTokens.delete(token)
+    }
+  }
 }, 60 * 1000)
 
-/**
- * Generowanie wyzwania obrazkowego
- */
 export async function generateImageChallenge() {
   const categories = [
     { name: 'traffic_lights', label: 'Światła drogowe', imageCount: 9 },
@@ -85,7 +86,6 @@ export async function generateImageChallenge() {
   const selectedCategory = categories[Math.floor(Math.random() * categories.length)]
   const challengeId = crypto.randomBytes(16).toString('hex')
 
-  // Losowo wybieramy które obrazki zawierają obiekt (2-4 obrazki)
   const correctCount = Math.floor(Math.random() * 3) + 2
   const correctIndices: number[] = []
 
@@ -96,7 +96,6 @@ export async function generateImageChallenge() {
     }
   }
 
-  // Zapisujemy wyzwanie
   activeChallenges.set(challengeId, {
     id: challengeId,
     type: 'image',
@@ -110,7 +109,6 @@ export async function generateImageChallenge() {
     category: selectedCategory.name,
     label: selectedCategory.label,
     imageCount: selectedCategory.imageCount,
-    // W prawdziwej implementacji zwróciłbyś URL-e do obrazków
     images: Array.from({ length: selectedCategory.imageCount }, (_, i) => ({
       id: i,
       url: `/api/captcha/images/${selectedCategory.name}/${i}`,
@@ -119,9 +117,6 @@ export async function generateImageChallenge() {
   }
 }
 
-/**
- * Generowanie wyzwania matematycznego
- */
 export async function generateMathChallenge() {
   const operations = [
     { a: Math.floor(Math.random() * 10) + 1, b: Math.floor(Math.random() * 10) + 1, op: '+' },
@@ -164,14 +159,7 @@ export async function generateMathChallenge() {
   }
 }
 
-/**
- * Zaawansowana analiza trajektorii ruchu myszy
- */
-function analyzeTrajectory(trajectory: TrajectoryPoint[]): {
-  isHuman: boolean
-  confidence: number
-  reasons: string[]
-} {
+function analyzeTrajectory(trajectory: TrajectoryPoint[]) {
   const reasons: string[] = []
   let confidence = 100
 
@@ -181,7 +169,6 @@ function analyzeTrajectory(trajectory: TrajectoryPoint[]): {
     return { isHuman: false, confidence, reasons }
   }
 
-  // 1. Analiza wariancji prędkości (ludzie nie poruszają się ze stałą prędkością)
   const velocities: number[] = []
   for (let i = 1; i < trajectory.length; i++) {
     const dx = trajectory[i].x - trajectory[i - 1].x
@@ -196,60 +183,8 @@ function analyzeTrajectory(trajectory: TrajectoryPoint[]): {
     velocities.reduce((sum, v) => sum + Math.pow(v - avgVelocity, 2), 0) / velocities.length
 
   if (velocityVariance < 0.01) {
-    reasons.push('Ruch zbyt regularny (brak ludzkiej wariancji)')
+    reasons.push('Ruch zbyt regularny')
     confidence -= 30
-  }
-
-  // 2. Analiza krzywizny (ludzie robią płynne łuki, nie proste linie)
-  let totalCurvature = 0
-  for (let i = 2; i < trajectory.length; i++) {
-    const v1x = trajectory[i - 1].x - trajectory[i - 2].x
-    const v1y = trajectory[i - 1].y - trajectory[i - 2].y
-    const v2x = trajectory[i].x - trajectory[i - 1].x
-    const v2y = trajectory[i].y - trajectory[i - 1].y
-
-    const dotProduct = v1x * v2x + v1y * v2y
-    const mag1 = Math.sqrt(v1x * v1x + v1y * v1y)
-    const mag2 = Math.sqrt(v2x * v2x + v2y * v2y)
-
-    if (mag1 > 0 && mag2 > 0) {
-      const angle = Math.acos(Math.max(-1, Math.min(1, dotProduct / (mag1 * mag2))))
-      totalCurvature += angle
-    }
-  }
-
-  if (totalCurvature < 0.1) {
-    reasons.push('Trajektoria zbyt liniowa')
-    confidence -= 25
-  }
-
-  // 3. Analiza mikro-ruchów (drobne korekty charakterystyczne dla ludzi)
-  let microMovements = 0
-  for (let i = 1; i < trajectory.length; i++) {
-    const distance = Math.sqrt(
-      Math.pow(trajectory[i].x - trajectory[i - 1].x, 2) +
-        Math.pow(trajectory[i].y - trajectory[i - 1].y, 2),
-    )
-    if (distance < 2 && distance > 0) {
-      microMovements++
-    }
-  }
-
-  if (microMovements < trajectory.length * 0.1) {
-    reasons.push('Brak mikro-ruchów charakterystycznych dla człowieka')
-    confidence -= 20
-  }
-
-  // 4. Analiza pressure (jeśli dostępne)
-  if (trajectory.some((p) => p.pressure !== undefined)) {
-    const pressures = trajectory.filter((p) => p.pressure !== undefined).map((p) => p.pressure!)
-    const pressureVariance =
-      pressures.reduce((sum, p) => sum + Math.pow(p - 0.5, 2), 0) / pressures.length
-
-    if (pressureVariance < 0.01) {
-      reasons.push('Stały nacisk (charakterystyczne dla botów)')
-      confidence -= 15
-    }
   }
 
   return {
@@ -259,53 +194,18 @@ function analyzeTrajectory(trajectory: TrajectoryPoint[]): {
   }
 }
 
-/**
- * Analiza fingerprinta urządzenia
- */
-function analyzeDeviceFingerprint(device: DeviceFingerprint): {
-  isSuspicious: boolean
-  score: number
-  flags: string[]
-} {
+function analyzeDeviceFingerprint(device: DeviceFingerprint) {
   const flags: string[] = []
   let suspicionScore = 0
 
-  // 1. Wykrywanie headless browsers
   if (device.webdriver) {
-    flags.push('WebDriver wykryty (Selenium/Puppeteer)')
+    flags.push('WebDriver wykryty')
     suspicionScore += 50
   }
 
-  // 2. Analiza pluginów (headless browsers często mają 0 pluginów)
   if (device.plugins === 0 && !device.userAgent.includes('Mobile')) {
     flags.push('Brak pluginów przeglądarki')
     suspicionScore += 20
-  }
-
-  // 3. Analiza touch points (niespójność z typem urządzenia)
-  const isMobile = /Mobile|Android|iPhone|iPad/.test(device.userAgent)
-  if (isMobile && device.touchPoints === 0) {
-    flags.push('Urządzenie mobilne bez wsparcia dotyku')
-    suspicionScore += 25
-  }
-
-  // 4. Sprawdzanie cookies
-  if (!device.cookieEnabled) {
-    flags.push('Cookies wyłączone')
-    suspicionScore += 15
-  }
-
-  // 5. Analiza języków (boty często mają nietypowe ustawienia)
-  if (device.languages.length === 0) {
-    flags.push('Brak języków przeglądarki')
-    suspicionScore += 20
-  }
-
-  // 6. Analiza rozdzielczości ekranu
-  const [width, height] = device.screenRes.split('x').map(Number)
-  if (width < 800 || height < 600 || width > 7680 || height > 4320) {
-    flags.push('Nietypowa rozdzielczość ekranu')
-    suspicionScore += 10
   }
 
   return {
@@ -315,14 +215,7 @@ function analyzeDeviceFingerprint(device: DeviceFingerprint): {
   }
 }
 
-/**
- * Analiza wzorca kliknięć w wyzwaniu obrazkowym
- */
-function analyzeClickPattern(clickPattern: { index: number; timestamp: number }[]): {
-  isHuman: boolean
-  confidence: number
-  reasons: string[]
-} {
+function analyzeClickPattern(clickPattern: { index: number; timestamp: number }[]) {
   const reasons: string[] = []
   let confidence = 100
 
@@ -330,42 +223,20 @@ function analyzeClickPattern(clickPattern: { index: number; timestamp: number }[
     return { isHuman: false, confidence: 0, reasons: ['Brak kliknięć'] }
   }
 
-  // 1. Analiza czasu między kliknięciami
   const intervals: number[] = []
   for (let i = 1; i < clickPattern.length; i++) {
     intervals.push(clickPattern[i].timestamp - clickPattern[i - 1].timestamp)
   }
 
-  // Boty często klikają w regularnych odstępach
   if (intervals.length > 1) {
     const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length
     const intervalVariance =
       intervals.reduce((sum, int) => sum + Math.pow(int - avgInterval, 2), 0) / intervals.length
 
     if (intervalVariance < 100) {
-      reasons.push('Zbyt regularne odstępy między kliknięciami')
+      reasons.push('Zbyt regularne odstępy')
       confidence -= 30
     }
-  }
-
-  // 2. Zbyt szybkie klikanie (boty mogą klikać natychmiast)
-  const tooFastClicks = intervals.filter((int) => int < 200).length
-  if (tooFastClicks > intervals.length * 0.5) {
-    reasons.push('Nienaturalnie szybkie klikanie')
-    confidence -= 25
-  }
-
-  // 3. Analiza kolejności (boty często klikają po kolei)
-  let sequential = 0
-  for (let i = 1; i < clickPattern.length; i++) {
-    if (clickPattern[i].index === clickPattern[i - 1].index + 1) {
-      sequential++
-    }
-  }
-
-  if (sequential === clickPattern.length - 1 && clickPattern.length > 2) {
-    reasons.push('Sekwencyjne klikanie (charakterystyczne dla botów)')
-    confidence -= 35
   }
 
   return {
@@ -375,43 +246,30 @@ function analyzeClickPattern(clickPattern: { index: number; timestamp: number }[
   }
 }
 
-/**
- * Główna funkcja weryfikacji
- */
 export async function verifyCaptcha(data: VerificationRequest) {
   try {
     const securityChecks: string[] = []
     let trustScore = 100
 
-    // 1. Sprawdzenie honeypot (ukryte pole, które boty wypełniają)
     if (data.honeypot && data.honeypot.length > 0) {
       return {
         verified: false,
         error: 'Wykryto podejrzaną aktywność',
-        details: { reason: 'honeypot_filled' },
       }
     }
 
-    // 2. Analiza czasu interakcji
     const interactionTime = Date.now() - data.interactionStartTime
     if (interactionTime < 2000) {
       securityChecks.push('Zbyt szybkie wypełnienie')
       trustScore -= 30
     }
-    if (interactionTime > 600000) {
-      // 10 minut
-      securityChecks.push('Zbyt długi czas wypełnienia')
-      trustScore -= 10
-    }
 
-    // 3. Analiza fingerprinta urządzenia
     const deviceAnalysis = analyzeDeviceFingerprint(data.deviceData)
     if (deviceAnalysis.isSuspicious) {
       securityChecks.push(...deviceAnalysis.flags)
       trustScore -= deviceAnalysis.score
     }
 
-    // 4. Weryfikacja wyzwania obrazkowego
     if (data.imageChallenge && data.challengeId) {
       const challenge = activeChallenges.get(data.challengeId)
 
@@ -422,64 +280,30 @@ export async function verifyCaptcha(data: VerificationRequest) {
         }
       }
 
-      if (challenge.type !== 'image') {
-        return {
-          verified: false,
-          error: 'Nieprawidłowy typ wyzwania',
-        }
-      }
-
-      // Sprawdzenie poprawności odpowiedzi
       const correctAnswer = challenge.correctAnswer as number[]
       const userAnswer = data.imageChallenge.selectedImages.sort()
 
-      const isCorrect = JSON.stringify(correctAnswer) === JSON.stringify(userAnswer)
-
-      if (!isCorrect) {
+      if (JSON.stringify(correctAnswer) !== JSON.stringify(userAnswer)) {
         activeChallenges.delete(data.challengeId)
         return {
           verified: false,
           error: 'Nieprawidłowa odpowiedź',
-          details: { type: 'wrong_answer' },
         }
       }
 
-      // Analiza wzorca kliknięć
       const clickAnalysis = analyzeClickPattern(data.imageChallenge.clickPattern)
       if (!clickAnalysis.isHuman) {
-        securityChecks.push(...clickAnalysis.reasons)
         trustScore -= 100 - clickAnalysis.confidence
-      }
-
-      // Analiza czasu spędzonego na wyzwaniu
-      if (data.imageChallenge.timeSpent < 1000) {
-        securityChecks.push('Zbyt szybkie rozwiązanie wyzwania')
-        trustScore -= 25
       }
 
       activeChallenges.delete(data.challengeId)
     }
 
-    // 5. Weryfikacja wyzwania matematycznego
     if (data.mathAnswer !== undefined && data.mathChallengeId) {
       const challenge = activeChallenges.get(data.mathChallengeId)
 
-      if (!challenge) {
-        return {
-          verified: false,
-          error: 'Wyzwanie wygasło lub nie istnieje',
-        }
-      }
-
-      if (challenge.type !== 'math') {
-        return {
-          verified: false,
-          error: 'Nieprawidłowy typ wyzwania',
-        }
-      }
-
-      if (challenge.correctAnswer !== data.mathAnswer) {
-        activeChallenges.delete(data.mathChallengeId)
+      if (!challenge || challenge.correctAnswer !== data.mathAnswer) {
+        activeChallenges.delete(data.mathChallengeId!)
         return {
           verified: false,
           error: 'Nieprawidłowa odpowiedź matematyczna',
@@ -489,45 +313,44 @@ export async function verifyCaptcha(data: VerificationRequest) {
       activeChallenges.delete(data.mathChallengeId)
     }
 
-    // 6. Analiza trajektorii ruchu (dla slider CAPTCHA)
     if (data.trajectory && data.trajectory.length > 0) {
       const trajectoryAnalysis = analyzeTrajectory(data.trajectory)
       if (!trajectoryAnalysis.isHuman) {
-        securityChecks.push(...trajectoryAnalysis.reasons)
         trustScore -= 100 - trajectoryAnalysis.confidence
       }
     }
 
-    // Decyzja finalna
     if (trustScore < 40) {
       return {
         verified: false,
-        error: 'Weryfikacja nieudana',
-        details: {
-          trustScore,
-          reasons: securityChecks,
-        },
+        error: 'Weryfikacja nieudana - zbyt niski wynik zaufania',
       }
     }
 
-    // Generowanie bezpiecznego tokenu
     const token = crypto
       .createHash('sha512')
       .update(`${JSON.stringify(data)}-${Date.now()}-${crypto.randomBytes(32).toString('hex')}`)
       .digest('hex')
 
+    const expiresAt = Date.now() + 10 * 60 * 1000
+
+    validTokens.set(token, {
+      token,
+      verified: true,
+      trustScore,
+      createdAt: Date.now(),
+      expiresAt,
+      used: false,
+    })
+
     return {
       verified: true,
       token,
-      expiresAt: Date.now() + 10 * 60 * 1000, // 10 minut
+      expiresAt,
       trustScore,
-      details: {
-        checks: securityChecks.length,
-        warnings: securityChecks,
-      },
     }
   } catch (error) {
-    console.error('Advanced CAPTCHA error:', error)
+    console.error('CAPTCHA error:', error)
     return {
       verified: false,
       error: 'Błąd systemowy weryfikacji',
@@ -535,11 +358,48 @@ export async function verifyCaptcha(data: VerificationRequest) {
   }
 }
 
-/**
- * Pomocnicza funkcja do walidacji tokenu
- */
-export async function validateToken(token: string): Promise<boolean> {
-  // W produkcji: sprawdź token w bazie/Redis
-  // Tutaj: prosty przykład
-  return token.length === 128 // SHA-512 hex ma 128 znaków
+export async function validateCaptchaToken(token: string) {
+  try {
+    const tokenData = validTokens.get(token)
+
+    if (!tokenData) {
+      return {
+        valid: false,
+        error: 'Nieprawidłowy token CAPTCHA',
+      }
+    }
+
+    if (Date.now() > tokenData.expiresAt) {
+      validTokens.delete(token)
+      return {
+        valid: false,
+        error: 'Token CAPTCHA wygasł',
+      }
+    }
+
+    if (tokenData.used) {
+      return {
+        valid: false,
+        error: 'Token CAPTCHA został już użyty',
+      }
+    }
+
+    tokenData.used = true
+    validTokens.set(token, tokenData)
+
+    setTimeout(() => {
+      validTokens.delete(token)
+    }, 60 * 1000)
+
+    return {
+      valid: true,
+      trustScore: tokenData.trustScore,
+    }
+  } catch (error) {
+    console.error('Token validation error:', error)
+    return {
+      valid: false,
+      error: 'Błąd walidacji tokenu',
+    }
+  }
 }

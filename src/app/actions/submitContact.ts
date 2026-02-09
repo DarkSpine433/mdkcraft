@@ -1,29 +1,16 @@
 'use server'
 
 import config from '@/payload.config'
+import { ContactSubmission } from '@/types/captcha'
 import { getPayload } from 'payload'
-
-interface ContactSubmission {
-  name: string
-  email: string
-  phone?: string
-  company?: string
-  projectType: string
-  budget?: string
-  timeline?: string
-  message: string
-  sessionId?: string
-  captchaToken: string
-  formInteractionTime?: number
-  ipAddress?: string
-}
+import { validateCaptchaToken } from './verifyCaptcha'
 
 /**
  * Server Action - Submit Contact Form
  */
 export async function submitContactForm(data: ContactSubmission) {
   try {
-    // Validate required fields
+    // 1. Validate required fields
     if (!data.name || !data.email || !data.projectType || !data.message) {
       return {
         success: false,
@@ -31,7 +18,7 @@ export async function submitContactForm(data: ContactSubmission) {
       }
     }
 
-    // Verify CAPTCHA token
+    // 2. Verify CAPTCHA token exists
     if (!data.captchaToken) {
       return {
         success: false,
@@ -39,9 +26,24 @@ export async function submitContactForm(data: ContactSubmission) {
       }
     }
 
+    // 3. Validate CAPTCHA token on server
+    const captchaValidation = await validateCaptchaToken(data.captchaToken)
+
+    if (!captchaValidation.valid) {
+      console.error('CAPTCHA validation failed:', captchaValidation.error)
+      return {
+        success: false,
+        error: captchaValidation.error || 'Nieprawidłowy token CAPTCHA. Spróbuj ponownie.',
+      }
+    }
+
+    // Log trust score for analytics
+    console.log('CAPTCHA validated with trust score:', captchaValidation.trustScore)
+
+    // 4. Get Payload instance
     const payload = await getPayload({ config })
 
-    // Check for duplicate submissions (same email within last 5 minutes)
+    // 5. Check for duplicate submissions (same email within last 5 minutes)
     const recentSubmissions = await payload.find({
       collection: 'contact-inquiries',
       where: {
@@ -68,15 +70,15 @@ export async function submitContactForm(data: ContactSubmission) {
       }
     }
 
-    // Create contact inquiry
+    // 6. Create contact inquiry
     await payload.create({
       collection: 'contact-inquiries',
       data: {
-        sessionId: data.sessionId,
+        sessionId: data.sessionId || 'unknown',
         name: data.name,
         email: data.email,
-        phone: data.phone,
-        company: data.company,
+        phone: data.phone || '',
+        company: data.company || '',
         projectType: data.projectType as
           | 'ecommerce'
           | 'ai_ml'
@@ -87,7 +89,7 @@ export async function submitContactForm(data: ContactSubmission) {
           | 'consulting'
           | 'maintenance'
           | 'other',
-        budget: data.budget as
+        budget: (data.budget || undefined) as
           | 'under_10k'
           | '10k_50k'
           | '50k_100k'
@@ -95,7 +97,7 @@ export async function submitContactForm(data: ContactSubmission) {
           | 'over_250k'
           | 'not_sure'
           | undefined,
-        timeline: data.timeline as
+        timeline: (data.timeline || undefined) as
           | 'urgent'
           | '1_3_months'
           | '3_6_months'
@@ -106,7 +108,7 @@ export async function submitContactForm(data: ContactSubmission) {
         submittedAt: new Date().toISOString(),
         status: 'new',
         source: 'contact_form',
-        formInteractionTime: data.formInteractionTime,
+        formInteractionTime: data.formInteractionTime || 0,
         ipAddress: data.ipAddress || 'unknown',
       },
     })
@@ -119,7 +121,7 @@ export async function submitContactForm(data: ContactSubmission) {
     console.error('Contact form submission error:', error)
     return {
       success: false,
-      error: 'Błąd podczas wysyłania wiadomości',
+      error: 'Błąd podczas wysyłania wiadomości. Spróbuj ponownie.',
     }
   }
 }

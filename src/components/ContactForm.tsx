@@ -1,5 +1,6 @@
 'use client'
 
+import { submitContactForm } from '@/app/actions/submitContact'
 import {
   AlertCircle,
   Building2,
@@ -89,27 +90,21 @@ export const ContactForm = () => {
     const formInteractionTime = Math.floor((Date.now() - formStartTime) / 1000)
 
     try {
-      const response = await fetch('/api/contact/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          captchaToken,
-          trustScore,
-          formInteractionTime,
-        }),
+      // Użyj server action zamiast API endpoint
+      const result = await submitContactForm({
+        ...formData,
+        captchaToken: captchaToken || '',
+        formInteractionTime,
       })
 
-      const data = await response.json()
-
-      if (response.ok) {
+      if (result.success) {
         setSubmitSuccess(true)
 
         // Reset form
         setFormData(initialFormData)
         resetCaptcha()
       } else {
-        throw new Error(data.error || 'Submission failed')
+        throw new Error(result.error || 'Submission failed')
       }
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : 'Błąd wysyłania formularza')

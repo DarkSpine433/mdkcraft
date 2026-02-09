@@ -177,7 +177,7 @@ export const AdvancedCaptcha = ({
       x: pos.clientX,
       y: pos.clientY,
       t: Date.now(),
-      pressure,
+      pressure: pressure as number,
     })
   }, [])
 

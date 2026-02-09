@@ -1,82 +1,47 @@
 'use server'
 
 import config from '@/payload.config'
+import { AnalyticsEvent, SessionData } from '@/types/Analytics'
 import { getPayload } from 'payload'
-
-interface AnalyticsEvent {
-  sessionId: string
-  events: Array<{
-    eventType: string
-    eventCategory: string
-    elementId?: string
-    elementText?: string
-    elementPosition?: { x: number; y: number }
-    pageUrl: string
-    referrerUrl?: string
-    timestamp: string
-    decisionTime?: number
-    hoverDuration?: number
-    scrollDepth?: number
-    viewportSize?: { width: number; height: number }
-    metadata?: Record<string, unknown>
-  }>
-}
 
 /**
  * Server Action - Track Analytics Events
  */
 export async function trackAnalyticsEvents(data: AnalyticsEvent) {
   try {
-    if (!data.sessionId || !data.events || !Array.isArray(data.events)) {
-      return { success: false, error: 'Invalid request body' }
-    }
-
     const payload = await getPayload({ config })
 
-    // Insert events in batch
+    // Używamy mapowania, aby upewnić się, że obiekt 'data'
+    // pasuje do schematu Payload (usuwamy nadmiarowe pola jeśli istnieją)
     const promises = data.events.map((event) =>
       payload.create({
         collection: 'user-behavior-events',
         data: {
           sessionId: data.sessionId,
-          ...event,
+          eventType: event.eventType,
+          eventCategory: event.eventCategory,
+          elementId: event.elementId,
+          elementText: event.elementText,
+          elementPosition: event.elementPosition,
+          pageUrl: event.pageUrl,
+          referrerUrl: event.referrerUrl,
           timestamp: event.timestamp || new Date().toISOString(),
+          decisionTime: event.decisionTime,
+          hoverDuration: event.hoverDuration,
+          scrollDepth: event.scrollDepth,
+          viewportSize: event.viewportSize,
+          // metadata: event.metadata // odkomentuj jeśli masz to pole w Payload
         },
       }),
     )
 
     await Promise.all(promises)
-
-    return { success: true, count: data.events.length }
-  } catch (error) {
-    console.error('Analytics tracking error:', error)
-    return { success: false, error: 'Failed to track events' }
+    return { success: true }
+  } catch (_error) {
+    console.error('Analytics error:', _error)
+    return { success: false }
   }
 }
-
-interface SessionData {
-  sessionId: string
-  userId?: string
-  deviceType: 'desktop' | 'mobile' | 'tablet' | 'unknown'
-  browserName?: string
-  browserVersion?: string
-  os?: string
-  screenResolution?: { width: number; height: number }
-  language?: string
-  timezone?: string
-  entryPage: string
-  landingSource?: string
-  utmParams?: {
-    source?: string
-    medium?: string
-    campaign?: string
-    term?: string
-    content?: string
-  }
-  sessionStart: string
-  pageViews: number
-}
-
 /**
  * Server Action - Create or Update Session
  */
