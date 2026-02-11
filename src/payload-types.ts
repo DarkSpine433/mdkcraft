@@ -77,6 +77,14 @@ export interface Config {
     categories: Category;
     media: Media;
     showcases: Showcase;
+    'subscription-plans': SubscriptionPlan;
+    'subscription-addons': SubscriptionAddon;
+    projects: Project;
+    tickets: Ticket;
+    faq: Faq;
+    'configurator-options': ConfiguratorOption;
+    'client-files': ClientFile;
+    roadmap: Roadmap;
     'user-behavior-events': UserBehaviorEvent;
     'user-sessions': UserSession;
     'page-views': PageView;
@@ -105,6 +113,8 @@ export interface Config {
       orders: 'orders';
       cart: 'carts';
       addresses: 'addresses';
+      userProjects: 'projects';
+      userTickets: 'tickets';
     };
     variantTypes: {
       options: 'variantOptions';
@@ -119,6 +129,14 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     showcases: ShowcasesSelect<false> | ShowcasesSelect<true>;
+    'subscription-plans': SubscriptionPlansSelect<false> | SubscriptionPlansSelect<true>;
+    'subscription-addons': SubscriptionAddonsSelect<false> | SubscriptionAddonsSelect<true>;
+    projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    tickets: TicketsSelect<false> | TicketsSelect<true>;
+    faq: FaqSelect<false> | FaqSelect<true>;
+    'configurator-options': ConfiguratorOptionsSelect<false> | ConfiguratorOptionsSelect<true>;
+    'client-files': ClientFilesSelect<false> | ClientFilesSelect<true>;
+    roadmap: RoadmapSelect<false> | RoadmapSelect<true>;
     'user-behavior-events': UserBehaviorEventsSelect<false> | UserBehaviorEventsSelect<true>;
     'user-sessions': UserSessionsSelect<false> | UserSessionsSelect<true>;
     'page-views': PageViewsSelect<false> | PageViewsSelect<true>;
@@ -149,10 +167,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    'site-settings': SiteSetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
   };
   locale: null;
   user: User;
@@ -215,6 +235,19 @@ export interface User {
   };
   addresses?: {
     docs?: (string | Address)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  activeSubscription?: (string | null) | SubscriptionPlan;
+  stripeCustomerID?: string | null;
+  activeAddons?: (string | SubscriptionAddon)[] | null;
+  userProjects?: {
+    docs?: (string | Project)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  userTickets?: {
+    docs?: (string | Ticket)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -1036,6 +1069,106 @@ export interface Address {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscription-plans".
+ */
+export interface SubscriptionPlan {
+  id: string;
+  name: string;
+  description?: string | null;
+  /**
+   * Miesięczna cena podstawowa
+   */
+  price: number;
+  billingCycle: 'monthly' | 'yearly';
+  features?:
+    | {
+        feature?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * ID ceny ze Stripe (dla subskrypcji)
+   */
+  stripePriceId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscription-addons".
+ */
+export interface SubscriptionAddon {
+  id: string;
+  name: string;
+  description?: string | null;
+  /**
+   * Cena doliczana do miesięcznej raty
+   */
+  price: number;
+  type: 'recurring' | 'one_time';
+  stripePriceId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects".
+ */
+export interface Project {
+  id: string;
+  title: string;
+  client: string | User;
+  status: 'planning' | 'designing' | 'development' | 'testing' | 'completed' | 'on_hold';
+  /**
+   * Procentowe ukończenie projektu
+   */
+  progress?: number | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  startDate?: string | null;
+  estimatedEndDate?: string | null;
+  figmaLink?: string | null;
+  stagingLink?: string | null;
+  subscription?: (string | null) | SubscriptionPlan;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tickets".
+ */
+export interface Ticket {
+  id: string;
+  subject: string;
+  client: string | User;
+  status: 'open' | 'in_progress' | 'pending_client' | 'resolved' | 'closed';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  messages?:
+    | {
+        author: string | User;
+        content: string;
+        sentAt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "showcases".
  */
 export interface Showcase {
@@ -1146,6 +1279,82 @@ export interface Showcase {
    */
   generateSlug?: boolean | null;
   slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faq".
+ */
+export interface Faq {
+  id: string;
+  question: string;
+  answer: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  category?: ('general' | 'technical' | 'billing' | 'hosting') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "configurator-options".
+ */
+export interface ConfiguratorOption {
+  id: string;
+  label: string;
+  value: string;
+  category: 'type' | 'pages' | 'design' | 'features' | 'marketing';
+  price: number;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "client-files".
+ */
+export interface ClientFile {
+  id: string;
+  client: string | User;
+  project?: (string | null) | Project;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roadmap".
+ */
+export interface Roadmap {
+  id: string;
+  title: string;
+  description: string;
+  status: 'planned' | 'in_progress' | 'completed' | 'cancelled';
+  priority?: ('low' | 'medium' | 'high') | null;
+  expectedRelease?: string | null;
+  votes?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1840,6 +2049,38 @@ export interface PayloadLockedDocument {
         value: string | Showcase;
       } | null)
     | ({
+        relationTo: 'subscription-plans';
+        value: string | SubscriptionPlan;
+      } | null)
+    | ({
+        relationTo: 'subscription-addons';
+        value: string | SubscriptionAddon;
+      } | null)
+    | ({
+        relationTo: 'projects';
+        value: string | Project;
+      } | null)
+    | ({
+        relationTo: 'tickets';
+        value: string | Ticket;
+      } | null)
+    | ({
+        relationTo: 'faq';
+        value: string | Faq;
+      } | null)
+    | ({
+        relationTo: 'configurator-options';
+        value: string | ConfiguratorOption;
+      } | null)
+    | ({
+        relationTo: 'client-files';
+        value: string | ClientFile;
+      } | null)
+    | ({
+        relationTo: 'roadmap';
+        value: string | Roadmap;
+      } | null)
+    | ({
         relationTo: 'user-behavior-events';
         value: string | UserBehaviorEvent;
       } | null)
@@ -1963,6 +2204,11 @@ export interface UsersSelect<T extends boolean = true> {
   orders?: T;
   cart?: T;
   addresses?: T;
+  activeSubscription?: T;
+  stripeCustomerID?: T;
+  activeAddons?: T;
+  userProjects?: T;
+  userTickets?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -2289,6 +2535,134 @@ export interface ShowcasesSelect<T extends boolean = true> {
       };
   generateSlug?: T;
   slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscription-plans_select".
+ */
+export interface SubscriptionPlansSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  price?: T;
+  billingCycle?: T;
+  features?:
+    | T
+    | {
+        feature?: T;
+        id?: T;
+      };
+  stripePriceId?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscription-addons_select".
+ */
+export interface SubscriptionAddonsSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  price?: T;
+  type?: T;
+  stripePriceId?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects_select".
+ */
+export interface ProjectsSelect<T extends boolean = true> {
+  title?: T;
+  client?: T;
+  status?: T;
+  progress?: T;
+  description?: T;
+  startDate?: T;
+  estimatedEndDate?: T;
+  figmaLink?: T;
+  stagingLink?: T;
+  subscription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tickets_select".
+ */
+export interface TicketsSelect<T extends boolean = true> {
+  subject?: T;
+  client?: T;
+  status?: T;
+  priority?: T;
+  messages?:
+    | T
+    | {
+        author?: T;
+        content?: T;
+        sentAt?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faq_select".
+ */
+export interface FaqSelect<T extends boolean = true> {
+  question?: T;
+  answer?: T;
+  category?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "configurator-options_select".
+ */
+export interface ConfiguratorOptionsSelect<T extends boolean = true> {
+  label?: T;
+  value?: T;
+  category?: T;
+  price?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "client-files_select".
+ */
+export interface ClientFilesSelect<T extends boolean = true> {
+  client?: T;
+  project?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roadmap_select".
+ */
+export interface RoadmapSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  status?: T;
+  priority?: T;
+  expectedRelease?: T;
+  votes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2991,6 +3365,21 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: string;
+  /**
+   * Cloudflare Turnstile Site Key
+   */
+  turnstileSiteKey?: string | null;
+  contactEmail?: string | null;
+  maintenanceMode?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -3031,6 +3420,18 @@ export interface FooterSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  turnstileSiteKey?: T;
+  contactEmail?: T;
+  maintenanceMode?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
