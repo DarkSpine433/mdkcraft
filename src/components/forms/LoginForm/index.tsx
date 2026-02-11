@@ -36,7 +36,7 @@ export const LoginForm: React.FC = () => {
       try {
         await login(data)
         if (redirect?.current) router.push(redirect.current)
-        else router.push('/account')
+        else router.push('/account/dashboard')
       } catch (_) {
         setError('There was an error with the credentials provided. Please try again.')
       }
@@ -45,47 +45,43 @@ export const LoginForm: React.FC = () => {
   )
 
   return (
-    <form className="" onSubmit={handleSubmit(onSubmit)}>
-      <Message className="classes.message" error={error} />
-      <div className="flex flex-col gap-8">
-        <FormItem>
-          <Label htmlFor="email">Email</Label>
+    <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+      <Message error={error} />
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-xs font-mono uppercase tracking-widest text-neutral-500">Email_Address</Label>
           <Input
             id="email"
             type="email"
+            className="bg-white/5 border-white/10 rounded-xl focus:border-primary transition-all"
+            placeholder="node@mdkcraft.pl"
             {...register('email', { required: 'Email is required.' })}
           />
           {errors.email && <FormError message={errors.email.message} />}
-        </FormItem>
+        </div>
 
-        <FormItem>
-          <Label htmlFor="password">Password</Label>
+        <div className="space-y-2">
+          <Label htmlFor="password" name="Password" className="text-xs font-mono uppercase tracking-widest text-neutral-500">Access_Key</Label>
           <Input
             id="password"
             type="password"
+            className="bg-white/5 border-white/10 rounded-xl focus:border-primary transition-all"
+            placeholder="••••••••"
             {...register('password', { required: 'Please provide a password.' })}
           />
           {errors.password && <FormError message={errors.password.message} />}
-        </FormItem>
+        </div>
 
-        <div className="text-primary/70 mb-6 prose prose-a:hover:text-primary dark:prose-invert">
-          <p>
-            Forgot your password?{' '}
-            <Link href={`/recover-password${allParams}`}>Click here to reset it</Link>
-          </p>
+        <div className="text-[10px] font-mono uppercase tracking-widest">
+          <Link href={`/recover-password${allParams}`} className="text-neutral-500 hover:text-primary transition-colors">
+            Resetuj_Hasło
+          </Link>
         </div>
       </div>
 
-      <div className="flex gap-4 justify-between">
-        <Button asChild variant="outline" size="lg">
-          <Link href={`/create-account${allParams}`} className="grow max-w-[50%]">
-            Create an account
-          </Link>
-        </Button>
-        <Button className="grow" disabled={isLoading} size="lg" type="submit" variant="default">
-          {isLoading ? 'Processing' : 'Continue'}
-        </Button>
-      </div>
+      <Button className="w-full bg-primary hover:bg-primary/80 text-white font-bold py-6 rounded-xl shadow-lg shadow-primary/20 transition-all uppercase tracking-widest" disabled={isLoading} type="submit">
+        {isLoading ? 'Przetwarzanie...' : 'Autoryzuj_Wejście'}
+      </Button>
     </form>
   )
 }

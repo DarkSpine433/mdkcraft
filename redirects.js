@@ -12,7 +12,13 @@ const redirects = async () => {
     source: '/:path((?!ie-incompatible.html$).*)', // all pages except the incompatibility page
   }
 
-  const redirects = [internetExplorerRedirect]
+  const mdkTechRedirect = {
+    destination: '/kontakt',
+    permanent: true,
+    source: '/mdktech',
+  }
+
+  const redirects = [internetExplorerRedirect, mdkTechRedirect]
 
   return redirects
 }

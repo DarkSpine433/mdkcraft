@@ -62,7 +62,10 @@ export const CreateAccountForm: React.FC = () => {
         await login(data)
         clearTimeout(timer)
         if (redirect) router.push(redirect)
-        else router.push(`/account?success=${encodeURIComponent('Account created successfully')}`)
+        else
+          router.push(
+            `/account/dashboard?success=${encodeURIComponent('Account created successfully')}`,
+          )
       } catch (_) {
         clearTimeout(timer)
         setError('There was an error with the credentials provided. Please try again.')
@@ -72,44 +75,41 @@ export const CreateAccountForm: React.FC = () => {
   )
 
   return (
-    <form className="max-w-lg py-4" onSubmit={handleSubmit(onSubmit)}>
-      <div className="prose dark:prose-invert mb-6">
-        <p>
-          {`This is where new customers can signup and create a new account. To manage all users, `}
-          <Link href="/admin/collections/users">login to the admin dashboard</Link>.
-        </p>
-      </div>
-
+    <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <Message error={error} />
 
-      <div className="flex flex-col gap-8 mb-8">
-        <FormItem>
-          <Label htmlFor="email" className="mb-2">
-            Email Address
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-xs font-mono uppercase tracking-widest text-neutral-500">
+            Email_Address
           </Label>
           <Input
             id="email"
             {...register('email', { required: 'Email is required.' })}
             type="email"
+            className="bg-white/5 border-white/10 rounded-xl focus:border-primary transition-all"
+            placeholder="node@mdkcraft.pl"
           />
           {errors.email && <FormError message={errors.email.message} />}
-        </FormItem>
+        </div>
 
-        <FormItem>
-          <Label htmlFor="password" className="mb-2">
-            New password
+        <div className="space-y-2">
+          <Label htmlFor="password" title="Password" className="text-xs font-mono uppercase tracking-widest text-neutral-500">
+            Nowe_Hasło
           </Label>
           <Input
             id="password"
             {...register('password', { required: 'Password is required.' })}
             type="password"
+            className="bg-white/5 border-white/10 rounded-xl focus:border-primary transition-all"
+            placeholder="••••••••"
           />
           {errors.password && <FormError message={errors.password.message} />}
-        </FormItem>
+        </div>
 
-        <FormItem>
-          <Label htmlFor="passwordConfirm" className="mb-2">
-            Confirm Password
+        <div className="space-y-2">
+          <Label htmlFor="passwordConfirm" className="text-xs font-mono uppercase tracking-widest text-neutral-500">
+            Potwierdź_Hasło
           </Label>
           <Input
             id="passwordConfirm"
@@ -118,20 +118,20 @@ export const CreateAccountForm: React.FC = () => {
               validate: (value) => value === password.current || 'The passwords do not match',
             })}
             type="password"
+            className="bg-white/5 border-white/10 rounded-xl focus:border-primary transition-all"
+            placeholder="••••••••"
           />
           {errors.passwordConfirm && <FormError message={errors.passwordConfirm.message} />}
-        </FormItem>
+        </div>
       </div>
-      <Button disabled={loading} type="submit" variant="default">
-        {loading ? 'Processing' : 'Create Account'}
-      </Button>
 
-      <div className="prose dark:prose-invert mt-8">
-        <p>
-          {'Already have an account? '}
-          <Link href={`/login${allParams}`}>Login</Link>
-        </p>
-      </div>
+      <Button
+        disabled={loading}
+        type="submit"
+        className="w-full bg-primary hover:bg-primary/80 text-white font-bold py-6 rounded-xl shadow-lg shadow-primary/20 transition-all uppercase tracking-widest"
+      >
+        {loading ? 'Inicjalizacja...' : 'Utwórz_Konto'}
+      </Button>
     </form>
   )
 }

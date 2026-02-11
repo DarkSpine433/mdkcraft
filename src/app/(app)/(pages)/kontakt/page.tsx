@@ -1,6 +1,6 @@
 'use client'
 
-import { ContactForm } from '@/components/ContactForm'
+import { ConfiguratorForm } from '@/components/ConfiguratorForm'
 import { Mail, MapPin, MousePointer2, Phone, ShieldCheck, Zap } from 'lucide-react'
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'motion/react'
 import { useEffect } from 'react'
@@ -82,73 +82,72 @@ export default function ContactPage() {
           </motion.p>
         </header>
 
-        <div className="grid lg:grid-cols-12 gap-16">
+        <div className="space-y-20">
           {/* Form Section */}
-          <div className="lg:col-span-7">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="relative p-1 bg-gradient-to-b from-white/10 to-transparent rounded-3xl"
-            >
-              <div className="bg-[#050507] rounded-[22px] p-8 md:p-10 border border-white/5">
-                <ContactForm />
-              </div>
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative p-1 bg-gradient-to-b from-white/10 to-transparent rounded-3xl"
+          >
+            <div className="bg-[#050507] rounded-[22px] p-8 md:p-10 border border-white/5">
+              <ConfiguratorForm />
+            </div>
+          </motion.div>
 
           {/* Info Section */}
-          <div className="lg:col-span-5 space-y-8">
+          <div className="grid lg:grid-cols-2 gap-16">
             <section className="space-y-6">
               <h2 className="text-xs font-mono text-neutral-500 uppercase tracking-widest">
                 Nodes // Dane Kontaktowe
               </h2>
 
-              {[
-                {
-                  icon: Mail,
-                  label: 'E-mail',
-                  val: 'kontakt@mdkcraft.com',
-                  link: 'mailto:kontakt@mdkcraft.com',
-                },
-                {
-                  icon: Phone,
-                  label: 'System Audio',
-                  val: '+48 123 456 789',
-                  link: 'tel:+48123456789',
-                },
-                { icon: MapPin, label: 'Lokalizacja', val: 'Warszawa, PL', link: '#' },
-              ].map((item, i) => (
-                <motion.a
-                  key={i}
-                  href={item.link}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="group flex items-center gap-6 p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-primary/50 hover:bg-white/10 transition-all duration-500"
-                >
-                  <div className="p-4 rounded-xl bg-neutral-900 border border-white/10 group-hover:text-primary transition-colors">
-                    <item.icon size={24} />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest mb-1">
-                      {item.label}
-                    </p>
-                    <p className="text-lg font-medium tracking-tight">{item.val}</p>
-                  </div>
-                </motion.a>
-              ))}
+              <div className="grid md:grid-cols-2 gap-4">
+                {[
+                  {
+                    icon: Mail,
+                    label: 'E-mail',
+                    val: 'kontakt@mdkcraft.pl',
+                    link: 'mailto:kontakt@mdkcraft.pl',
+                  },
+                  {
+                    icon: Phone,
+                    label: 'System Audio',
+                    val: '+48 123 456 789',
+                    link: 'tel:+48123456789',
+                  },
+                ].map((item, i) => (
+                  <motion.a
+                    key={i}
+                    href={item.link}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    className="group flex items-center gap-6 p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-primary/50 hover:bg-white/10 transition-all duration-500"
+                  >
+                    <div className="p-4 rounded-xl bg-neutral-900 border border-white/10 group-hover:text-primary transition-colors">
+                      <item.icon size={24} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest mb-1">
+                        {item.label}
+                      </p>
+                      <p className="text-lg font-medium tracking-tight">{item.val}</p>
+                    </div>
+                  </motion.a>
+                ))}
+              </div>
             </section>
 
             {/* Status Section */}
-            <div className="p-8 rounded-2xl border border-white/5 bg-gradient-to-br from-primary/5 to-transparent">
+            <div className="p-8 rounded-2xl border border-white/5 bg-gradient-to-br from-primary/5 to-transparent h-fit self-end">
               <h3 className="text-sm font-bold mb-6 flex items-center gap-2 uppercase tracking-tighter">
                 <Zap size={16} className="text-primary" /> System_Status: Online
               </h3>
               <ul className="space-y-4">
                 {[
                   'Średni czas odpowiedzi: < 2h',
-                  'Weryfikacja biometryczna aktywna',
+                  'Zintegrowana wycena AI',
                   'Szyfrowanie end-to-end (AES-256)',
                 ].map((text, i) => (
                   <li
