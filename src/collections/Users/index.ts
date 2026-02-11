@@ -84,5 +84,60 @@ export const Users: CollectionConfig = {
         defaultColumns: ['id'],
       },
     },
+    {
+      name: 'activeSubscription',
+      type: 'relationship',
+      relationTo: 'subscription-plans',
+      access: {
+        update: adminOnlyFieldAccess,
+      },
+      admin: {
+        group: 'MDKcraft',
+      },
+    },
+    {
+      name: 'stripeCustomerID',
+      type: 'text',
+      access: {
+        read: adminOnlyFieldAccess,
+        update: adminOnlyFieldAccess,
+      },
+      admin: {
+        group: 'MDKcraft',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'activeAddons',
+      type: 'relationship',
+      relationTo: 'subscription-addons',
+      hasMany: true,
+      access: {
+        update: adminOnlyFieldAccess,
+      },
+      admin: {
+        group: 'MDKcraft',
+      },
+    },
+    {
+      name: 'userProjects',
+      type: 'join',
+      collection: 'projects',
+      on: 'client',
+      admin: {
+        allowCreate: false,
+        group: 'MDKcraft',
+      },
+    },
+    {
+      name: 'userTickets',
+      type: 'join',
+      collection: 'tickets',
+      on: 'client',
+      admin: {
+        allowCreate: false,
+        group: 'MDKcraft',
+      },
+    },
   ],
 }

@@ -14,11 +14,79 @@ import {
 } from 'lucide-react'
 import { motion, useMotionTemplate, useMotionValue } from 'motion/react'
 import Link from 'next/link'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Logo } from '../Logo/Logo'
 import MagneticButton from '../ui/magneticBotton'
+import { subscribeToNewsletter } from '@/app/actions/subscribeNewsletter'
+import { AdvancedCaptcha, useAdvancedCaptcha } from '../Captcha'
 
 // --- TYPY ---
+
+const NewsletterForm = () => {
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [message, setMessage] = useState('')
+  const { captchaToken, isVerified, handleVerify, handleError } = useAdvancedCaptcha()
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!isVerified) return
+    setStatus('loading')
+
+    try {
+      const result = await subscribeToNewsletter({
+        email,
+        captchaToken: captchaToken || '',
+        source: 'homepage_footer',
+      })
+      if (result.success) {
+        setStatus('success')
+        setMessage(result.message || 'Zapisano!')
+        setEmail('')
+      } else {
+        setStatus('error')
+        setMessage(result.error || 'Błąd')
+      }
+    } catch (err) {
+      setStatus('error')
+      setMessage('Wystąpił błąd')
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="relative">
+        <input
+          type="email"
+          required
+          placeholder="TWÓJ_EMAIL@"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none transition-colors"
+        />
+        <button
+          disabled={status === 'loading' || !isVerified}
+          className="absolute right-2 top-2 bottom-2 px-4 bg-primary rounded-lg text-xs font-bold hover:bg-primary/80 transition-all disabled:opacity-50"
+        >
+          {status === 'loading' ? '...' : 'JOIN'}
+        </button>
+      </div>
+
+      {!isVerified && (
+        <div className="scale-75 origin-left">
+          <AdvancedCaptcha onVerify={handleVerify} onError={handleError} mode="auto" />
+        </div>
+      )}
+
+      {status === 'success' && (
+        <p className="text-[10px] font-mono text-green-500 uppercase">{message}</p>
+      )}
+      {status === 'error' && (
+        <p className="text-[10px] font-mono text-red-500 uppercase">{message}</p>
+      )}
+    </form>
+  )
+}
 
 // --- KOMPONENT 2: INTERAKTNYWNY LOGOTYP (Spójność z Twoim stylem) ---
 const FooterBrand = () => {
@@ -114,24 +182,18 @@ export default function FooterClient() {
 
       <div className="container relative z-10 mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 mb-24">
-          {/* KOLUMNA 1: BRANDING */}
+          {/* KOLUMNA 1: BRANDING & NEWSLETTER */}
           <div className="lg:col-span-5 space-y-8">
             <FooterBrand />
             <p className="text-neutral-400 text-lg max-w-md leading-relaxed">
               Tworzymy cyfrową przyszłość, łącząc estetykę z technologiczną precyzją. Twój sukces w
               sieci zaczyna się tutaj.
             </p>
-            {/* <div className="flex  flex-wrap w-fit gap-4">
-              {socialLinks.map((social, i) => (
-                <MagneticButton
-                  key={i}
-                  icon={<span></span>}
-                  className=" rounded-xl bg-white/5 border border-white/10 text-neutral-400 p-5 "
-                >
-                  <Link href={social.href}>{social.icon}</Link>
-                </MagneticButton>
-              ))}
-            </div> */}
+
+            <div className="pt-8 space-y-4 max-w-sm">
+              <h4 className="text-[10px] font-mono uppercase tracking-[0.3em] text-primary">Newsletter_System</h4>
+              <NewsletterForm />
+            </div>
           </div>
 
           {/* KOLUMNA 2: MENU */}

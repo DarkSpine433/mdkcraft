@@ -3,6 +3,7 @@
 import config from '@/payload.config'
 import crypto from 'crypto'
 import { getPayload } from 'payload'
+import { validateCaptchaToken } from './verifyCaptcha'
 
 interface NewsletterSubscription {
   email: string
@@ -27,6 +28,14 @@ export async function subscribeToNewsletter(data: NewsletterSubscription) {
       return {
         success: false,
         error: 'Weryfikacja CAPTCHA jest wymagana',
+      }
+    }
+
+    const captchaValidation = await validateCaptchaToken(data.captchaToken)
+    if (!captchaValidation.valid) {
+      return {
+        success: false,
+        error: 'Weryfikacja bezpieczeństwa nieudana',
       }
     }
 

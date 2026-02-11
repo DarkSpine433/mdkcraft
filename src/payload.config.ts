@@ -20,6 +20,12 @@ import { Media } from '@/collections/Media'
 import { Pages } from '@/collections/Pages'
 import { Users } from '@/collections/Users'
 import { Showcases } from './collections/Showcases'
+import { SubscriptionPlans } from './collections/SubscriptionPlans'
+import { SubscriptionAddons } from './collections/SubscriptionAddons'
+import { Projects } from './collections/Projects'
+import { Tickets } from './collections/Tickets'
+import { FAQ } from './collections/FAQ'
+import { ConfiguratorOptions } from './collections/ConfiguratorOptions'
 
 // Analytics Collections
 import { ContactInquiries } from '@/collections/ContactInquiries'
@@ -33,6 +39,7 @@ import { UserSessions } from '@/collections/UserSessions'
 
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
+import { SiteSettings } from '@/globals/SiteSettings'
 import { plugins } from './plugins'
 
 const filename = fileURLToPath(import.meta.url)
@@ -56,6 +63,12 @@ export default buildConfig({
     Categories,
     Media,
     Showcases,
+    SubscriptionPlans,
+    SubscriptionAddons,
+    Projects,
+    Tickets,
+    FAQ,
+    ConfiguratorOptions,
     // Analytics Collections
     UserBehaviorEvents,
     UserSessions,
@@ -108,7 +121,7 @@ export default buildConfig({
   }),
   //email: nodemailerAdapter(),
   endpoints: [],
-  globals: [Header, Footer],
+  globals: [Header, Footer, SiteSettings],
   plugins,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
