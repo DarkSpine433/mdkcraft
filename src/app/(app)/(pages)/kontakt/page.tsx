@@ -1,7 +1,7 @@
 'use client'
 
 import { ConfiguratorForm } from '@/components/ConfiguratorForm'
-import { Mail, MapPin, MousePointer2, Phone, ShieldCheck, Zap } from 'lucide-react'
+import { Mail, MousePointer2, Phone, ShieldCheck, Zap } from 'lucide-react'
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'motion/react'
 import { useEffect } from 'react'
 

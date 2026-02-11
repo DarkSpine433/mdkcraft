@@ -139,15 +139,5 @@ export const Users: CollectionConfig = {
         group: 'MDKcraft',
       },
     },
-    {
-      name: 'userFiles',
-      type: 'join',
-      collection: 'client-files',
-      on: 'client',
-      admin: {
-        allowCreate: false,
-        group: 'MDKcraft',
-      },
-    },
   ],
 }

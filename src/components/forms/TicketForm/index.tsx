@@ -37,8 +37,8 @@ export const TicketForm = () => {
       if (!response.ok) throw new Error('Nie udało się utworzyć zgłoszenia')
 
       router.push('/account/dashboard?success=Ticket utworzony pomyślnie')
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Wystąpił nieoczekiwany błąd')
+    } catch (err: any) {
+      setError(err.message)
     } finally {
       setIsSubmitting(false)
     }

@@ -88,7 +88,7 @@ export const CreateAccountForm: React.FC = () => {
             {...register('email', { required: 'Email is required.' })}
             type="email"
             className="bg-white/5 border-white/10 rounded-xl focus:border-primary transition-all"
-            placeholder="node@mdkcraft.pl"
+            placeholder="node@MDKcraft.pl"
           />
           {errors.email && <FormError message={errors.email.message} />}
         </div>

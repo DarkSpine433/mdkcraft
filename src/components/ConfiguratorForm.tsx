@@ -15,13 +15,12 @@ import {
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState, useMemo } from 'react'
 import { AdvancedCaptcha, useAdvancedCaptcha } from './Captcha'
-import type { ConfiguratorOption, SubscriptionPlan, SubscriptionAddon } from '@/payload-types'
 
 export const ConfiguratorForm = () => {
   const [step, setStep] = useState(1)
-  const [options, setOptions] = useState<ConfiguratorOption[]>([])
-  const [plans, setPlans] = useState<SubscriptionPlan[]>([])
-  const [addons, setAddons] = useState<SubscriptionAddon[]>([])
+  const [options, setOptions] = useState<any[]>([])
+  const [plans, setPlans] = useState<any[]>([])
+  const [addons, setAddons] = useState<any[]>([])
 
   const [selections, setSelections] = useState<{
     type: string;
@@ -157,8 +156,8 @@ Wiadomość dodatkowa: ${contactData.message}
       } else {
         throw new Error(result.error || 'Błąd wysyłania')
       }
-      } catch (err: unknown) {
-        setSubmitError(err instanceof Error ? err.message : 'Wystąpił nieoczekiwany błąd')
+    } catch (err: any) {
+      setSubmitError(err.message)
     } finally {
       setIsSubmitting(false)
     }

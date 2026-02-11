@@ -142,10 +142,10 @@ export default function FooterClient() {
 
   const navLinks = [
     { label: 'Strona Główna', href: '/' },
-    { label: 'Roadmap', href: '/roadmap' },
+    { label: 'O nas', href: '#about' },
     { label: 'Oferta', href: '#services' },
     { label: 'Portfolio', href: '#projects' },
-    { label: 'Kontakt', href: '/kontakt' },
+    { label: 'Kontakt', href: '#contact' },
   ]
 
   const socialLinks = [

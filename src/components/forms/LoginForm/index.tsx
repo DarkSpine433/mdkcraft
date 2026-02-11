@@ -54,7 +54,7 @@ export const LoginForm: React.FC = () => {
             id="email"
             type="email"
             className="bg-white/5 border-white/10 rounded-xl focus:border-primary transition-all"
-            placeholder="node@mdkcraft.pl"
+            placeholder="node@MDKcraft.pl"
             {...register('email', { required: 'Email is required.' })}
           />
           {errors.email && <FormError message={errors.email.message} />}

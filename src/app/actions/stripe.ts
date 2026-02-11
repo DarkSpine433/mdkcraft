@@ -12,13 +12,13 @@ const stripeClient = new stripe(process.env.STRIPE_SECRET_KEY!, {
 export async function createSubscriptionCheckoutSession(priceId: string) {
   const headers = await getHeaders()
   const payload = await getPayload({ config })
-  const { user } = (await payload.auth({ headers })) as { user: any }
+  const { user } = await payload.auth({ headers })
 
   if (!user) {
     throw new Error('Musisz być zalogowany, aby wykupić subskrypcję')
   }
 
-  let customerId = user.stripeCustomerID
+  let customerId = (user as any).stripeCustomerID
 
   if (!customerId) {
     // Create Stripe customer
@@ -52,23 +52,6 @@ export async function createSubscriptionCheckoutSession(priceId: string) {
     mode: 'subscription',
     success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/account/dashboard?success=Subscription+active`,
     cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/kontakt`,
-  })
-
-  return { url: session.url }
-}
-
-export async function getStripeCustomerPortalUrl() {
-  const headers = await getHeaders()
-  const payload = await getPayload({ config })
-  const { user } = (await payload.auth({ headers })) as { user: any }
-
-  if (!user || !user.stripeCustomerID) {
-    throw new Error('Klient nie posiada aktywnego profilu Stripe')
-  }
-
-  const session = await stripeClient.billingPortal.sessions.create({
-    customer: user.stripeCustomerID as string,
-    return_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/account/dashboard`,
   })
 
   return { url: session.url }

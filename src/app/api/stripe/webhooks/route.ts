@@ -31,24 +31,24 @@ export async function POST(req: NextRequest) {
         const stripeCustomerId = subscription.customer as string
 
         // Find user by stripeCustomerId
-        const users = (await payload.find({
+        const users = await payload.find({
           collection: 'users',
           where: {
             stripeCustomerID: { equals: stripeCustomerId },
           },
-        })) as { docs: any[] }
+        })
 
         if (users.docs.length > 0) {
           const user = users.docs[0]
           const priceId = subscription.items.data[0].price.id
 
           // Find subscription plan by stripePriceId
-          const plans = (await payload.find({
+          const plans = await payload.find({
             collection: 'subscription-plans',
             where: {
               stripePriceId: { equals: priceId },
             },
-          })) as { docs: any[] }
+          })
 
           if (plans.docs.length > 0) {
             await payload.update({
@@ -67,12 +67,12 @@ export async function POST(req: NextRequest) {
         const subscription = event.data.object as stripe.Subscription
         const stripeCustomerId = subscription.customer as string
 
-        const users = (await payload.find({
+        const users = await payload.find({
           collection: 'users',
           where: {
             stripeCustomerID: { equals: stripeCustomerId },
           },
-        })) as { docs: any[] }
+        })
 
         if (users.docs.length > 0) {
           await payload.update({

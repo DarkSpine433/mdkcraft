@@ -77,25 +77,5 @@ export const Projects: CollectionConfig = {
       type: 'relationship',
       relationTo: 'subscription-plans',
     },
-    {
-      name: 'activityLog',
-      type: 'array',
-      admin: {
-        description: 'Log aktywności projektu widoczny dla klienta',
-      },
-      fields: [
-        {
-          name: 'message',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'date',
-          type: 'date',
-          defaultValue: () => new Date().toISOString(),
-          required: true,
-        },
-      ],
-    },
   ],
 }
