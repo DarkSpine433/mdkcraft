@@ -26,6 +26,7 @@ import { Projects } from './collections/Projects'
 import { Tickets } from './collections/Tickets'
 import { FAQ } from './collections/FAQ'
 import { ConfiguratorOptions } from './collections/ConfiguratorOptions'
+import { ClientFiles } from './collections/ClientFiles'
 
 // Analytics Collections
 import { ContactInquiries } from '@/collections/ContactInquiries'
@@ -69,6 +70,7 @@ export default buildConfig({
     Tickets,
     FAQ,
     ConfiguratorOptions,
+    ClientFiles,
     // Analytics Collections
     UserBehaviorEvents,
     UserSessions,
