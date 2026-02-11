@@ -59,7 +59,9 @@ export function HeaderClient({ header: _header }: Props) {
               {link.name}
             </Link>
           ))}
-          <GlowingButton className="h-10 px-6">Kontakt</GlowingButton>
+          <Link href="/kontakt">
+            <GlowingButton className="h-10 px-6">Kontakt</GlowingButton>
+          </Link>
         </div>
 
         {/* Mobile Toggle */}
