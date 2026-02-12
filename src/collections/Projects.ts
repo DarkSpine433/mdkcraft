@@ -77,5 +77,22 @@ export const Projects: CollectionConfig = {
       type: 'relationship',
       relationTo: 'subscription-plans',
     },
+    {
+      name: 'activityLog',
+      type: 'array',
+      fields: [
+        {
+          name: 'message',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'date',
+          type: 'date',
+          required: true,
+          defaultValue: () => new Date().toISOString(),
+        },
+      ],
+    },
   ],
 }

@@ -1,11 +1,23 @@
 import type { CollectionConfig } from 'payload'
 import { adminOnly } from '@/access/adminOnly'
-import { adminOrSelf } from '@/access/adminOrSelf'
+import { checkRole } from '@/access/utilities'
 
 export const ClientFiles: CollectionConfig = {
   slug: 'client-files',
   access: {
-    read: adminOrSelf,
+    read: ({ req: { user } }) => {
+      if (user && checkRole(['admin'], user)) {
+        return true
+      }
+      if (user) {
+        return {
+          client: {
+            equals: user.id,
+          },
+        }
+      }
+      return false
+    },
     create: adminOnly,
     update: adminOnly,
     delete: adminOnly,
@@ -15,8 +27,7 @@ export const ClientFiles: CollectionConfig = {
     group: 'Management',
   },
   upload: {
-    staticDir: 'client-vault',
-    mimeTypes: ['image/*', 'application/pdf', 'application/zip'],
+    staticDir: 'public/client-files',
   },
   fields: [
     {
@@ -25,11 +36,6 @@ export const ClientFiles: CollectionConfig = {
       relationTo: 'users',
       required: true,
       index: true,
-    },
-    {
-      name: 'project',
-      type: 'relationship',
-      relationTo: 'projects',
     },
     {
       name: 'description',

@@ -1,5 +1,4 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
-
 import {
   BoldFeature,
   EXPERIMENTAL_TableFeature,
@@ -27,7 +26,6 @@ import { Tickets } from './collections/Tickets'
 import { FAQ } from './collections/FAQ'
 import { ConfiguratorOptions } from './collections/ConfiguratorOptions'
 import { ClientFiles } from './collections/ClientFiles'
-import { Roadmap } from './collections/Roadmap'
 
 // Analytics Collections
 import { ContactInquiries } from '@/collections/ContactInquiries'
@@ -50,11 +48,7 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     components: {
-      // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below and the import `BeforeLogin` statement on line 15.
       beforeLogin: ['@/components/BeforeLogin#BeforeLogin'],
-      // The `BeforeDashboard` component renders the 'welcome' block that you see after logging into your admin panel.
-      // Feel free to delete this at any time. Simply remove the line below and the import `BeforeDashboard` statement on line 15.
       beforeDashboard: ['@/components/BeforeDashboard#BeforeDashboard'],
     },
     user: Users.slug,
@@ -72,7 +66,6 @@ export default buildConfig({
     FAQ,
     ConfiguratorOptions,
     ClientFiles,
-    Roadmap,
     // Analytics Collections
     UserBehaviorEvents,
     UserSessions,
@@ -123,7 +116,6 @@ export default buildConfig({
       ]
     },
   }),
-  //email: nodemailerAdapter(),
   endpoints: [],
   globals: [Header, Footer, SiteSettings],
   plugins,
@@ -131,8 +123,4 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  // Sharp is now an optional dependency -
-  // if you want to resize images, crop, set focal point, etc.
-  // make sure to install it and pass it to the config.
-  // sharp,
 })

@@ -15,9 +15,13 @@ export function useIgnoredEffect(
   const ignoredDepsRef = useRef(ignoredDeps)
 
   // Update ref when ignoredDeps change, but do not trigger the effect
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     ignoredDepsRef.current = ignoredDeps
   }, ignoredDeps)
 
-  useEffect(effect, triggerDeps)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    return effect()
+  }, triggerDeps)
 }
