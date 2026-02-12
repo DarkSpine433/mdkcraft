@@ -83,6 +83,7 @@ export interface Config {
     tickets: Ticket;
     faq: Faq;
     'configurator-options': ConfiguratorOption;
+
     'user-behavior-events': UserBehaviorEvent;
     'user-sessions': UserSession;
     'page-views': PageView;
@@ -1319,6 +1320,7 @@ export interface ConfiguratorOption {
   createdAt: string;
 }
 /**
+
  * Tracks all user interactions and behavior events
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2033,6 +2035,7 @@ export interface PayloadLockedDocument {
         value: string | ConfiguratorOption;
       } | null)
     | ({
+
         relationTo: 'user-behavior-events';
         value: string | UserBehaviorEvent;
       } | null)
@@ -2586,6 +2589,7 @@ export interface ConfiguratorOptionsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+
  * via the `definition` "user-behavior-events_select".
  */
 export interface UserBehaviorEventsSelect<T extends boolean = true> {
