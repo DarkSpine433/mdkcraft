@@ -83,7 +83,7 @@ export interface Config {
     tickets: Ticket;
     faq: Faq;
     'configurator-options': ConfiguratorOption;
-
+    'client-files': ClientFile;
     'user-behavior-events': UserBehaviorEvent;
     'user-sessions': UserSession;
     'page-views': PageView;
@@ -134,6 +134,7 @@ export interface Config {
     tickets: TicketsSelect<false> | TicketsSelect<true>;
     faq: FaqSelect<false> | FaqSelect<true>;
     'configurator-options': ConfiguratorOptionsSelect<false> | ConfiguratorOptionsSelect<true>;
+    'client-files': ClientFilesSelect<false> | ClientFilesSelect<true>;
     'user-behavior-events': UserBehaviorEventsSelect<false> | UserBehaviorEventsSelect<true>;
     'user-sessions': UserSessionsSelect<false> | UserSessionsSelect<true>;
     'page-views': PageViewsSelect<false> | PageViewsSelect<true>;
@@ -1140,6 +1141,13 @@ export interface Project {
   figmaLink?: string | null;
   stagingLink?: string | null;
   subscription?: (string | null) | SubscriptionPlan;
+  activityLog?:
+    | {
+        message: string;
+        date: string;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1320,7 +1328,26 @@ export interface ConfiguratorOption {
   createdAt: string;
 }
 /**
-
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "client-files".
+ */
+export interface ClientFile {
+  id: string;
+  client: string | User;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
  * Tracks all user interactions and behavior events
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2035,7 +2062,10 @@ export interface PayloadLockedDocument {
         value: string | ConfiguratorOption;
       } | null)
     | ({
-
+        relationTo: 'client-files';
+        value: string | ClientFile;
+      } | null)
+    | ({
         relationTo: 'user-behavior-events';
         value: string | UserBehaviorEvent;
       } | null)
@@ -2540,6 +2570,13 @@ export interface ProjectsSelect<T extends boolean = true> {
   figmaLink?: T;
   stagingLink?: T;
   subscription?: T;
+  activityLog?:
+    | T
+    | {
+        message?: T;
+        date?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2589,7 +2626,25 @@ export interface ConfiguratorOptionsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
-
+ * via the `definition` "client-files_select".
+ */
+export interface ClientFilesSelect<T extends boolean = true> {
+  client?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "user-behavior-events_select".
  */
 export interface UserBehaviorEventsSelect<T extends boolean = true> {
