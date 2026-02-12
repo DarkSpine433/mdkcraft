@@ -83,8 +83,7 @@ export interface Config {
     tickets: Ticket;
     faq: Faq;
     'configurator-options': ConfiguratorOption;
-    'client-files': ClientFile;
-    roadmap: Roadmap;
+
     'user-behavior-events': UserBehaviorEvent;
     'user-sessions': UserSession;
     'page-views': PageView;
@@ -135,8 +134,6 @@ export interface Config {
     tickets: TicketsSelect<false> | TicketsSelect<true>;
     faq: FaqSelect<false> | FaqSelect<true>;
     'configurator-options': ConfiguratorOptionsSelect<false> | ConfiguratorOptionsSelect<true>;
-    'client-files': ClientFilesSelect<false> | ClientFilesSelect<true>;
-    roadmap: RoadmapSelect<false> | RoadmapSelect<true>;
     'user-behavior-events': UserBehaviorEventsSelect<false> | UserBehaviorEventsSelect<true>;
     'user-sessions': UserSessionsSelect<false> | UserSessionsSelect<true>;
     'page-views': PageViewsSelect<false> | PageViewsSelect<true>;
@@ -1323,42 +1320,7 @@ export interface ConfiguratorOption {
   createdAt: string;
 }
 /**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "client-files".
- */
-export interface ClientFile {
-  id: string;
-  client: string | User;
-  project?: (string | null) | Project;
-  description?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "roadmap".
- */
-export interface Roadmap {
-  id: string;
-  title: string;
-  description: string;
-  status: 'planned' | 'in_progress' | 'completed' | 'cancelled';
-  priority?: ('low' | 'medium' | 'high') | null;
-  expectedRelease?: string | null;
-  votes?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
+
  * Tracks all user interactions and behavior events
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2073,14 +2035,7 @@ export interface PayloadLockedDocument {
         value: string | ConfiguratorOption;
       } | null)
     | ({
-        relationTo: 'client-files';
-        value: string | ClientFile;
-      } | null)
-    | ({
-        relationTo: 'roadmap';
-        value: string | Roadmap;
-      } | null)
-    | ({
+
         relationTo: 'user-behavior-events';
         value: string | UserBehaviorEvent;
       } | null)
@@ -2634,40 +2589,7 @@ export interface ConfiguratorOptionsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "client-files_select".
- */
-export interface ClientFilesSelect<T extends boolean = true> {
-  client?: T;
-  project?: T;
-  description?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "roadmap_select".
- */
-export interface RoadmapSelect<T extends boolean = true> {
-  title?: T;
-  description?: T;
-  status?: T;
-  priority?: T;
-  expectedRelease?: T;
-  votes?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
+
  * via the `definition` "user-behavior-events_select".
  */
 export interface UserBehaviorEventsSelect<T extends boolean = true> {
