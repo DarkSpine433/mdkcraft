@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import stripe from 'stripe'
-import config from '@/payload.config'
+import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
 const stripeClient = new stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 })
   }
 
-  const payload = await getPayload({ config })
+  const payload = await getPayload({ config: configPromise })
 
   try {
     switch (event.type) {

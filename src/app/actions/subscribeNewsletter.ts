@@ -1,6 +1,6 @@
 'use server'
 
-import config from '@/payload.config'
+import configPromise from '@payload-config'
 import crypto from 'crypto'
 import { getPayload } from 'payload'
 import { validateCaptchaToken } from './verifyCaptcha'
@@ -39,7 +39,7 @@ export async function subscribeToNewsletter(data: NewsletterSubscription) {
       }
     }
 
-    const payload = await getPayload({ config })
+    const payload = await getPayload({ config: configPromise })
 
     // Check if email already exists
     const existingSubscribers = await payload.find({

@@ -20,6 +20,8 @@ export default async function DashboardPage() {
   // Fetch user projects
   const projects = (await payload.find({
     collection: 'projects',
+    user,
+    overrideAccess: false,
     where: {
       client: { equals: user.id },
     },
@@ -29,6 +31,8 @@ export default async function DashboardPage() {
   // Fetch user tickets
   const tickets = (await payload.find({
     collection: 'tickets',
+    user,
+    overrideAccess: false,
     where: {
       client: { equals: user.id },
     },
@@ -39,6 +43,8 @@ export default async function DashboardPage() {
   // Fetch user files
   const files = (await payload.find({
     collection: 'client-files',
+    user,
+    overrideAccess: false,
     where: {
       client: { equals: user.id },
     },

@@ -1,6 +1,6 @@
 'use server'
 
-import config from '@/payload.config'
+import configPromise from '@payload-config'
 import { AnalyticsEvent, SessionData } from '@/types/Analytics'
 import { getPayload } from 'payload'
 
@@ -9,7 +9,7 @@ import { getPayload } from 'payload'
  */
 export async function trackAnalyticsEvents(data: AnalyticsEvent) {
   try {
-    const payload = await getPayload({ config })
+    const payload = await getPayload({ config: configPromise })
 
     // Używamy mapowania, aby upewnić się, że obiekt 'data'
     // pasuje do schematu Payload (usuwamy nadmiarowe pola jeśli istnieją)
@@ -51,7 +51,7 @@ export async function trackSession(data: SessionData) {
       return { success: false, error: 'Session ID required' }
     }
 
-    const payload = await getPayload({ config })
+    const payload = await getPayload({ config: configPromise })
 
     // Check if session already exists
     const existingSessions = await payload.find({

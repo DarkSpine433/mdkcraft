@@ -42,8 +42,7 @@ export default async function AccountPage() {
   } catch (error) {
     // when deploying this template on Payload Cloud, this page needs to build before the APIs are live
     // so swallow the error here and simply render the page with fallback data where necessary
-    // in production you may want to redirect to a 404  page or at least log the error somewhere
-    // console.error(error)
+    console.error('Error fetching orders:', error)
   }
 
   return (
@@ -63,7 +62,11 @@ export default async function AccountPage() {
           </p>
         </div>
 
-        {(!orders || !Array.isArray(orders) || orders?.length === 0) && (
+        {orders === null && (
+          <p className="mb-8 text-error">There was an error fetching your orders. Please try again later.</p>
+        )}
+
+        {orders !== null && orders.length === 0 && (
           <p className="mb-8">You have no orders.</p>
         )}
 
