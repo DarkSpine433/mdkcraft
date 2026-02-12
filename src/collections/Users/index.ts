@@ -2,8 +2,8 @@ import type { CollectionConfig } from 'payload'
 
 import { adminOnly } from '@/access/adminOnly'
 import { adminOnlyFieldAccess } from '@/access/adminOnlyFieldAccess'
-import { publicAccess } from '@/access/publicAccess'
 import { adminOrSelf } from '@/access/adminOrSelf'
+import { publicAccess } from '@/access/publicAccess'
 import { checkRole } from '@/access/utilities'
 
 import { ensureFirstUserIsAdmin } from './hooks/ensureFirstUserIsAdmin'
@@ -91,9 +91,6 @@ export const Users: CollectionConfig = {
       access: {
         update: adminOnlyFieldAccess,
       },
-      admin: {
-        group: 'MDKcraft',
-      },
     },
     {
       name: 'stripeCustomerID',
@@ -103,7 +100,6 @@ export const Users: CollectionConfig = {
         update: adminOnlyFieldAccess,
       },
       admin: {
-        group: 'MDKcraft',
         position: 'sidebar',
       },
     },
@@ -115,9 +111,6 @@ export const Users: CollectionConfig = {
       access: {
         update: adminOnlyFieldAccess,
       },
-      admin: {
-        group: 'MDKcraft',
-      },
     },
     {
       name: 'userProjects',
@@ -126,7 +119,6 @@ export const Users: CollectionConfig = {
       on: 'client',
       admin: {
         allowCreate: false,
-        group: 'MDKcraft',
       },
     },
     {
@@ -136,7 +128,6 @@ export const Users: CollectionConfig = {
       on: 'client',
       admin: {
         allowCreate: false,
-        group: 'MDKcraft',
       },
     },
   ],

@@ -1,12 +1,12 @@
+import { getStripeCustomerPortalUrl } from '@/app/actions/stripe'
+import type { ClientFile, Project, SubscriptionPlan, Ticket } from '@/payload-types'
+import configPromise from '@payload-config'
+import { Box, ExternalLink, FileText, Layout, MessageSquare, Zap } from 'lucide-react'
 import type { Metadata } from 'next'
 import { headers as getHeaders } from 'next/headers.js'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import { redirect } from 'next/navigation'
-import { Box, FileText, Layout, MessageSquare, Zap, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
-import { getStripeCustomerPortalUrl } from '@/app/actions/stripe'
-import type { Project, Ticket, ClientFile, SubscriptionPlan } from '@/payload-types'
+import { redirect } from 'next/navigation'
+import { getPayload } from 'payload'
 
 export default async function DashboardPage() {
   const headers = await getHeaders()
@@ -96,7 +96,8 @@ export default async function DashboardPage() {
           <MessageSquare className="text-primary mb-4 group-hover:scale-110 transition-transform" />
           <div className="text-sm text-neutral-500 uppercase font-mono mb-1">Otwarte Tickety</div>
           <div className="text-xl font-bold">
-            {tickets.docs.filter((t) => t.status !== 'closed' && t.status !== 'resolved').length} Nowych
+            {tickets.docs.filter((t) => t.status !== 'closed' && t.status !== 'resolved').length}{' '}
+            Nowych
           </div>
         </div>
       </div>
@@ -208,7 +209,7 @@ export default async function DashboardPage() {
             <MessageSquare size={20} className="text-primary" /> Ostatnie Zgłoszenia
           </h2>
           <Link
-            href="/account/tickets/new"
+            href="/tickets/new"
             className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-xs font-mono hover:bg-white/10 transition-colors uppercase"
           >
             Otwórz Ticket +

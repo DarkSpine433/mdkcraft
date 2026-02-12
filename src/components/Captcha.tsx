@@ -50,7 +50,6 @@ export const AdvancedCaptcha = ({
         siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
         onSuccess={handleSuccess}
         onError={handleError}
-        theme="dark"
       />
     </div>
   )

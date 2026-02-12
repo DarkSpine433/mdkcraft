@@ -1,7 +1,6 @@
 'use client'
 
 import { FormError } from '@/components/forms/FormError'
-import { FormItem } from '@/components/forms/FormItem'
 import { Message } from '@/components/Message'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -49,7 +48,12 @@ export const LoginForm: React.FC = () => {
       <Message error={error} />
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-xs font-mono uppercase tracking-widest text-neutral-500">Email_Address</Label>
+          <Label
+            htmlFor="email"
+            className="text-xs font-mono uppercase tracking-widest text-neutral-500"
+          >
+            Email_Address
+          </Label>
           <Input
             id="email"
             type="email"
@@ -61,7 +65,12 @@ export const LoginForm: React.FC = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password" name="Password" className="text-xs font-mono uppercase tracking-widest text-neutral-500">Access_Key</Label>
+          <Label
+            htmlFor="password"
+            className="text-xs font-mono uppercase tracking-widest text-neutral-500"
+          >
+            Access_Key
+          </Label>
           <Input
             id="password"
             type="password"
@@ -73,13 +82,20 @@ export const LoginForm: React.FC = () => {
         </div>
 
         <div className="text-[10px] font-mono uppercase tracking-widest">
-          <Link href={`/recover-password${allParams}`} className="text-neutral-500 hover:text-primary transition-colors">
+          <Link
+            href={`/recover-password${allParams}`}
+            className="text-neutral-500 hover:text-primary transition-colors"
+          >
             Resetuj_Hasło
           </Link>
         </div>
       </div>
 
-      <Button className="w-full bg-primary hover:bg-primary/80 text-white font-bold py-6 rounded-xl shadow-lg shadow-primary/20 transition-all uppercase tracking-widest" disabled={isLoading} type="submit">
+      <Button
+        className="w-full bg-primary hover:bg-primary/80 text-white font-bold py-6 rounded-xl shadow-lg shadow-primary/20 transition-all uppercase tracking-widest"
+        disabled={isLoading}
+        type="submit"
+      >
         {isLoading ? 'Przetwarzanie...' : 'Autoryzuj_Wejście'}
       </Button>
     </form>
