@@ -1,13 +1,10 @@
 'use server'
 
+import type { ContactInquiry as ContactInquiryType } from '@/payload-types'
 import config from '@/payload.config'
 import { ContactSubmission } from '@/types/captcha'
 import { getPayload } from 'payload'
 import { validateCaptchaToken } from './verifyCaptcha'
-
-/**
- * Server Action - Submit Contact Form
- */
 export async function submitContactForm(data: ContactSubmission) {
   try {
     // 1. Validate required fields
@@ -69,6 +66,16 @@ export async function submitContactForm(data: ContactSubmission) {
         error: 'Wiadomość została już wysłana. Proszę poczekać przed kolejną próbą.',
       }
     }
+    const collectionDesc = payload.config.collections.find((c) => c.slug === 'contact-inquiries')
+
+    const options = (
+      collectionDesc?.fields.find((f) => 'name' in f && f.name === 'projectType') as any
+    )?.options
+    const validValues = options?.map((o: any) => (typeof o === 'object' ? o.value : o)) || []
+
+    const validatedProjectType = (
+      validValues.includes(data.projectType) ? data.projectType : 'other'
+    ) as ContactInquiryType['projectType']
 
     // 6. Create contact inquiry
     await payload.create({
@@ -79,16 +86,7 @@ export async function submitContactForm(data: ContactSubmission) {
         email: data.email,
         phone: data.phone || '',
         company: data.company || '',
-        projectType: data.projectType as
-          | 'ecommerce'
-          | 'ai_ml'
-          | 'blockchain'
-          | 'custom_app'
-          | 'mobile'
-          | 'design'
-          | 'consulting'
-          | 'maintenance'
-          | 'other',
+        projectType: validatedProjectType == undefined ? 'other' : validatedProjectType,
         budget: (data.budget || undefined) as
           | 'under_10k'
           | '10k_50k'

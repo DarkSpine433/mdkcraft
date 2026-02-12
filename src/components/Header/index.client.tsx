@@ -24,10 +24,10 @@ export function HeaderClient({ header: _header }: Props) {
   }, [])
 
   const navLinks = [
-    { name: 'O nas', href: '#about' },
-    { name: 'Oferta', href: '#services' },
-    { name: 'Realizacje', href: '#projects' },
-    { name: 'Opinie', href: '#testimonials' },
+    { name: 'O nas', href: '/#about' },
+    { name: 'Oferta', href: '/#services' },
+    { name: 'Realizacje', href: '/#projects' },
+    { name: 'Opinie', href: '/#testimonials' },
   ]
 
   return (
