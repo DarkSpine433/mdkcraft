@@ -1,6 +1,6 @@
 'use client'
 
-import { Header } from '@/payload-types'
+import { Header, User } from '@/payload-types'
 import { cn } from '@/utilities/cn'
 import { Menu, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
@@ -11,9 +11,10 @@ import GlowingButton from '../landingpage/GlowingButton'
 
 type Props = {
   header: Header
+  user: User | null
 }
 
-export function HeaderClient({ header: _header }: Props) {
+export function HeaderClient({ header: _header, user }: Props) {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenu, setMobileMenu] = useState(false)
 
@@ -59,8 +60,8 @@ export function HeaderClient({ header: _header }: Props) {
               {link.name}
             </Link>
           ))}
-          <Link href="/kontakt">
-            <GlowingButton className="h-10 px-6">Kontakt</GlowingButton>
+          <Link href={user ? '/dashboard' : '/kontakt'}>
+            <GlowingButton className="h-10 px-6">{user ? 'Panel' : 'Kontakt'}</GlowingButton>
           </Link>
         </div>
 

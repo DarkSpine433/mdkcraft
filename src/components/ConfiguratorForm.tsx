@@ -15,6 +15,7 @@ import {
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useMemo, useState } from 'react'
 import { AdvancedCaptcha, useAdvancedCaptcha } from './Captcha'
+import { Button } from './ui/button'
 
 export const ConfiguratorForm = () => {
   const [step, setStep] = useState(1)
@@ -175,12 +176,12 @@ Wiadomość dodatkowa: ${contactData.message}
         <p className="text-neutral-400">
           Nasz zespół przeanalizuje Twoją konfigurację i skontaktuje się z Tobą wkrótce.
         </p>
-        <button
+        <Button
           onClick={() => window.location.reload()}
           className="px-6 py-3 bg-primary rounded-xl font-bold"
         >
           Zacznij od nowa
-        </button>
+        </Button>
       </div>
     )
   }
@@ -188,11 +189,11 @@ Wiadomość dodatkowa: ${contactData.message}
   return (
     <div className="grid lg:grid-cols-12 gap-8">
       <div className="lg:col-span-8 space-y-8">
-        <div className="flex justify-between items-center mb-10">
+        <div className="flex  items-center mb-10">
           {[1, 2, 3, 4].map((s) => (
-            <div key={s} className="flex items-center gap-2">
+            <div key={s} className="flex items-center ">
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center font-mono text-sm ${step >= s ? 'bg-primary text-white shadow-[0_0_15px_rgba(124,58,237,0.5)]' : 'bg-white/5 text-neutral-500'}`}
+                className={`w-8 h-8 rounded-full flex items-center justify-center font-mono text-sm ${step >= s ? 'bg-primary text-background shadow-[0_0_15px_rgba(124,58,237,0.5)]' : 'bg-white/5 text-neutral-500'}`}
               >
                 {s}
               </div>
@@ -430,32 +431,33 @@ Wiadomość dodatkowa: ${contactData.message}
 
         <div className="flex justify-between pt-10">
           {step > 1 ? (
-            <button
+            <Button
+              variant={'ghost'}
               onClick={handleBack}
               className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors"
             >
               <ChevronLeft size={20} /> Wróć
-            </button>
+            </Button>
           ) : (
             <div />
           )}
 
           {step < 4 ? (
-            <button
+            <Button
               onClick={handleNext}
               disabled={step === 1 && !selections.type}
               className="px-8 py-4 bg-primary rounded-xl font-bold flex items-center gap-2 hover:bg-primary/80 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Dalej <ChevronRight size={20} />
-            </button>
+            </Button>
           ) : (
-            <button
+            <Button
               onClick={handleSubmit}
               disabled={!isVerified || isSubmitting || !contactData.name || !contactData.email}
               className="px-8 py-4 bg-gradient-to-r from-primary to-purple-600 rounded-xl font-bold flex items-center gap-2 hover:opacity-90 transition-all disabled:opacity-50"
             >
               {isSubmitting ? 'Wysyłanie...' : 'Wyślij zapytanie'} <Send size={20} />
-            </button>
+            </Button>
           )}
         </div>
       </div>

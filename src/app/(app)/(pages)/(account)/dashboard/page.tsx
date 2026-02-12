@@ -53,7 +53,7 @@ export default async function DashboardPage() {
   })) as unknown as { docs: ClientFile[] }
 
   return (
-    <div className="space-y-12">
+    <div className="flex flex-1 flex-col gap-4 p-4">
       <header>
         <h1 className="text-4xl font-black tracking-tighter mb-2 uppercase">
           Witaj, {user.name || user.email}!

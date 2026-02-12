@@ -1,5 +1,6 @@
 'use client'
 
+import { subscribeToNewsletter } from '@/app/actions/subscribeNewsletter'
 import {
   ArrowUpRight,
   Facebook,
@@ -15,10 +16,10 @@ import {
 import { motion, useMotionTemplate, useMotionValue } from 'motion/react'
 import Link from 'next/link'
 import React, { useRef, useState } from 'react'
-import { Logo } from '../Logo/Logo'
-import MagneticButton from '../ui/magneticBotton'
-import { subscribeToNewsletter } from '@/app/actions/subscribeNewsletter'
 import { AdvancedCaptcha, useAdvancedCaptcha } from '../Captcha'
+import { Logo } from '../Logo/Logo'
+import { Button } from '../ui/button'
+import MagneticButton from '../ui/magneticBotton'
 
 // --- TYPY ---
 
@@ -64,12 +65,12 @@ const NewsletterForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-primary focus:outline-none transition-colors"
         />
-        <button
+        <Button
           disabled={status === 'loading' || !isVerified}
-          className="absolute right-2 top-2 bottom-2 px-4 bg-primary rounded-lg text-xs font-bold hover:bg-primary/80 transition-all disabled:opacity-50"
+          className="absolute right-2 top-1/2 -translate-y-1/2   px-4 rounded-lg text-xs font-bold transition-all disabled:opacity-50 "
         >
-          {status === 'loading' ? '...' : 'JOIN'}
-        </button>
+          {status === 'loading' ? '...' : 'Zapisz się'}
+        </Button>
       </div>
 
       {!isVerified && (
@@ -191,7 +192,9 @@ export default function FooterClient() {
             </p>
 
             <div className="pt-8 space-y-4 max-w-sm">
-              <h4 className="text-[10px] font-mono uppercase tracking-[0.3em] text-primary">Newsletter_System</h4>
+              <h4 className="text-[10px] font-mono uppercase tracking-[0.3em] text-primary">
+                Newsletter_System
+              </h4>
               <NewsletterForm />
             </div>
           </div>
