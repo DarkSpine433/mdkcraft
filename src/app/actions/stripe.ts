@@ -2,7 +2,7 @@
 
 import stripe from 'stripe'
 import { headers as getHeaders } from 'next/headers'
-import config from '@/payload.config'
+import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
 const stripeClient = new stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -11,7 +11,7 @@ const stripeClient = new stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function createSubscriptionCheckoutSession(priceId: string) {
   const headers = await getHeaders()
-  const payload = await getPayload({ config })
+  const payload = await getPayload({ config: configPromise })
   const { user } = (await payload.auth({ headers })) as { user: any }
 
   if (!user) {
@@ -59,7 +59,7 @@ export async function createSubscriptionCheckoutSession(priceId: string) {
 
 export async function getStripeCustomerPortalUrl() {
   const headers = await getHeaders()
-  const payload = await getPayload({ config })
+  const payload = await getPayload({ config: configPromise })
   const { user } = (await payload.auth({ headers })) as { user: any }
 
   if (!user || !user.stripeCustomerID) {

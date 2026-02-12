@@ -1,7 +1,7 @@
 'use server'
 
 import type { ContactInquiry as ContactInquiryType } from '@/payload-types'
-import config from '@/payload.config'
+import configPromise from '@payload-config'
 import { ContactSubmission } from '@/types/captcha'
 import { getPayload } from 'payload'
 import { validateCaptchaToken } from './verifyCaptcha'
@@ -38,7 +38,7 @@ export async function submitContactForm(data: ContactSubmission) {
     console.log('CAPTCHA validated with trust score:', captchaValidation.trustScore)
 
     // 4. Get Payload instance
-    const payload = await getPayload({ config })
+    const payload = await getPayload({ config: configPromise })
 
     // 5. Check for duplicate submissions (same email within last 5 minutes)
     const recentSubmissions = await payload.find({

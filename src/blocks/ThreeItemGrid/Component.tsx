@@ -42,15 +42,21 @@ export const ThreeItemGridBlock: React.FC<
     className?: string
   }
 > = async ({ products }) => {
-  if (!products || !products[0] || !products[1] || !products[2]) return null
+  if (!products) return null
 
-  const [firstProduct, secondProduct, thirdProduct] = products
+  const publishedProducts = products
+    .map((item) => (typeof item === 'object' ? item : null))
+    .filter((item) => item !== null && item._status === 'published') as Product[]
+
+  if (publishedProducts.length < 3) return null
+
+  const [firstProduct, secondProduct, thirdProduct] = publishedProducts
 
   return (
     <section className="container grid gap-4 pb-4 md:grid-cols-6 md:grid-rows-2">
-      <ThreeItemGridItem item={firstProduct as Product} priority size="full" />
-      <ThreeItemGridItem item={secondProduct as Product} priority size="half" />
-      <ThreeItemGridItem item={thirdProduct as Product} size="half" />
+      <ThreeItemGridItem item={firstProduct} priority size="full" />
+      <ThreeItemGridItem item={secondProduct} priority size="half" />
+      <ThreeItemGridItem item={thirdProduct} size="half" />
     </section>
   )
 }

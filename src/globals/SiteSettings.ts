@@ -9,6 +9,22 @@ export const SiteSettings: GlobalConfig = {
   },
   fields: [
     {
+      name: 'siteName',
+      type: 'text',
+      defaultValue: 'MDKcraft',
+      required: true,
+    },
+    {
+      name: 'description',
+      type: 'textarea',
+      defaultValue: 'Modern Web Development Services',
+    },
+    {
+      name: 'ogImage',
+      type: 'upload',
+      relationTo: 'media',
+    },
+    {
       name: 'turnstileSiteKey',
       type: 'text',
       admin: {

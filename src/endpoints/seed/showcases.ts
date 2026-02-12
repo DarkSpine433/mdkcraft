@@ -1,5 +1,5 @@
 import type { Media, Showcase } from '@/payload-types'
-import { Payload, RequiredDataFromCollectionSlug } from 'payload'
+import { Payload, PayloadRequest, RequiredDataFromCollectionSlug } from 'payload'
 import {
     CHALLENGES,
     CLIENTS,
@@ -14,9 +14,11 @@ import {
 
 export const seedShowcases = async ({
   payload,
+  req,
   thumbnail,
 }: {
   payload: Payload
+  req: PayloadRequest
   thumbnail: Media
 }): Promise<void> => {
   payload.logger.info(`— Seeding 50 showcases...`)
@@ -150,6 +152,7 @@ export const seedShowcases = async ({
       payload.create({
         collection: 'showcases',
         data: project,
+        req,
       }),
     ),
   )

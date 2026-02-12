@@ -84,6 +84,7 @@ export interface Config {
     faq: Faq;
     'configurator-options': ConfiguratorOption;
     'client-files': ClientFile;
+    roadmap: Roadmap;
     'user-behavior-events': UserBehaviorEvent;
     'user-sessions': UserSession;
     'page-views': PageView;
@@ -135,6 +136,7 @@ export interface Config {
     faq: FaqSelect<false> | FaqSelect<true>;
     'configurator-options': ConfiguratorOptionsSelect<false> | ConfiguratorOptionsSelect<true>;
     'client-files': ClientFilesSelect<false> | ClientFilesSelect<true>;
+    roadmap: RoadmapSelect<false> | RoadmapSelect<true>;
     'user-behavior-events': UserBehaviorEventsSelect<false> | UserBehaviorEventsSelect<true>;
     'user-sessions': UserSessionsSelect<false> | UserSessionsSelect<true>;
     'page-views': PageViewsSelect<false> | PageViewsSelect<true>;
@@ -1348,6 +1350,21 @@ export interface ClientFile {
   focalY?: number | null;
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roadmap".
+ */
+export interface Roadmap {
+  id: string;
+  title: string;
+  description: string;
+  status: 'planned' | 'in_progress' | 'completed' | 'cancelled';
+  priority?: ('low' | 'medium' | 'high') | null;
+  expectedRelease?: string | null;
+  votes?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Tracks all user interactions and behavior events
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2066,6 +2083,10 @@ export interface PayloadLockedDocument {
         value: string | ClientFile;
       } | null)
     | ({
+        relationTo: 'roadmap';
+        value: string | Roadmap;
+      } | null)
+    | ({
         relationTo: 'user-behavior-events';
         value: string | UserBehaviorEvent;
       } | null)
@@ -2642,6 +2663,20 @@ export interface ClientFilesSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roadmap_select".
+ */
+export interface RoadmapSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  status?: T;
+  priority?: T;
+  expectedRelease?: T;
+  votes?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3346,6 +3381,9 @@ export interface Footer {
  */
 export interface SiteSetting {
   id: string;
+  siteName: string;
+  description?: string | null;
+  ogImage?: (string | null) | Media;
   /**
    * Cloudflare Turnstile Site Key
    */
@@ -3406,6 +3444,9 @@ export interface FooterSelect<T extends boolean = true> {
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
+  siteName?: T;
+  description?: T;
+  ogImage?: T;
   turnstileSiteKey?: T;
   contactEmail?: T;
   maintenanceMode?: T;

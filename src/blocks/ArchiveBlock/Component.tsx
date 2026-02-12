@@ -45,9 +45,12 @@ export const ArchiveBlock: React.FC<
     posts = fetchedProducts.docs
   } else {
     if (selectedDocs?.length) {
-      const filteredSelectedPosts = selectedDocs.map((post) => {
-        if (typeof post.value === 'object') return post.value
-      }) as Product[]
+      const filteredSelectedPosts = selectedDocs
+        .map((post) => {
+          if (typeof post.value === 'object') return post.value
+          return null
+        })
+        .filter((post) => post !== null && post._status === 'published') as Product[]
 
       posts = filteredSelectedPosts
     }

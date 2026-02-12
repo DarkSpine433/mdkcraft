@@ -1,10 +1,10 @@
 'use server'
 
-import config from '@/payload.config'
+import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
 export async function getConfiguratorOptions() {
-  const payload = await getPayload({ config })
+  const payload = await getPayload({ config: configPromise })
 
   const options = await payload.find({
     collection: 'configurator-options',
