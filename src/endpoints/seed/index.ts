@@ -1,16 +1,25 @@
 import type { CollectionSlug, File, GlobalSlug, Payload, PayloadRequest } from 'payload'
 
 import { Address, Transaction, VariantOption } from '@/payload-types'
+import { seedAnalytics } from './analytics'
+import { seedClientFiles } from './client-files'
 import { contactFormData } from './contact-form'
 import { contactPageData } from './contact-page'
+import { seedFaq } from './faq'
 import { homePageData } from './home'
 import { imageHatData } from './image-hat'
 import { imageHero1Data } from './image-hero-1'
 import { imageTshirtBlackData } from './image-tshirt-black'
 import { imageTshirtWhiteData } from './image-tshirt-white'
+import { seedOpinions } from './opinions'
 import { productHatData } from './product-hat'
 import { productTshirtData, productTshirtVariant } from './product-tshirt'
+import { seedProjects } from './projects'
+import { seedRoadmap } from './roadmap'
 import { seedShowcases } from './showcases'
+import { seedSiteSettings } from './site-settings'
+import { seedSubscriptions } from './subscriptions'
+import { seedTickets } from './tickets'
 
 const collections: CollectionSlug[] = [
   'categories',
@@ -27,9 +36,23 @@ const collections: CollectionSlug[] = [
   'addresses',
   'orders',
   'showcases',
+  'projects',
+  'tickets',
+  'faq',
+  'subscription-plans',
+  'subscription-addons',
+  'roadmap',
+  'client-files',
+  'contact-inquiries',
+  'newsletter-subscribers',
+  'page-views',
+  'project-views',
+  'user-sessions',
+  'user-behavior-events',
+  'heatmap-data',
 ]
 
-const categories = ['Accessories', 'T-Shirts', 'Hats']
+const categories = ['Accessories', 'T-Shirts', 'Hats', 'Opinions']
 
 const sizeVariantOptions = [
   { label: 'Small', value: 'small' },
@@ -43,7 +66,7 @@ const colorVariantOptions = [
   { label: 'White', value: 'white' },
 ]
 
-const globals: GlobalSlug[] = ['header', 'footer']
+const globals: GlobalSlug[] = ['header', 'footer', 'site-settings']
 
 const baseAddressUSData: Transaction['billingAddress'] = {
   title: 'Dr.',
@@ -70,10 +93,6 @@ const baseAddressUKData: Transaction['billingAddress'] = {
   country: 'GB',
 }
 
-// Next.js revalidation errors are normal when seeding the database without a server running
-// i.e. running `yarn seed` locally instead of using the admin UI within an active app
-// The app is not running to revalidate the pages and so the API routes are not available
-// These error messages can be ignored: `Error hitting revalidate route for...`
 export const seed = async ({
   payload,
   req,
@@ -83,16 +102,13 @@ export const seed = async ({
 }): Promise<void> => {
   payload.logger.info('Seeding database...')
 
-  // we need to clear the media directory before seeding
-  // as well as the collections and globals
-  // this is because while `yarn seed` drops the database
-  // the custom `/api/seed` endpoint does not
   payload.logger.info(`— Clearing collections and globals...`)
 
-  // clear the database
+  // clear globals
   await Promise.all(
     globals.map((global) =>
-      payload.updateGlobal({ req,
+      payload.updateGlobal({
+        req,
         slug: global,
         data: {},
         depth: 0,
@@ -103,22 +119,37 @@ export const seed = async ({
     ),
   )
 
+  // clear collections
   for (const collection of collections) {
-    await payload.db.deleteMany({ collection, req, where: {} })
-    if (payload.collections[collection].config.versions) {
-      await payload.db.deleteVersions({ collection, req, where: {} })
+    if (payload.collections[collection]) {
+      await payload.db.deleteMany({ collection, req, where: {} })
+      if (payload.collections[collection].config.versions) {
+        await payload.db.deleteVersions({ collection, req, where: {} })
+      }
     }
   }
 
   payload.logger.info(`— Seeding customer and customer data...`)
 
-  await payload.delete({ req,
+  await payload.delete({
+    req,
     collection: 'users',
     depth: 0,
     where: {
       email: {
         equals: 'customer@example.com',
       },
+    },
+  })
+
+  const customer = await payload.create({
+    req,
+    collection: 'users',
+    data: {
+      name: 'Customer',
+      email: 'customer@example.com',
+      password: 'password',
+      roles: ['customer'],
     },
   })
 
@@ -140,47 +171,42 @@ export const seed = async ({
       ),
     ])
 
-  const [
-    customer,
-    imageHat,
-    imageTshirtBlack,
-    imageTshirtWhite,
-    imageHero,
-    accessoriesCategory,
-    tshirtsCategory,
-    hatsCategory,
-  ] = await Promise.all([
-    payload.create({ req,
-      collection: 'users',
-      data: {
-        name: 'Customer',
-        email: 'customer@example.com',
-        password: 'password',
-        roles: ['customer'],
-      },
-    }),
-    payload.create({ req,
-      collection: 'media',
-      data: imageHatData,
-      file: imageHatBuffer,
-    }),
-    payload.create({ req,
-      collection: 'media',
-      data: imageTshirtBlackData,
-      file: imageTshirtBlackBuffer,
-    }),
-    payload.create({ req,
-      collection: 'media',
-      data: imageTshirtWhiteData,
-      file: imageTshirtWhiteBuffer,
-    }),
-    payload.create({ req,
-      collection: 'media',
-      data: imageHero1Data,
-      file: heroBuffer,
-    }),
-    ...categories.map((category) =>
-      payload.create({ req,
+  payload.logger.info('— Creating media...')
+
+  // Create Media Sequentially
+  const imageHat = await payload.create({
+    collection: 'media',
+    data: imageHatData,
+    file: imageHatBuffer,
+    overrideAccess: true,
+  })
+
+  const imageTshirtBlack = await payload.create({
+    collection: 'media',
+    data: imageTshirtBlackData,
+    file: imageTshirtBlackBuffer,
+    overrideAccess: true,
+  })
+
+  const imageTshirtWhite = await payload.create({
+    collection: 'media',
+    data: imageTshirtWhiteData,
+    file: imageTshirtWhiteBuffer,
+    overrideAccess: true,
+  })
+
+  const imageHero = await payload.create({
+    collection: 'media',
+    data: imageHero1Data,
+    file: heroBuffer,
+    overrideAccess: true,
+  })
+
+  // Create Categories
+  const [accessoriesCategory, tshirtsCategory, hatsCategory] = await Promise.all(
+    categories.map((category) =>
+      payload.create({
+        req,
         collection: 'categories',
         data: {
           title: category,
@@ -188,11 +214,49 @@ export const seed = async ({
         },
       }),
     ),
-  ])
+  )
+
+  // Fetch avatars
+  const avatarUrls = [
+    'https://randomuser.me/api/portraits/men/32.jpg',
+    'https://randomuser.me/api/portraits/women/44.jpg',
+    'https://randomuser.me/api/portraits/men/86.jpg',
+    'https://randomuser.me/api/portraits/women/68.jpg',
+    'https://randomuser.me/api/portraits/men/46.jpg',
+    'https://randomuser.me/api/portraits/women/65.jpg',
+    'https://randomuser.me/api/portraits/men/33.jpg',
+    'https://randomuser.me/api/portraits/women/22.jpg',
+  ]
+
+  const avatarBuffers = await Promise.all(
+    avatarUrls.map(async (url) => {
+      try {
+        return await fetchFileByURL(url)
+      } catch (e) {
+        console.error(`Failed to fetch avatar ${url}`, e)
+        return null
+      }
+    }),
+  ).then((results) => results.filter((r): r is File => r !== null))
+
+  // Create avatar media items
+  const avatars = await Promise.all(
+    avatarBuffers.map((buffer, i) =>
+      payload.create({
+        collection: 'media',
+        data: {
+          alt: `Avatar ${i + 1}`,
+        },
+        file: buffer,
+        overrideAccess: true,
+      }),
+    ),
+  )
 
   payload.logger.info(`— Seeding variant types and options...`)
 
-  const sizeVariantType = await payload.create({ req,
+  const sizeVariantType = await payload.create({
+    req,
     collection: 'variantTypes',
     data: {
       name: 'size',
@@ -203,7 +267,8 @@ export const seed = async ({
   const sizeVariantOptionsResults: VariantOption[] = []
 
   for (const option of sizeVariantOptions) {
-    const result = await payload.create({ req,
+    const result = await payload.create({
+      req,
       collection: 'variantOptions',
       data: {
         ...option,
@@ -215,7 +280,8 @@ export const seed = async ({
 
   const [small, medium, large, xlarge] = sizeVariantOptionsResults
 
-  const colorVariantType = await payload.create({ req,
+  const colorVariantType = await payload.create({
+    req,
     collection: 'variantTypes',
     data: {
       name: 'color',
@@ -225,7 +291,8 @@ export const seed = async ({
 
   const [black, white] = await Promise.all(
     colorVariantOptions.map((option) => {
-      return payload.create({ req,
+      return payload.create({
+        req,
         collection: 'variantOptions',
         data: {
           ...option,
@@ -237,7 +304,8 @@ export const seed = async ({
 
   payload.logger.info(`— Seeding products...`)
 
-  const productHat = await payload.create({ req,
+  const productHat = await payload.create({
+    req,
     collection: 'products',
     depth: 0,
     data: productHatData({
@@ -249,7 +317,8 @@ export const seed = async ({
     }),
   })
 
-  const productTshirt = await payload.create({ req,
+  const productTshirt = await payload.create({
+    req,
     collection: 'products',
     depth: 0,
     data: productTshirtData({
@@ -265,20 +334,15 @@ export const seed = async ({
     }),
   })
 
-  let hoodieID: number | string = productTshirt.id
-
-  if (payload.db.defaultIDType === 'text') {
-    hoodieID = `"${hoodieID}"`
-  }
-
   const [
     smallTshirtHoodieVariant,
     mediumTshirtHoodieVariant,
-    largeTshirtHoodieVariant,
-    xlargeTshirtHoodieVariant,
+    _largeTshirtHoodieVariant,
+    _xlargeTshirtHoodieVariant,
   ] = await Promise.all(
     [small, medium, large, xlarge].map((variantOption) =>
-      payload.create({ req,
+      payload.create({
+        req,
         collection: 'variants',
         depth: 0,
         data: productTshirtVariant({
@@ -291,7 +355,8 @@ export const seed = async ({
 
   await Promise.all(
     [small, medium, large, xlarge].map((variantOption) =>
-      payload.create({ req,
+      payload.create({
+        req,
         collection: 'variants',
         depth: 0,
         data: productTshirtVariant({
@@ -305,7 +370,8 @@ export const seed = async ({
 
   payload.logger.info(`— Seeding contact form...`)
 
-  const contactForm = await payload.create({ req,
+  const contactForm = await payload.create({
+    req,
     collection: 'forms',
     depth: 0,
     data: contactFormData(),
@@ -313,8 +379,9 @@ export const seed = async ({
 
   payload.logger.info(`— Seeding pages...`)
 
-  const [_, contactPage] = await Promise.all([
-    payload.create({ req,
+  await Promise.all([
+    payload.create({
+      req,
       collection: 'pages',
       depth: 0,
       data: homePageData({
@@ -322,7 +389,8 @@ export const seed = async ({
         metaImage: imageHat,
       }),
     }),
-    payload.create({ req,
+    payload.create({
+      req,
       collection: 'pages',
       depth: 0,
       data: contactPageData({
@@ -333,14 +401,41 @@ export const seed = async ({
 
   payload.logger.info(`— Seeding showcases...`)
 
-  await seedShowcases({ req,
+  await seedShowcases({
+    req,
     payload,
     thumbnail: imageHero,
   })
 
+  payload.logger.info(`— Seeding projects...`)
+
+  await seedProjects({
+    req,
+    payload,
+    media: [imageHero, imageHat, imageTshirtBlack],
+    categories: [accessoriesCategory, tshirtsCategory, hatsCategory],
+  })
+
+  await seedTickets({ req, payload, user: customer })
+  await seedFaq({ req, payload })
+  await seedSubscriptions({ req, payload })
+  await seedRoadmap({ req, payload })
+  await seedClientFiles({ req, payload, user: customer })
+  await seedSiteSettings({ req, payload })
+  await seedAnalytics({ req, payload })
+
+  payload.logger.info(`— Seeding opinions...`)
+
+  await seedOpinions({
+    req,
+    payload,
+    media: avatars,
+  })
+
   payload.logger.info(`— Seeding addresses...`)
 
-  const customerUSAddress = await payload.create({ req,
+  await payload.create({
+    req,
     collection: 'addresses',
     depth: 0,
     data: {
@@ -349,7 +444,8 @@ export const seed = async ({
     },
   })
 
-  const customerUKAddress = await payload.create({ req,
+  await payload.create({
+    req,
     collection: 'addresses',
     depth: 0,
     data: {
@@ -360,22 +456,8 @@ export const seed = async ({
 
   payload.logger.info(`— Seeding transactions...`)
 
-  const pendingTransaction = await payload.create({ req,
-    collection: 'transactions',
-    data: {
-      currency: 'USD',
-      customer: customer.id,
-      paymentMethod: 'stripe',
-      stripe: {
-        customerID: 'cus_123',
-        paymentIntentID: 'pi_123',
-      },
-      status: 'pending',
-      billingAddress: baseAddressUSData,
-    },
-  })
-
-  const succeededTransaction = await payload.create({ req,
+  const succeededTransaction = await payload.create({
+    req,
     collection: 'transactions',
     data: {
       currency: 'USD',
@@ -390,16 +472,11 @@ export const seed = async ({
     },
   })
 
-  let succeededTransactionID: number | string = succeededTransaction.id
-
-  if (payload.db.defaultIDType === 'text') {
-    succeededTransactionID = `"${succeededTransactionID}"`
-  }
-
   payload.logger.info(`— Seeding carts...`)
 
   // This cart is open as it's created now
-  const openCart = await payload.create({ req,
+  await payload.create({
+    req,
     collection: 'carts',
     data: {
       customer: customer.id,
@@ -416,8 +493,9 @@ export const seed = async ({
 
   const oldTimestamp = new Date('2023-01-01T00:00:00Z').toISOString()
 
-  // Cart is abandoned because it was created long in the past
-  const abandonedCart = await payload.create({ req,
+  // Cart is abandoned
+  await payload.create({
+    req,
     collection: 'carts',
     data: {
       currency: 'USD',
@@ -431,8 +509,9 @@ export const seed = async ({
     },
   })
 
-  // Cart is purchased because it has a purchasedAt date
-  const completedCart = await payload.create({ req,
+  // Cart is purchased
+  await payload.create({
+    req,
     collection: 'carts',
     data: {
       customer: customer.id,
@@ -454,15 +533,10 @@ export const seed = async ({
     },
   })
 
-  let completedCartID: number | string = completedCart.id
-
-  if (payload.db.defaultIDType === 'text') {
-    completedCartID = `"${completedCartID}"`
-  }
-
   payload.logger.info(`— Seeding orders...`)
 
-  const orderInCompleted = await payload.create({ req,
+  await payload.create({
+    req,
     collection: 'orders',
     data: {
       amount: 7499,
@@ -486,7 +560,8 @@ export const seed = async ({
     },
   })
 
-  const orderInProcessing = await payload.create({ req,
+  await payload.create({
+    req,
     collection: 'orders',
     data: {
       amount: 7499,
@@ -513,7 +588,8 @@ export const seed = async ({
   payload.logger.info(`— Seeding globals...`)
 
   await Promise.all([
-    payload.updateGlobal({ req,
+    payload.updateGlobal({
+      req,
       slug: 'header',
       data: {
         navItems: [
@@ -541,7 +617,8 @@ export const seed = async ({
         ],
       },
     }),
-    payload.updateGlobal({ req,
+    payload.updateGlobal({
+      req,
       slug: 'footer',
       data: {
         navItems: [
@@ -557,6 +634,7 @@ export const seed = async ({
               type: 'custom',
               label: 'Find my order',
               url: '/find-order',
+              newTab: false,
             },
           },
           {
@@ -584,21 +662,40 @@ export const seed = async ({
 }
 
 async function fetchFileByURL(url: string): Promise<File> {
-  const res = await fetch(url, {
-    credentials: 'include',
-    method: 'GET',
-  })
+  try {
+    const res = await fetch(url, {
+      credentials: 'include',
+      method: 'GET',
+    })
 
-  if (!res.ok) {
-    throw new Error(`Failed to fetch file from ${url}, status: ${res.status}`)
-  }
+    if (!res.ok) {
+      // Log warning but continue to fallback
+      console.warn(`Fetch failed for ${url}: ${res.status}`)
+      throw new Error(`Failed to fetch file from ${url}, status: ${res.status}`)
+    }
 
-  const data = await res.arrayBuffer()
+    const data = await res.arrayBuffer()
 
-  return {
-    name: url.split('/').pop() || `file-${Date.now()}`,
-    data: Buffer.from(data),
-    mimetype: `image/${url.split('.').pop()}`,
-    size: data.byteLength,
+    return {
+      name: url.split('/').pop() || `file-${Date.now()}`,
+      data: Buffer.from(data),
+      mimetype: `image/${url.split('.').pop()}`,
+      size: data.byteLength,
+    }
+  } catch (e) {
+    console.error(`Error fetching file from ${url}, using fallback. Error:`, e)
+
+    // Return a 1x1 transparent PNG as fallback
+    const fallbackBuffer = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+      'base64',
+    )
+
+    return {
+      name: `fallback-${Date.now()}-${Math.random().toString(36).substring(7)}.png`,
+      data: fallbackBuffer,
+      mimetype: 'image/png',
+      size: fallbackBuffer.length,
+    }
   }
 }

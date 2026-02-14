@@ -38,6 +38,7 @@
 @source inline("bg-warning/30");
 
 @theme {
+  --breakpoint-xs: 26rem;
   --breakpoint-sm: 40rem;
   --breakpoint-md: 48rem;
   --breakpoint-lg: 64rem;
@@ -53,7 +54,11 @@
     margin-inline: auto;
     padding-inline: 1rem;
   }
-
+  @variant xs {
+    .container {
+      max-width: var(--breakpoint-xs);
+    }
+  }
   @variant sm {
     .container {
       max-width: var(--breakpoint-sm);
@@ -248,4 +253,3 @@ button {
     @apply bg-background text-foreground;
   }
 }
-

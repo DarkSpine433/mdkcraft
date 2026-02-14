@@ -16,17 +16,18 @@ import { fileURLToPath } from 'url'
 
 import { Categories } from '@/collections/Categories'
 import { Media } from '@/collections/Media'
+import { Opinions } from '@/collections/Opinions'
 import { Pages } from '@/collections/Pages'
 import { Users } from '@/collections/Users'
-import { Showcases } from './collections/Showcases'
-import { SubscriptionPlans } from './collections/SubscriptionPlans'
-import { SubscriptionAddons } from './collections/SubscriptionAddons'
-import { Projects } from './collections/Projects'
-import { Tickets } from './collections/Tickets'
-import { FAQ } from './collections/FAQ'
-import { ConfiguratorOptions } from './collections/ConfiguratorOptions'
 import { ClientFiles } from './collections/ClientFiles'
+import { ConfiguratorOptions } from './collections/ConfiguratorOptions'
+import { FAQ } from './collections/FAQ'
+import { Projects } from './collections/Projects'
 import { Roadmap } from './collections/Roadmap'
+import { Showcases } from './collections/Showcases'
+import { SubscriptionAddons } from './collections/SubscriptionAddons'
+import { SubscriptionPlans } from './collections/SubscriptionPlans'
+import { Tickets } from './collections/Tickets'
 
 // Analytics Collections
 import { ContactInquiries } from '@/collections/ContactInquiries'
@@ -119,7 +120,7 @@ export default buildConfig({
     },
   }),
   endpoints: [],
-  globals: [Header, Footer, SiteSettings],
+  globals: [Header, Footer, SiteSettings, Opinions],
   plugins,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

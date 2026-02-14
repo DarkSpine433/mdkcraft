@@ -1,4 +1,5 @@
 import { getStripeCustomerPortalUrl } from '@/app/actions/stripe'
+
 import type { ClientFile, Project, SubscriptionPlan, Ticket } from '@/payload-types'
 import configPromise from '@payload-config'
 import { Box, ExternalLink, FileText, Layout, MessageSquare, Zap } from 'lucide-react'
@@ -7,6 +8,8 @@ import { headers as getHeaders } from 'next/headers.js'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
+import Projects from './Projects'
+import TicketsRow from './TicketsRow'
 
 export default async function DashboardPage() {
   const headers = await getHeaders()
@@ -25,7 +28,6 @@ export default async function DashboardPage() {
     where: {
       client: { equals: user.id },
     },
-    limit: 5,
   })) as unknown as { docs: Project[]; totalDocs: number }
 
   // Fetch user tickets
@@ -36,7 +38,6 @@ export default async function DashboardPage() {
     where: {
       client: { equals: user.id },
     },
-    limit: 5,
     sort: '-createdAt',
   })) as unknown as { docs: Ticket[] }
 
@@ -48,7 +49,6 @@ export default async function DashboardPage() {
     where: {
       client: { equals: user.id },
     },
-    limit: 10,
     sort: '-createdAt',
   })) as unknown as { docs: ClientFile[] }
 
@@ -124,42 +124,7 @@ export default async function DashboardPage() {
 
         <div className="grid gap-4">
           {projects.docs.length > 0 ? (
-            projects.docs.map((project) => (
-              <div
-                key={project.id}
-                className="p-6 rounded-2xl bg-[#0a0a0c] border border-white/5 flex flex-col gap-4"
-              >
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 w-full">
-                  <div>
-                    <h3 className="font-bold text-lg">{project.title}</h3>
-                    <p className="text-xs text-neutral-500 font-mono uppercase">{project.status}</p>
-                  </div>
-                  <div className="w-full md:w-48 bg-white/5 h-2 rounded-full overflow-hidden">
-                    <div
-                      className="bg-primary h-full shadow-[0_0_10px_rgba(124,58,237,0.5)]"
-                      style={{ width: `${project.progress}%` }}
-                    />
-                  </div>
-                  <div className="text-sm font-mono">{project.progress}%</div>
-                </div>
-
-                {project.activityLog && project.activityLog.length > 0 && (
-                  <div className="w-full mt-4 pt-4 border-t border-white/5">
-                    <div className="text-[10px] font-mono text-neutral-500 uppercase mb-2">
-                      Ostatnia aktywność:
-                    </div>
-                    <div className="text-sm italic">
-                      &quot;{project.activityLog[project.activityLog.length - 1].message}&quot;
-                      <span className="text-[10px] text-neutral-600 ml-2">
-                        {new Date(
-                          project.activityLog[project.activityLog.length - 1].date,
-                        ).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))
+            projects.docs.map((project) => <Projects key={project.id} project={project} />)
           ) : (
             <div className="p-10 text-center border border-dashed border-white/10 rounded-2xl text-neutral-500 italic">
               Brak aktywnych projektów.
@@ -236,25 +201,10 @@ export default async function DashboardPage() {
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {tickets.docs.map((ticket) => (
-                    <tr
-                      key={ticket.id}
-                      className="hover:bg-white/2 transition-colors cursor-pointer group"
-                    >
-                      <td className="px-6 py-4 font-medium group-hover:text-primary transition-colors">
-                        {ticket.subject}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`text-[10px] px-2 py-1 rounded-full border ${ticket.status === 'open' ? 'border-green-500/50 text-green-500' : 'border-neutral-500/50 text-neutral-500'}`}
-                        >
-                          {ticket.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-xs">{ticket.priority}</td>
-                      <td className="px-6 py-4 text-xs text-neutral-500 font-mono">
-                        {new Date(ticket.createdAt).toLocaleDateString()}
-                      </td>
-                    </tr>
+                    <TicketsRow
+                      key={ticket.id + ticket.createdAt + ticket.status}
+                      ticket={ticket}
+                    />
                   ))}
                 </tbody>
               </table>
