@@ -1,12 +1,22 @@
+import { adminOnly } from '@/access/adminOnly'
+import { anyone } from '@/access/anyone'
 import type { CollectionConfig } from 'payload'
 
 export const UserSessions: CollectionConfig = {
   slug: 'user-sessions',
   access: {
-    read: ({ req: { user } }) => !!user,
-    create: () => true,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
+    read: ({ req: { user } }) => {
+      if (!user) return false
+      if (user.roles?.includes('admin')) return true
+      return {
+        userId: {
+          equals: user.id,
+        },
+      }
+    },
+    create: anyone,
+    update: adminOnly,
+    delete: adminOnly,
   },
   admin: {
     useAsTitle: 'sessionId',

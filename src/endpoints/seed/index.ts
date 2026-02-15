@@ -226,6 +226,10 @@ export const seed = async ({
     'https://randomuser.me/api/portraits/women/65.jpg',
     'https://randomuser.me/api/portraits/men/33.jpg',
     'https://randomuser.me/api/portraits/women/22.jpg',
+    'https://randomuser.me/api/portraits/women/4.jpg',
+    'https://randomuser.me/api/portraits/women/8.jpg',
+    'https://randomuser.me/api/portraits/men/8.jpg',
+    'https://randomuser.me/api/portraits/men/1.jpg',
   ]
 
   const avatarBuffers = await Promise.all(
@@ -239,19 +243,20 @@ export const seed = async ({
     }),
   ).then((results) => results.filter((r): r is File => r !== null))
 
-  // Create avatar media items
-  const avatars = await Promise.all(
-    avatarBuffers.map((buffer, i) =>
-      payload.create({
-        collection: 'media',
-        data: {
-          alt: `Avatar ${i + 1}`,
-        },
-        file: buffer,
-        overrideAccess: true,
-      }),
-    ),
-  )
+  // Create avatar media items sequentially to avoid race conditions and unique constraint errors
+  const avatars = []
+  for (let i = 0; i < avatarBuffers.length; i++) {
+    const buffer = avatarBuffers[i]
+    const createdAvatar = await payload.create({
+      collection: 'media',
+      data: {
+        alt: `Avatar ${i + 1}`,
+      },
+      file: buffer,
+      overrideAccess: true,
+    })
+    avatars.push(createdAvatar)
+  }
 
   payload.logger.info(`— Seeding variant types and options...`)
 
@@ -676,8 +681,15 @@ async function fetchFileByURL(url: string): Promise<File> {
 
     const data = await res.arrayBuffer()
 
+    const pathParts = url.split('/')
+    const filename = pathParts.pop() || `file-${Date.now()}`
+    const folder = pathParts.pop() || ''
+
+    // Prefix filename with folder name to avoid collisions (e.g., men/8.jpg vs women/8.jpg)
+    const uniqueName = folder ? `${folder}-${filename}` : filename
+
     return {
-      name: url.split('/').pop() || `file-${Date.now()}`,
+      name: uniqueName,
       data: Buffer.from(data),
       mimetype: `image/${url.split('.').pop()}`,
       size: data.byteLength,

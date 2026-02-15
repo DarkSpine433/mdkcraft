@@ -142,6 +142,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     void fetchMe()
   }, [])
 
+  // Apply user settings (Font Size, Layout Density, etc.)
+  useEffect(() => {
+    if (user?.settings) {
+      const { fontSize, layoutDensity, animationSpeed, glassIntensity } = user.settings
+      const doc = document.documentElement
+
+      if (fontSize) doc.setAttribute('data-font-size', fontSize)
+      if (layoutDensity) doc.setAttribute('data-layout-density', layoutDensity)
+      if (animationSpeed) doc.setAttribute('data-animation-speed', animationSpeed)
+      if (glassIntensity) doc.setAttribute('data-glass-intensity', glassIntensity)
+    } else {
+      // Defaults if no user/settings
+      const doc = document.documentElement
+      doc.setAttribute('data-font-size', 'medium')
+      doc.setAttribute('data-layout-density', 'comfortable')
+      doc.setAttribute('data-animation-speed', 'normal')
+      doc.setAttribute('data-glass-intensity', 'medium')
+    }
+  }, [user])
   const forgotPassword = useCallback<ForgotPassword>(async (args) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/forgot-password`, {

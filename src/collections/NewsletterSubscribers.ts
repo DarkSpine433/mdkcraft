@@ -1,12 +1,14 @@
+import { adminOnly } from '@/access/adminOnly'
+import { anyone } from '@/access/anyone'
 import type { CollectionConfig } from 'payload'
 
 export const NewsletterSubscribers: CollectionConfig = {
   slug: 'newsletter-subscribers',
   access: {
-    read: ({ req: { user } }) => !!user,
-    create: () => true,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
+    read: adminOnly,
+    create: anyone,
+    update: adminOnly,
+    delete: adminOnly,
   },
   admin: {
     useAsTitle: 'email',

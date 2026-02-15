@@ -19,8 +19,8 @@ export const Users: CollectionConfig = {
   },
   admin: {
     group: 'Users',
-    defaultColumns: ['name', 'email', 'roles'],
-    useAsTitle: 'name',
+    defaultColumns: ['name', 'surname', 'email', 'roles'],
+    useAsTitle: 'email',
   },
   auth: {
     tokenExpiration: 1209600,
@@ -29,6 +29,22 @@ export const Users: CollectionConfig = {
     {
       name: 'name',
       type: 'text',
+      label: 'Imię',
+    },
+    {
+      name: 'surname',
+      type: 'text',
+      label: 'Nazwisko',
+    },
+    {
+      name: 'phone',
+      type: 'text',
+      label: 'Numer telefonu',
+    },
+    {
+      name: 'company',
+      type: 'text',
+      label: 'Firma / Organizacja',
     },
     {
       name: 'roles',
@@ -45,11 +61,23 @@ export const Users: CollectionConfig = {
       },
       options: [
         {
-          label: 'admin',
+          label: 'Admin',
           value: 'admin',
         },
         {
-          label: 'customer',
+          label: 'Manager',
+          value: 'manager',
+        },
+        {
+          label: 'Developer',
+          value: 'developer',
+        },
+        {
+          label: 'Editor',
+          value: 'editor',
+        },
+        {
+          label: 'Klient',
           value: 'customer',
         },
       ],
@@ -126,6 +154,96 @@ export const Users: CollectionConfig = {
       type: 'join',
       collection: 'tickets',
       on: 'client',
+      admin: {
+        allowCreate: false,
+      },
+    },
+    {
+      name: 'userFiles',
+      type: 'join',
+      collection: 'client-files',
+      on: 'client',
+      admin: {
+        allowCreate: false,
+      },
+    },
+    {
+      name: 'assignedInquiries',
+      type: 'join',
+      collection: 'contact-inquiries',
+      on: 'assignedTo',
+      admin: {
+        allowCreate: false,
+      },
+    },
+    {
+      name: 'settings',
+      type: 'group',
+      label: 'Ustawienia Konta',
+      fields: [
+        {
+          name: 'newsletter',
+          type: 'checkbox',
+          label: 'Subskrypcja Newslettera',
+          defaultValue: false,
+        },
+        {
+          name: 'marketing',
+          type: 'checkbox',
+          label: 'Zgody Marketingowe',
+          defaultValue: false,
+        },
+        {
+          name: 'fontSize',
+          type: 'select',
+          label: 'Rozmiar_Tekstu',
+          options: [
+            { label: 'Minimalistyczny (S)', value: 'small' },
+            { label: 'Standardowy (M)', value: 'medium' },
+            { label: 'Zwiększony (L)', value: 'large' },
+          ],
+          defaultValue: 'medium',
+        },
+        {
+          name: 'layoutDensity',
+          type: 'select',
+          label: 'Zagęszczenie_Interfejsu',
+          options: [
+            { label: 'Kompaktowy', value: 'compact' },
+            { label: 'Zbalansowany', value: 'comfortable' },
+            { label: 'Przestronny', value: 'spacious' },
+          ],
+          defaultValue: 'comfortable',
+        },
+        {
+          name: 'animationSpeed',
+          type: 'select',
+          label: 'Szybkość_Animacji',
+          options: [
+            { label: 'Szybka', value: 'fast' },
+            { label: 'Normalna', value: 'normal' },
+            { label: 'Spokojna', value: 'relaxed' },
+          ],
+          defaultValue: 'normal',
+        },
+        {
+          name: 'glassIntensity',
+          type: 'select',
+          label: 'Intensywność_Efektu_Szkła',
+          options: [
+            { label: 'Niska', value: 'low' },
+            { label: 'Średnia', value: 'medium' },
+            { label: 'Wysoka', value: 'high' },
+          ],
+          defaultValue: 'medium',
+        },
+      ],
+    },
+    {
+      name: 'userSessions',
+      type: 'join',
+      collection: 'user-sessions',
+      on: 'userId',
       admin: {
         allowCreate: false,
       },

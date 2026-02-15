@@ -1,14 +1,15 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { Media } from '@/payload-types'
 import { AnalyticsProvider } from '@/providers/AnalyticsProvider'
 import { InitTheme } from '@/providers/Theme/InitTheme'
+import configPromise from '@payload-config'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
-import './globals.css'
-import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-import { Media } from '@/payload-types'
+import './globals.css'
 
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getPayload({ config: configPromise })
@@ -65,7 +66,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
       <body>
-        <AnalyticsProvider enabled={true}>{children}</AnalyticsProvider>
+        <TooltipProvider>
+          <AnalyticsProvider enabled={true}>{children}</AnalyticsProvider>
+        </TooltipProvider>
       </body>
     </html>
   )

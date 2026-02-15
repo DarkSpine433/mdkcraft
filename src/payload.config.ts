@@ -12,10 +12,12 @@ import {
 } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
+import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
 import { Categories } from '@/collections/Categories'
 import { Media } from '@/collections/Media'
+import { Notifications } from '@/collections/Notifications'
 import { Opinions } from '@/collections/Opinions'
 import { Pages } from '@/collections/Pages'
 import { Users } from '@/collections/Users'
@@ -44,6 +46,9 @@ import { Header } from '@/globals/Header'
 import { SiteSettings } from '@/globals/SiteSettings'
 import { plugins } from './plugins'
 
+// Endpoints
+import { sessionHandler, trackHandler } from './endpoints/analytics'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -69,6 +74,7 @@ export default buildConfig({
     ConfiguratorOptions,
     ClientFiles,
     Roadmap,
+    Notifications,
     // Analytics Collections
     UserBehaviorEvents,
     UserSessions,
@@ -81,6 +87,7 @@ export default buildConfig({
     ContactInquiries,
     NewsletterSubscribers,
   ],
+  sharp,
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
   }),
@@ -119,7 +126,18 @@ export default buildConfig({
       ]
     },
   }),
-  endpoints: [],
+  endpoints: [
+    {
+      path: '/analytics/session',
+      method: 'post',
+      handler: sessionHandler,
+    },
+    {
+      path: '/analytics/track',
+      method: 'post',
+      handler: trackHandler,
+    },
+  ],
   globals: [Header, Footer, SiteSettings, Opinions],
   plugins,
   secret: process.env.PAYLOAD_SECRET || '',

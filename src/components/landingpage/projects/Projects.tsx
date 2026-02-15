@@ -1,8 +1,8 @@
 'use client'
 
-import { ProjectCard } from '@/app/(app)/projectsArchive/components/ProjectCard'
-import { PROJECTS_DATA } from '@/app/(app)/projectsArchive/data/projects'
-import { ProjectCategory } from '@/app/(app)/projectsArchive/types/project'
+import { ProjectCard } from '@/app/(app)/(pages)/(unauthenticated)/projectsArchive/components/ProjectCard'
+import { PROJECTS_DATA } from '@/app/(app)/(pages)/(unauthenticated)/projectsArchive/data/projects'
+import { ProjectCategory } from '@/app/(app)/(pages)/(unauthenticated)/projectsArchive/types/project'
 import MagneticButton from '@/components/ui/magneticBotton'
 import { ArrowRight, LucideIcon, Monitor } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'

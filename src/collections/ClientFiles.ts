@@ -1,23 +1,11 @@
-import type { CollectionConfig } from 'payload'
 import { adminOnly } from '@/access/adminOnly'
-import { checkRole } from '@/access/utilities'
+import { isOwner } from '@/access/isOwner'
+import type { CollectionConfig } from 'payload'
 
 export const ClientFiles: CollectionConfig = {
   slug: 'client-files',
   access: {
-    read: ({ req: { user } }) => {
-      if (user && checkRole(['admin'], user)) {
-        return true
-      }
-      if (user) {
-        return {
-          client: {
-            equals: user.id,
-          },
-        }
-      }
-      return false
-    },
+    read: isOwner('client'),
     create: adminOnly,
     update: adminOnly,
     delete: adminOnly,

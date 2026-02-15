@@ -28,13 +28,35 @@ export const AnalyticsProvider = ({ children, enabled = true }: AnalyticsProvide
   useEffect(() => {
     if (!enabled || typeof window === 'undefined') return
 
-    // Initialize tracker on client side only
-    const tracker = getAnalyticsTracker()
-    setSessionId(tracker.getSessionId())
+    const checkConsent = () => {
+      const consent = localStorage.getItem('cookie-consent')
+      if (consent === 'all') {
+        const tracker = getAnalyticsTracker()
+        setSessionId(tracker.getSessionId())
+        return tracker
+      }
+      return null
+    }
 
-    // Cleanup on unmount
+    let tracker = checkConsent()
+
+    // Listen for consent changes
+    const handleStorageChange = () => {
+      if (!tracker) {
+        tracker = checkConsent()
+      }
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    // Custom event for same-window updates
+    window.addEventListener('cookie-consent-updated', handleStorageChange)
+
     return () => {
-      tracker.destroy()
+      if (tracker) {
+        tracker.destroy()
+      }
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('cookie-consent-updated', handleStorageChange)
     }
   }, [enabled])
 

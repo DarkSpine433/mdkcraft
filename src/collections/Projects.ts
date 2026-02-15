@@ -1,11 +1,12 @@
-import type { CollectionConfig } from 'payload'
 import { adminOnly } from '@/access/adminOnly'
-import { adminOrSelf } from '@/access/adminOrSelf'
+import { isOwner } from '@/access/isOwner'
+import type { CollectionConfig } from 'payload'
+import { slugField } from 'payload'
 
 export const Projects: CollectionConfig = {
   slug: 'projects',
   access: {
-    read: adminOrSelf,
+    read: isOwner('client'),
     create: adminOnly,
     update: adminOnly,
     delete: adminOnly,
@@ -94,5 +95,22 @@ export const Projects: CollectionConfig = {
         },
       ],
     },
+    slugField({
+      useAsSlug: 'title',
+      slugify: ({ valueToSlugify }) => {
+        if (!valueToSlugify) return ''
+        const base = valueToSlugify
+          .toString()
+          .toLowerCase()
+          .trim()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/[^\w-]+/g, '')
+          .replace(/--+/g, '-')
+        const randomSuffix = Math.floor(1000000000 + Math.random() * 9000000000)
+        return `${base}-id-${randomSuffix}`
+      },
+    }),
   ],
 }

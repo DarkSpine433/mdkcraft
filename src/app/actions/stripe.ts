@@ -1,18 +1,20 @@
 'use server'
 
-import stripe from 'stripe'
-import { headers as getHeaders } from 'next/headers'
+import { User } from '@/payload-types'
 import configPromise from '@payload-config'
+import { headers as getHeaders } from 'next/headers'
 import { getPayload } from 'payload'
+import stripe from 'stripe'
 
 const stripeClient = new stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-01-27.patch_1' as any,
+  // @ts-expect-error - custom patch version
+  apiVersion: '2025-01-27.patch_1',
 })
 
 export async function createSubscriptionCheckoutSession(priceId: string) {
   const headers = await getHeaders()
   const payload = await getPayload({ config: configPromise })
-  const { user } = (await payload.auth({ headers })) as { user: any }
+  const { user } = (await payload.auth({ headers })) as { user: User | null }
 
   if (!user) {
     throw new Error('Musisz być zalogowany, aby wykupić subskrypcję')
@@ -60,14 +62,14 @@ export async function createSubscriptionCheckoutSession(priceId: string) {
 export async function getStripeCustomerPortalUrl() {
   const headers = await getHeaders()
   const payload = await getPayload({ config: configPromise })
-  const { user } = (await payload.auth({ headers })) as { user: any }
+  const { user } = (await payload.auth({ headers })) as { user: User | null }
 
   if (!user || !user.stripeCustomerID) {
     throw new Error('Klient nie posiada aktywnego profilu Stripe')
   }
 
   const session = await stripeClient.billingPortal.sessions.create({
-    customer: user.stripeCustomerID as string,
+    customer: user.stripeCustomerID,
     return_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/account/dashboard`,
   })
 

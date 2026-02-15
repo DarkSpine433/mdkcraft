@@ -37,5 +37,40 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     staticDir: path.resolve(dirname, '../../public/media'),
+    mimeTypes: ['image/*'], // Restrict to images
+    // 1. Optimize the original file
+    formatOptions: {
+      format: 'webp',
+      options: {
+        quality: 80, // Balanced quality vs. file size
+        effort: 4, // CPU effort for compression (1-6)
+      },
+    },
+    // 2. Define responsive sizes
+    imageSizes: [
+      {
+        name: 'thumbnail',
+        width: 400,
+        height: 300,
+        position: 'centre',
+        formatOptions: { format: 'webp', options: { quality: 70 } },
+      },
+      {
+        name: 'card',
+        width: 768,
+        height: undefined, // Maintains aspect ratio
+        position: 'centre',
+        formatOptions: { format: 'webp', options: { quality: 80 } },
+      },
+      {
+        name: 'desktop',
+        width: 1920,
+        height: undefined,
+        position: 'centre',
+        formatOptions: { format: 'webp', options: { quality: 85 } },
+      },
+    ],
+    // 3. Admin UI optimization
+    adminThumbnail: 'thumbnail',
   },
 }

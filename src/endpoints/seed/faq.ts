@@ -1,4 +1,4 @@
-import type { Payload, PayloadRequest } from 'payload'
+import { Payload, PayloadRequest, RequiredDataFromCollectionSlug } from 'payload'
 
 export const seedFaq = async ({
   payload,
@@ -9,7 +9,7 @@ export const seedFaq = async ({
 }): Promise<void> => {
   payload.logger.info(`— Seeding FAQ...`)
 
-  const faqData = [
+  const faqData: RequiredDataFromCollectionSlug<'faq'>[] = [
     {
       question: 'Czy oferujecie wsparcie po wdrożeniu?',
       answer: {
@@ -114,7 +114,7 @@ export const seedFaq = async ({
       },
       category: 'technical',
     },
-  ] as any[]
+  ]
 
   for (const item of faqData) {
     await payload.create({

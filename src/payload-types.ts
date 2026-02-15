@@ -85,6 +85,7 @@ export interface Config {
     'configurator-options': ConfiguratorOption;
     'client-files': ClientFile;
     roadmap: Roadmap;
+    notifications: Notification;
     'user-behavior-events': UserBehaviorEvent;
     'user-sessions': UserSession;
     'page-views': PageView;
@@ -115,6 +116,9 @@ export interface Config {
       addresses: 'addresses';
       userProjects: 'projects';
       userTickets: 'tickets';
+      userFiles: 'client-files';
+      assignedInquiries: 'contact-inquiries';
+      userSessions: 'user-sessions';
     };
     variantTypes: {
       options: 'variantOptions';
@@ -137,6 +141,7 @@ export interface Config {
     'configurator-options': ConfiguratorOptionsSelect<false> | ConfiguratorOptionsSelect<true>;
     'client-files': ClientFilesSelect<false> | ClientFilesSelect<true>;
     roadmap: RoadmapSelect<false> | RoadmapSelect<true>;
+    notifications: NotificationsSelect<false> | NotificationsSelect<true>;
     'user-behavior-events': UserBehaviorEventsSelect<false> | UserBehaviorEventsSelect<true>;
     'user-sessions': UserSessionsSelect<false> | UserSessionsSelect<true>;
     'page-views': PageViewsSelect<false> | PageViewsSelect<true>;
@@ -224,7 +229,10 @@ export interface UserAuthOperations {
 export interface User {
   id: string;
   name?: string | null;
-  roles?: ('admin' | 'customer')[] | null;
+  surname?: string | null;
+  phone?: string | null;
+  company?: string | null;
+  roles?: ('admin' | 'manager' | 'developer' | 'editor' | 'customer')[] | null;
   orders?: {
     docs?: (string | Order)[];
     hasNextPage?: boolean;
@@ -250,6 +258,29 @@ export interface User {
   };
   userTickets?: {
     docs?: (string | Ticket)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  userFiles?: {
+    docs?: (string | ClientFile)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  assignedInquiries?: {
+    docs?: (string | ContactInquiry)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  settings?: {
+    newsletter?: boolean | null;
+    marketing?: boolean | null;
+    fontSize?: ('small' | 'medium' | 'large') | null;
+    layoutDensity?: ('compact' | 'comfortable' | 'spacious') | null;
+    animationSpeed?: ('fast' | 'normal' | 'relaxed') | null;
+    glassIntensity?: ('low' | 'medium' | 'high') | null;
+  };
+  userSessions?: {
+    docs?: (string | UserSession)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -401,6 +432,32 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    desktop?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1152,6 +1209,11 @@ export interface Project {
         id?: string | null;
       }[]
     | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -1173,6 +1235,87 @@ export interface Ticket {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "client-files".
+ */
+export interface ClientFile {
+  id: string;
+  client: string | User;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * Contact form submissions with tracking context
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-inquiries".
+ */
+export interface ContactInquiry {
+  id: string;
+  /**
+   * Links to user session
+   */
+  sessionId?: string | null;
+  name: string;
+  email: string;
+  phone?: string | null;
+  company?: string | null;
+  projectType:
+    | 'ecommerce'
+    | 'ai_ml'
+    | 'blockchain'
+    | 'custom_app'
+    | 'mobile'
+    | 'design'
+    | 'consulting'
+    | 'maintenance'
+    | 'other';
+  budget?: ('under_10k' | '10k_50k' | '50k_100k' | '100k_250k' | 'over_250k' | 'not_sure') | null;
+  timeline?: ('urgent' | '1_3_months' | '3_6_months' | '6_plus_months' | 'flexible') | null;
+  message: string;
+  submittedAt: string;
+  /**
+   * Lead status in the sales pipeline
+   */
+  status: 'new' | 'contacted' | 'qualified' | 'proposal_sent' | 'negotiating' | 'converted' | 'rejected' | 'spam';
+  /**
+   * Page where they submitted the form
+   */
+  source?: string | null;
+  /**
+   * If contacted from a specific project page
+   */
+  referringProject?: (string | null) | Showcase;
+  /**
+   * Time spent filling out the form in seconds
+   */
+  formInteractionTime?: number | null;
+  /**
+   * For spam prevention and rate limiting
+   */
+  ipAddress?: string | null;
+  /**
+   * Internal notes about this inquiry
+   */
+  notes?: string | null;
+  /**
+   * Sales rep or team member assigned to this lead
+   */
+  assignedTo?: (string | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -1292,6 +1435,101 @@ export interface Showcase {
   createdAt: string;
 }
 /**
+ * Tracks complete user sessions from entry to exit
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-sessions".
+ */
+export interface UserSession {
+  id: string;
+  /**
+   * Unique session identifier (UUID)
+   */
+  sessionId: string;
+  /**
+   * Linked user if logged in
+   */
+  userId?: (string | null) | User;
+  /**
+   * Full user agent string
+   */
+  userAgent?: string | null;
+  /**
+   * User IP address (consider privacy implications)
+   */
+  ipAddress?: string | null;
+  deviceType?: ('desktop' | 'mobile' | 'tablet' | 'unknown') | null;
+  browserName?: string | null;
+  browserVersion?: string | null;
+  /**
+   * Operating system
+   */
+  os?: string | null;
+  /**
+   * Screen dimensions {width, height}
+   */
+  screenResolution?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Browser language preference
+   */
+  language?: string | null;
+  /**
+   * User timezone
+   */
+  timezone?: string | null;
+  /**
+   * First page visited in session
+   */
+  entryPage: string;
+  /**
+   * Last page visited before session ended
+   */
+  exitPage?: string | null;
+  /**
+   * UTM source, referrer domain, or direct
+   */
+  landingSource?: string | null;
+  utmParams?: {
+    source?: string | null;
+    medium?: string | null;
+    campaign?: string | null;
+    term?: string | null;
+    content?: string | null;
+  };
+  sessionStart: string;
+  sessionEnd?: string | null;
+  /**
+   * Total session duration in seconds
+   */
+  sessionDuration?: number | null;
+  /**
+   * Total number of pages viewed
+   */
+  pageViews?: number | null;
+  /**
+   * User left after viewing only one page
+   */
+  bounced?: boolean | null;
+  /**
+   * User completed a desired action (form, newsletter, etc.)
+   */
+  converted?: boolean | null;
+  /**
+   * Type of conversion if converted
+   */
+  conversionType?: ('contact_form' | 'newsletter' | 'project_inquiry' | 'download' | 'other') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "faq".
  */
@@ -1333,26 +1571,6 @@ export interface ConfiguratorOption {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "client-files".
- */
-export interface ClientFile {
-  id: string;
-  client: string | User;
-  description?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "roadmap".
  */
 export interface Roadmap {
@@ -1363,6 +1581,22 @@ export interface Roadmap {
   priority?: ('low' | 'medium' | 'high') | null;
   expectedRelease?: string | null;
   votes?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notifications".
+ */
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  type?: ('info' | 'win' | 'bonus' | 'alert') | null;
+  recipient?: (string | null) | User;
+  broadcast?: boolean | null;
+  isReadBy?: (string | User)[] | null;
+  isRead?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1458,101 +1692,6 @@ export interface UserBehaviorEvent {
     | number
     | boolean
     | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Tracks complete user sessions from entry to exit
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "user-sessions".
- */
-export interface UserSession {
-  id: string;
-  /**
-   * Unique session identifier (UUID)
-   */
-  sessionId: string;
-  /**
-   * Linked user if logged in
-   */
-  userId?: (string | null) | User;
-  /**
-   * Full user agent string
-   */
-  userAgent?: string | null;
-  /**
-   * User IP address (consider privacy implications)
-   */
-  ipAddress?: string | null;
-  deviceType?: ('desktop' | 'mobile' | 'tablet' | 'unknown') | null;
-  browserName?: string | null;
-  browserVersion?: string | null;
-  /**
-   * Operating system
-   */
-  os?: string | null;
-  /**
-   * Screen dimensions {width, height}
-   */
-  screenResolution?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  /**
-   * Browser language preference
-   */
-  language?: string | null;
-  /**
-   * User timezone
-   */
-  timezone?: string | null;
-  /**
-   * First page visited in session
-   */
-  entryPage: string;
-  /**
-   * Last page visited before session ended
-   */
-  exitPage?: string | null;
-  /**
-   * UTM source, referrer domain, or direct
-   */
-  landingSource?: string | null;
-  utmParams?: {
-    source?: string | null;
-    medium?: string | null;
-    campaign?: string | null;
-    term?: string | null;
-    content?: string | null;
-  };
-  sessionStart: string;
-  sessionEnd?: string | null;
-  /**
-   * Total session duration in seconds
-   */
-  sessionDuration?: number | null;
-  /**
-   * Total number of pages viewed
-   */
-  pageViews?: number | null;
-  /**
-   * User left after viewing only one page
-   */
-  bounced?: boolean | null;
-  /**
-   * User completed a desired action (form, newsletter, etc.)
-   */
-  converted?: boolean | null;
-  /**
-   * Type of conversion if converted
-   */
-  conversionType?: ('contact_form' | 'newsletter' | 'project_inquiry' | 'download' | 'other') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1853,67 +1992,6 @@ export interface ConversionFunnel {
   createdAt: string;
 }
 /**
- * Contact form submissions with tracking context
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-inquiries".
- */
-export interface ContactInquiry {
-  id: string;
-  /**
-   * Links to user session
-   */
-  sessionId?: string | null;
-  name: string;
-  email: string;
-  phone?: string | null;
-  company?: string | null;
-  projectType:
-    | 'ecommerce'
-    | 'ai_ml'
-    | 'blockchain'
-    | 'custom_app'
-    | 'mobile'
-    | 'design'
-    | 'consulting'
-    | 'maintenance'
-    | 'other';
-  budget?: ('under_10k' | '10k_50k' | '50k_100k' | '100k_250k' | 'over_250k' | 'not_sure') | null;
-  timeline?: ('urgent' | '1_3_months' | '3_6_months' | '6_plus_months' | 'flexible') | null;
-  message: string;
-  submittedAt: string;
-  /**
-   * Lead status in the sales pipeline
-   */
-  status: 'new' | 'contacted' | 'qualified' | 'proposal_sent' | 'negotiating' | 'converted' | 'rejected' | 'spam';
-  /**
-   * Page where they submitted the form
-   */
-  source?: string | null;
-  /**
-   * If contacted from a specific project page
-   */
-  referringProject?: (string | null) | Showcase;
-  /**
-   * Time spent filling out the form in seconds
-   */
-  formInteractionTime?: number | null;
-  /**
-   * For spam prevention and rate limiting
-   */
-  ipAddress?: string | null;
-  /**
-   * Internal notes about this inquiry
-   */
-  notes?: string | null;
-  /**
-   * Sales rep or team member assigned to this lead
-   */
-  assignedTo?: (string | null) | User;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * Newsletter subscription management with preferences
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2089,6 +2167,10 @@ export interface PayloadLockedDocument {
         value: string | Roadmap;
       } | null)
     | ({
+        relationTo: 'notifications';
+        value: string | Notification;
+      } | null)
+    | ({
         relationTo: 'user-behavior-events';
         value: string | UserBehaviorEvent;
       } | null)
@@ -2208,6 +2290,9 @@ export interface PayloadMigration {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  surname?: T;
+  phone?: T;
+  company?: T;
   roles?: T;
   orders?: T;
   cart?: T;
@@ -2217,6 +2302,19 @@ export interface UsersSelect<T extends boolean = true> {
   activeAddons?: T;
   userProjects?: T;
   userTickets?: T;
+  userFiles?: T;
+  assignedInquiries?: T;
+  settings?:
+    | T
+    | {
+        newsletter?: T;
+        marketing?: T;
+        fontSize?: T;
+        layoutDensity?: T;
+        animationSpeed?: T;
+        glassIntensity?: T;
+      };
+  userSessions?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -2435,6 +2533,40 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        desktop?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2600,6 +2732,8 @@ export interface ProjectsSelect<T extends boolean = true> {
         date?: T;
         id?: T;
       };
+  generateSlug?: T;
+  slug?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2677,6 +2811,21 @@ export interface RoadmapSelect<T extends boolean = true> {
   priority?: T;
   expectedRelease?: T;
   votes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notifications_select".
+ */
+export interface NotificationsSelect<T extends boolean = true> {
+  title?: T;
+  message?: T;
+  type?: T;
+  recipient?: T;
+  broadcast?: T;
+  isReadBy?: T;
+  isRead?: T;
   updatedAt?: T;
   createdAt?: T;
 }

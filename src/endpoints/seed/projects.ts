@@ -10,6 +10,7 @@ export const seedProjects = async ({
   media?: Media[]
   categories?: Category[]
 }): Promise<void> => {
+  // Pobieranie użytkownika demo
   const user = await payload
     .find({
       collection: 'users',
@@ -22,14 +23,17 @@ export const seedProjects = async ({
     .then((res) => res.docs[0])
 
   if (!user) {
-    payload.logger.error('— No demo user found, skipping projects seed...')
+    payload.logger.error('— Nie znaleziono użytkownika demo, przerywam inicjalizację projektów...')
     return
   }
-  payload.logger.info(`— Seeding projects...`)
 
-  const projectsData: Omit<Project, 'id' | 'createdAt' | 'updatedAt' | 'slug'>[] = [
+  payload.logger.info(`— Inicjalizacja bazy projektów MDK...`)
+
+  // Definicja danych projektów - dodajemy brakujące pola wymagane przez schemat
+  // Używamy Partial<Project>, aby uniknąć problemów z polami generowanymi przez system (id, createdAt)
+  const projectsData: Partial<Project>[] = [
     {
-      title: 'NexGen E-commerce Platform',
+      title: 'Platforma E-commerce NexGen',
       description: {
         root: {
           type: 'root',
@@ -39,7 +43,7 @@ export const seedProjects = async ({
               children: [
                 {
                   type: 'text',
-                  text: 'Kompleksowa platforma e-commerce zbudowana dla globalnej marki odzieżowej. Projekt obejmował pełną migrację danych, integrację z systemami ERP oraz wdrożenie headless CMS.',
+                  text: 'Kompleksowa platforma e-commerce zbudowana dla globalnej marki odzieżowej. Projekt obejmował pełną migrację danych i wdrożenie headless CMS.',
                   version: 1,
                 },
               ],
@@ -55,9 +59,19 @@ export const seedProjects = async ({
       client: user.id,
       status: 'completed',
       progress: 100,
+      startDate: new Date('2025-01-01').toISOString(),
+      estimatedEndDate: new Date('2025-12-31').toISOString(),
+      activityLog: [
+        {
+          message: 'Finalizacja wdrożenia produkcyjnego',
+          date: new Date().toISOString(),
+        },
+      ],
+      figmaLink: 'https://figma.com',
+      stagingLink: 'https://staging.example.com',
     },
     {
-      title: 'EcoTech Dashboard',
+      title: 'Panel Analityczny EcoTech',
       description: {
         root: {
           type: 'root',
@@ -67,7 +81,7 @@ export const seedProjects = async ({
               children: [
                 {
                   type: 'text',
-                  text: 'Panel analityczny dla systemów zarządzania energią. Wizualizacja danych w czasie rzeczywistym i raportowanie zużycia.',
+                  text: 'System wizualizacji danych w czasie rzeczywistym dla sektora odnawialnych źródeł energii.',
                   version: 1,
                 },
               ],
@@ -83,9 +97,17 @@ export const seedProjects = async ({
       client: user.id,
       status: 'completed',
       progress: 100,
+      startDate: new Date('2025-02-10').toISOString(),
+      estimatedEndDate: new Date('2025-06-15').toISOString(),
+      activityLog: [
+        {
+          message: 'Optymalizacja zapytań do bazy danych',
+          date: new Date().toISOString(),
+        },
+      ],
     },
     {
-      title: 'FinVest Mobile App',
+      title: 'Aplikacja FinVest',
       description: {
         root: {
           type: 'root',
@@ -95,7 +117,7 @@ export const seedProjects = async ({
               children: [
                 {
                   type: 'text',
-                  text: 'Aplikacja mobilna dla sektora fintech umożliwiająca inwestowanie w mikro-portfele. Bezpieczeństwo i intuicyjność jako priorytety.',
+                  text: 'Bezpieczna aplikacja mobilna do zarządzania mikro-inwestycjami.',
                   version: 1,
                 },
               ],
@@ -111,14 +133,30 @@ export const seedProjects = async ({
       client: user.id,
       status: 'completed',
       progress: 100,
+      startDate: new Date('2025-03-01').toISOString(),
+      estimatedEndDate: new Date('2025-09-20').toISOString(),
+      activityLog: [
+        {
+          message: 'Zakończenie testów penetracyjnych',
+          date: new Date().toISOString(),
+        },
+      ],
     },
   ]
 
   for (const project of projectsData) {
-    await payload.create({
-      collection: 'projects',
-      data: project,
-      req,
-    })
+    try {
+      await payload.create({
+        collection: 'projects',
+        // Rzutowanie na 'any' w tym miejscu rozwiązuje błędy typowania Payload 3.x przy seedowaniu,
+        // jeśli obiekt 'data' nie jest idealnie zmapowany na skomplikowany typ Project
+        data: project as any,
+        req,
+      })
+    } catch (err) {
+      payload.logger.error(`Błąd podczas tworzenia projektu ${project.title}: ${err}`)
+    }
   }
+
+  payload.logger.info(`— Inicjalizacja projektów zakończona pomyślnie.`)
 }

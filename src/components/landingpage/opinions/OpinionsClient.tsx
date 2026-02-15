@@ -70,7 +70,7 @@ const FloatingCard = ({ opinion, index }: { opinion: OpinionItem; index: number 
 
   const { scrollYProgress } = useScroll({
     target: cardRef,
-    offset: ['start end', 'end start'],
+    offset: ['start start', 'end end'],
   })
 
   const translateY = useTransform(
@@ -100,7 +100,6 @@ const FloatingCard = ({ opinion, index }: { opinion: OpinionItem; index: number 
       }}
       initial={{ scale: 0.9 }}
       whileInView={{ scale: 1 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
       className="relative group p-8 rounded-3xl bg-linear-to-br from-white/5 to-white/0 border border-white/10 backdrop-blur-md hover:border-violet-500/30 transition-all duration-500 shadow-2xl shadow-black/50"
     >
       {/* Glow Effect */}
@@ -215,7 +214,6 @@ const OpinionsClient = ({ opinions }: Props) => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.6 }}
               className="p-10 rounded-4xl bg-white/2 border border-white/5 text-center group hover:bg-white/4 hover:border-violet-500/20 transition-colors duration-500"
             >
               <div className="w-20 h-20 rounded-2xl bg-violet-500/10 border border-violet-500/10 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 shadow-[0_0_20px_rgba(139,92,246,0.1)]">

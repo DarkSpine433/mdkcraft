@@ -1,6 +1,9 @@
 import type { Media, Showcase } from '@/payload-types'
 import { Payload, PayloadRequest, RequiredDataFromCollectionSlug } from 'payload'
-import { TECH_POOL, pseudoRandom } from '../../app/(app)/projectsArchive/data/projects'
+import {
+  TECH_POOL,
+  pseudoRandom,
+} from '../../app/(app)/(pages)/(unauthenticated)/projectsArchive/data/projects'
 
 // Override imported constants with Polish versions and more variety within this file scope
 // Note: We are shadowing the imports for the seed script usage.

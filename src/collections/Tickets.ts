@@ -1,15 +1,14 @@
+import { adminOnly } from '@/access/adminOnly'
+import { isOwner } from '@/access/isOwner'
 import type { CollectionConfig } from 'payload'
-import { adminOrSelf } from '@/access/adminOrSelf'
 
 export const Tickets: CollectionConfig = {
   slug: 'tickets',
   access: {
-    read: adminOrSelf,
-    create: adminOrSelf,
-    update: adminOrSelf,
-    delete: ({ req: { user } }) => {
-      return user?.roles?.includes('admin') || false
-    },
+    read: isOwner('client'),
+    create: isOwner('client'),
+    update: isOwner('client'),
+    delete: adminOnly,
   },
   admin: {
     useAsTitle: 'subject',

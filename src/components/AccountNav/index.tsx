@@ -14,70 +14,34 @@ export const AccountNav: React.FC<Props> = ({ className }) => {
 
   return (
     <div className={clsx(className)}>
-      <ul className="flex flex-col gap-2">
-        <li>
-          <Button asChild variant="link">
-            <Link
-              href="/dashboard"
-              className={clsx('text-primary/50 hover:text-primary hover:no-underline font-bold', {
-                'text-primary': pathname === '/dashboard',
-              })}
-            >
-              Dashboard
-            </Link>
-          </Button>
-        </li>
-
-        <li>
-          <Button asChild variant="link">
-            <Link
-              href="/account"
-              className={clsx('text-primary/50 hover:text-primary hover:no-underline', {
-                'text-primary': pathname === '/account',
-              })}
-            >
-              Account settings
-            </Link>
-          </Button>
-        </li>
-
-        <li>
-          <Button asChild variant="link">
-            <Link
-              href="/account/addresses"
-              className={clsx('text-primary/50 hover:text-primary hover:no-underline', {
-                'text-primary': pathname === '/account/addresses',
-              })}
-            >
-              Addresses
-            </Link>
-          </Button>
-        </li>
-
-        <li>
-          <Button
-            asChild
-            variant="link"
-            className={clsx('text-primary/50 hover:text-primary hover:no-underline', {
-              'text-primary': pathname === '/orders' || pathname.includes('/orders'),
-            })}
-          >
-            <Link href="/orders">Orders</Link>
-          </Button>
-        </li>
+      <ul className="flex flex-col gap-1">
+        {[
+          { href: '/dashboard', label: 'Dashboard' },
+          { href: '/orders', label: 'Moje_Zamówienia' },
+          { href: '/account', label: 'Profil_Użytkownika' },
+          { href: '/account/addresses', label: 'Twoje_Adresy' },
+          { href: '/settings', label: 'Ustawienia_Systemu' },
+          { href: '/notifications', label: 'Powiadomienia' },
+          { href: '/privacy', label: 'Prywatność' },
+          { href: '/tickets', label: 'Wsparcie_Specjalisty' },
+        ].map((item) => (
+          <li key={item.href}>
+            <Button asChild variant="link" className="h-9 px-0 justify-start">
+              <Link
+                href={item.href}
+                className={clsx(
+                  'text-[11px] uppercase tracking-widest font-mono transition-all hover:no-underline',
+                  pathname === item.href ? 'text-primary' : 'text-neutral-500 hover:text-white',
+                )}
+              >
+                {item.label}
+              </Link>
+            </Button>
+          </li>
+        ))}
       </ul>
 
       <hr className="w-full border-white/5" />
-
-      <Button
-        asChild
-        variant="link"
-        className={clsx('text-primary/50 hover:text-primary hover:no-underline', {
-          'text-primary': pathname === '/logout',
-        })}
-      >
-        <Link href="/logout">Log out</Link>
-      </Button>
     </div>
   )
 }
