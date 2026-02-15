@@ -26,6 +26,10 @@ export default async function NotificationsPage({
   const payload = await getPayload({ config: configPromise })
   const { user } = await payload.auth({ headers })
 
+  if (!user) {
+    redirect(`/login?redirect=${encodeURIComponent('/notifications')}`)
+  }
+
   const notificationsResult = await payload.find({
     collection: 'notifications',
     where: {

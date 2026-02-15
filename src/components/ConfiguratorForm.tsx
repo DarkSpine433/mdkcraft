@@ -15,6 +15,7 @@ import {
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useMemo, useState } from 'react'
 import { AdvancedCaptcha, useAdvancedCaptcha } from './Captcha'
+import { TerminalInput, TerminalTextarea } from './TerminalInput'
 import { Button } from './ui/button'
 
 export const ConfiguratorForm = () => {
@@ -208,9 +209,10 @@ Wiadomość dodatkowa: ${contactData.message}
           {step === 1 && (
             <motion.div
               key="step1"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ type: 'spring', damping: 20, stiffness: 100 }}
               className="space-y-6"
             >
               <h3 className="text-2xl font-bold flex items-center gap-2">
@@ -258,9 +260,10 @@ Wiadomość dodatkowa: ${contactData.message}
           {step === 2 && (
             <motion.div
               key="step2"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ type: 'spring', damping: 20, stiffness: 100 }}
               className="space-y-6"
             >
               <h3 className="text-2xl font-bold flex items-center gap-2">
@@ -313,9 +316,10 @@ Wiadomość dodatkowa: ${contactData.message}
           {step === 3 && (
             <motion.div
               key="step3"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ type: 'spring', damping: 20, stiffness: 100 }}
               className="space-y-6"
             >
               <h3 className="text-2xl font-bold flex items-center gap-2">
@@ -370,53 +374,39 @@ Wiadomość dodatkowa: ${contactData.message}
           {step === 4 && (
             <motion.div
               key="step4"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ type: 'spring', damping: 20, stiffness: 100 }}
               className="space-y-6"
             >
-              <h3 className="text-2xl font-bold flex items-center gap-2">
-                <Send className="text-primary" /> Dane Kontaktowe
+              <h3 className="text-2xl font-black italic uppercase tracking-tighter flex items-center gap-2">
+                <Send className="text-primary" /> Dane_Kontaktowe
               </h3>
 
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-xs font-mono text-neutral-500 uppercase">
-                    Imię i Nazwisko
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={contactData.name}
-                    onChange={(e) => setContactData((prev) => ({ ...prev, name: e.target.value }))}
-                    className="w-full p-4 rounded-xl bg-white/5 border border-white/10 focus:border-primary focus:outline-none"
-                    placeholder="Jan Kowalski"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-mono text-neutral-500 uppercase">Email</label>
-                  <input
-                    type="email"
-                    required
-                    value={contactData.email}
-                    onChange={(e) => setContactData((prev) => ({ ...prev, email: e.target.value }))}
-                    className="w-full p-4 rounded-xl bg-white/5 border border-white/10 focus:border-primary focus:outline-none"
-                    placeholder="jan@mdkcraft.pl"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs font-mono text-neutral-500 uppercase">
-                  Dodatkowe uwagi
-                </label>
-                <textarea
-                  rows={4}
-                  value={contactData.message}
-                  onChange={(e) => setContactData((prev) => ({ ...prev, message: e.target.value }))}
-                  className="w-full p-4 rounded-xl bg-white/5 border border-white/10 focus:border-primary focus:outline-none resize-none"
-                  placeholder="Czy masz jakieś specjalne wymagania?"
+                <TerminalInput
+                  label="Imię i Nazwisko"
+                  required
+                  value={contactData.name}
+                  onChange={(e) => setContactData((prev) => ({ ...prev, name: e.target.value }))}
+                  placeholder="JAN_KOWALSKI"
+                />
+                <TerminalInput
+                  label="Email_Kontaktowy"
+                  type="email"
+                  required
+                  value={contactData.email}
+                  onChange={(e) => setContactData((prev) => ({ ...prev, email: e.target.value }))}
+                  placeholder="JAN@MDKCRAFT.PL"
                 />
               </div>
+              <TerminalTextarea
+                label="Dodatkowe_Uwagi / Specyfikacja"
+                value={contactData.message}
+                onChange={(e) => setContactData((prev) => ({ ...prev, message: e.target.value }))}
+                placeholder="WPISZ_DODATKOWE_WYMAGANIA..."
+              />
 
               <AdvancedCaptcha onVerify={handleVerify} onError={handleError} mode="auto" />
 

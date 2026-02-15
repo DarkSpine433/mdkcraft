@@ -46,30 +46,45 @@ export default async function TicketsPage() {
         </Link>
       </header>
 
-      <div className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-2xl overflow-hidden">
+      <div className="p-6 md:p-8 rounded-[30px] md:rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-2xl overflow-hidden">
         <h2 className="text-xl font-black tracking-tight uppercase mb-6 flex items-center gap-2">
           <MessageSquare size={20} className="text-primary" /> Twoje_Zgłoszenia
         </h2>
 
         <div className="bg-[#0a0a0c]/50 rounded-2xl border border-white/5 overflow-hidden">
           {tickets.docs.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-white/5 text-[10px] font-mono text-neutral-500 uppercase">
-                  <tr>
-                    <th className="px-6 py-4">Temat</th>
-                    <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4">Priorytet</th>
-                    <th className="px-6 py-4">Data</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {tickets.docs.map((ticket) => (
-                    <TicketsRow key={ticket.id} ticket={ticket} currentUser={user!} />
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <>
+              {/* Desktop Table */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead className="bg-white/5 text-[10px] font-mono text-neutral-500 uppercase">
+                    <tr>
+                      <th className="px-6 py-4">Temat</th>
+                      <th className="px-6 py-4">Status</th>
+                      <th className="px-6 py-4">Priorytet</th>
+                      <th className="px-6 py-4">Data</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {tickets.docs.map((ticket) => (
+                      <TicketsRow
+                        key={ticket.id}
+                        ticket={ticket}
+                        currentUser={user!}
+                        view="table"
+                      />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile List */}
+              <div className="md:hidden divide-y divide-white/5">
+                {tickets.docs.map((ticket) => (
+                  <TicketsRow key={ticket.id} ticket={ticket} currentUser={user!} view="card" />
+                ))}
+              </div>
+            </>
           ) : (
             <div className="p-16 text-center">
               <p className="text-neutral-500 font-mono text-sm uppercase tracking-widest">

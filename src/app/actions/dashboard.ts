@@ -26,6 +26,91 @@ export async function updateUserSettings(data: any) {
   return updatedUser
 }
 
+export async function exportUserData() {
+  const headers = await getHeaders()
+  const payload = await getPayload({ config: configPromise })
+  const { user } = await payload.auth({ headers })
+
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+
+  // Fetch full user data including linked collections for transparency
+  const fullUser = await payload.findByID({
+    collection: 'users',
+    id: user.id,
+    depth: 1,
+  })
+
+  return JSON.stringify(fullUser, null, 2)
+}
+
+export async function anonymizeUserData() {
+  const headers = await getHeaders()
+  const payload = await getPayload({ config: configPromise })
+  const { user } = await payload.auth({ headers })
+
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+
+  await payload.update({
+    collection: 'users',
+    id: user.id,
+    data: {
+      name: 'ANONYMIZED',
+      surname: 'USER',
+      handle: `anon_${user.id.slice(-6)}`,
+      phone: '',
+      company: '',
+      settings: {
+        newsletter: false,
+        marketing: false,
+      },
+    },
+  })
+
+  revalidatePath('/account')
+  revalidatePath('/settings/privacy')
+  return { success: true }
+}
+
+export async function updateUserData(data: {
+  name?: string
+  surname?: string
+  handle?: string
+  phone?: string
+  company?: string
+  password?: string
+}) {
+  const headers = await getHeaders()
+  const payload = await getPayload({ config: configPromise })
+  const { user } = await payload.auth({ headers })
+
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+
+  // Handle regex: only lowercase, numbers, underscores
+  if (data.handle && !/^[a-z0-9_]+$/.test(data.handle)) {
+    throw new Error('Invalid handle format. Use lowercase, numbers, and underscores only.')
+  }
+
+  // Phone regex: International format (+XX...)
+  if (data.phone && !/^\+[1-9]\d{1,14}$/.test(data.phone.replace(/\s/g, ''))) {
+    throw new Error('Invalid phone format. Use international format (e.g., +48123456789).')
+  }
+
+  const updatedUser = await payload.update({
+    collection: 'users',
+    id: user.id,
+    data: data,
+  })
+
+  revalidatePath('/account')
+  return updatedUser
+}
+
 export async function markNotificationAsRead(id: string) {
   const headers = await getHeaders()
   const payload = await getPayload({ config: configPromise })
@@ -79,29 +164,35 @@ export async function markAllNotificationsAsRead() {
   }
 
   // 1. Mark personal notifications
-  await payload.update({
+  const personalUnread = await payload.find({
     collection: 'notifications',
     where: {
       recipient: { equals: user.id },
       isRead: { equals: false },
     },
-    data: {
-      isRead: true,
-    },
+    limit: 100,
   })
 
-  // 2. Mark broadcast notifications (this is trickier as it's a relationship)
-  // For simplicity, we fetch them and update individual ones
-  const unreadBroadcasts = await payload.find({
+  for (const doc of personalUnread.docs) {
+    await payload.update({
+      collection: 'notifications',
+      id: doc.id,
+      data: {
+        isRead: true,
+      },
+    })
+  }
+
+  // 2. Mark broadcast notifications
+  const broadcasts = await payload.find({
     collection: 'notifications',
     where: {
       broadcast: { equals: true },
-      // Theoretically we should check if user.id is NOT in isReadBy
-      // But Payload 'not_in' might be complex here.
     },
+    limit: 100,
   })
 
-  for (const doc of unreadBroadcasts.docs) {
+  for (const doc of broadcasts.docs) {
     const isReadBy = (doc.isReadBy as any[])?.map((u) => (typeof u === 'string' ? u : u.id)) || []
     if (!isReadBy.includes(user.id)) {
       await payload.update({

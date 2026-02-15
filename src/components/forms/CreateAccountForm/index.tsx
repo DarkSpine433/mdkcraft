@@ -64,7 +64,7 @@ export const CreateAccountForm: React.FC = () => {
         if (redirect) router.push(redirect)
         else
           router.push(
-            `/account/dashboard?success=${encodeURIComponent('Account created successfully')}`,
+            `/dashboard?success=${encodeURIComponent('Account created successfully')}`,
           )
       } catch (_) {
         clearTimeout(timer)

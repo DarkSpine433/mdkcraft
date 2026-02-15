@@ -11,6 +11,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 import Projects from './Projects'
+import { StripePortalButton } from './StripePortalButton'
 import TicketsRow from './TicketsRow'
 
 export default async function DashboardPage() {
@@ -19,7 +20,7 @@ export default async function DashboardPage() {
   const { user } = (await payload.auth({ headers })) as { user: User | null }
 
   if (!user) {
-    redirect(`/login?redirect=${encodeURIComponent('/account/dashboard')}`)
+    redirect(`/login?redirect=${encodeURIComponent('/dashboard')}`)
   }
 
   // Fetch user projects
@@ -90,23 +91,7 @@ export default async function DashboardPage() {
               {(user.activeSubscription as SubscriptionPlan)?.name || 'DEMO_VERSION'}
             </div>
           </div>
-          {user.stripeCustomerID && (
-            <form
-              action={async () => {
-                'use server'
-                try {
-                  const { url } = await getStripeCustomerPortalUrl()
-                  redirect(url)
-                } catch (err) {
-                  console.error(err)
-                }
-              }}
-            >
-              <button className="mt-4 text-[9px] font-mono text-primary flex items-center gap-1 hover:underline uppercase text-left tracking-widest font-bold">
-                Biling i Subskrypcja <ExternalLink size={10} />
-              </button>
-            </form>
-          )}
+          {user.stripeCustomerID && <StripePortalButton />}
         </div>
 
         <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-primary/50 transition-all group backdrop-blur-sm">
@@ -233,27 +218,43 @@ export default async function DashboardPage() {
 
         <div className="bg-[#0a0a0c]/80 backdrop-blur-md rounded-2xl border border-white/5 overflow-hidden shadow-2xl">
           {tickets.docs.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-white/5 text-[9px] font-mono text-neutral-500 uppercase tracking-widest">
-                  <tr>
-                    <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4">Temat_Zgłoszenia</th>
-                    <th className="px-6 py-4">Priorytet</th>
-                    <th className="px-6 py-4">Data_Utworzenia</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {tickets.docs.map((ticket) => (
-                    <TicketsRow
-                      key={ticket.id + ticket.createdAt + ticket.status}
-                      ticket={ticket}
-                      currentUser={user}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <>
+              {/* Desktop View */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead className="bg-white/5 text-[9px] font-mono text-neutral-500 uppercase tracking-widest">
+                    <tr>
+                      <th className="px-6 py-4">Temat_Zgłoszenia</th>
+                      <th className="px-6 py-4">Status</th>
+                      <th className="px-6 py-4">Priorytet</th>
+                      <th className="px-6 py-4">Data_Utworzenia</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {tickets.docs.map((ticket) => (
+                      <TicketsRow
+                        key={ticket.id + ticket.createdAt + ticket.status}
+                        ticket={ticket}
+                        currentUser={user}
+                        view="table"
+                      />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile View */}
+              <div className="md:hidden divide-y divide-white/5">
+                {tickets.docs.map((ticket) => (
+                  <TicketsRow
+                    key={ticket.id + ticket.createdAt + ticket.status}
+                    ticket={ticket}
+                    currentUser={user}
+                    view="card"
+                  />
+                ))}
+              </div>
+            </>
           ) : (
             <div className="p-16 text-center">
               <p className="text-neutral-500 font-mono text-sm uppercase tracking-widest">

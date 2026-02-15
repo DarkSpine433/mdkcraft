@@ -14,49 +14,53 @@ import {
 import { User } from '@/payload-types'
 import { useAuth } from '@/providers/Auth'
 import { Mail, Palette } from 'lucide-react'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useOptimistic, useTransition } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
+type SettingsData = {
+  newsletter: boolean
+  marketing: boolean
+  fontSize: 'small' | 'medium' | 'large'
+  layoutDensity: 'compact' | 'comfortable' | 'spacious'
+  animationSpeed: 'fast' | 'normal' | 'relaxed'
+  glassIntensity: 'low' | 'medium' | 'high'
+}
+
 type SettingsFormData = {
-  settings: {
-    newsletter: boolean
-    marketing: boolean
-    fontSize: 'small' | 'medium' | 'large'
-    layoutDensity: 'compact' | 'comfortable' | 'spacious'
-    animationSpeed: 'fast' | 'normal' | 'relaxed'
-    glassIntensity: 'low' | 'medium' | 'high'
-  }
+  settings: SettingsData
 }
 
 export const SettingsForm: React.FC = () => {
   const { setUser, user } = useAuth()
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { isSubmitting },
-  } = useForm<SettingsFormData>()
+  const [isPending, startTransition] = useTransition()
+
+  const initialSettings: SettingsData = {
+    newsletter: user?.settings?.newsletter ?? false,
+    marketing: user?.settings?.marketing ?? false,
+    fontSize: (user?.settings?.fontSize as SettingsData['fontSize']) ?? 'medium',
+    layoutDensity: (user?.settings?.layoutDensity as SettingsData['layoutDensity']) ?? 'comfortable',
+    animationSpeed:
+      (user?.settings?.animationSpeed as SettingsData['animationSpeed']) ?? 'normal',
+    glassIntensity:
+      (user?.settings?.glassIntensity as SettingsData['glassIntensity']) ?? 'medium',
+  }
+
+  const [optimisticSettings, setOptimisticSettings] = useOptimistic(
+    initialSettings,
+    (state, newSettings: Partial<SettingsData>) => ({
+      ...state,
+      ...newSettings,
+    }),
+  )
+
+  const { control, reset, handleSubmit } = useForm<SettingsFormData>({
+    defaultValues: { settings: initialSettings },
+  })
 
   useEffect(() => {
     if (user) {
-      const u = user as User
-      reset({
-        settings: {
-          newsletter: u.settings?.newsletter ?? false,
-          marketing: u.settings?.marketing ?? false,
-          fontSize: (u.settings?.fontSize as SettingsFormData['settings']['fontSize']) ?? 'medium',
-          layoutDensity:
-            (u.settings?.layoutDensity as SettingsFormData['settings']['layoutDensity']) ??
-            'comfortable',
-          animationSpeed:
-            (u.settings?.animationSpeed as SettingsFormData['settings']['animationSpeed']) ??
-            'normal',
-          glassIntensity:
-            (u.settings?.glassIntensity as SettingsFormData['settings']['glassIntensity']) ??
-            'medium',
-        },
-      })
+      reset({ settings: initialSettings })
     }
   }, [user, reset])
 
@@ -65,21 +69,29 @@ export const SettingsForm: React.FC = () => {
       try {
         const updatedUser = await updateUserSettings(data)
         setUser(updatedUser as User)
-        toast.success('Ustawienia zostały zaktualizowane.', {
+        toast.success('System_Zsynchronizowany', {
+          description: 'Ustawienia zostały pomyślnie zapisane w bazie.',
           id: 'settings-save',
         })
       } catch (error) {
-        toast.error('Błąd podczas zapisywania ustawień.')
+        toast.error('Błąd_Krytyczny', {
+          description: 'Nie udało się zapisać ustawień. Reverting...',
+        })
         console.error(error)
+        // Reset form to actual user data
+        if (user) reset({ settings: initialSettings })
       }
     },
-    [setUser],
+    [setUser, user, reset],
   )
 
   const handleFieldChange =
-    (onChange: (val: string | boolean) => void) => (value: string | boolean) => {
+    (name: keyof SettingsData, onChange: (val: any) => void) => (value: any) => {
       onChange(value)
-      handleSubmit(onSave)()
+      startTransition(async () => {
+        setOptimisticSettings({ [name]: value })
+        await handleSubmit(onSave)()
+      })
     }
 
   return (
@@ -108,9 +120,9 @@ export const SettingsForm: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <Select
-                  onValueChange={handleFieldChange(field.onChange)}
-                  value={field.value}
-                  disabled={isSubmitting}
+                  onValueChange={handleFieldChange('fontSize', field.onChange)}
+                  value={optimisticSettings.fontSize}
+                  disabled={isPending}
                 >
                   <SelectTrigger className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-primary/50 transition-all font-mono">
                     <SelectValue placeholder="Wybierz rozmiar" />
@@ -140,9 +152,9 @@ export const SettingsForm: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <Select
-                  onValueChange={handleFieldChange(field.onChange)}
-                  value={field.value}
-                  disabled={isSubmitting}
+                  onValueChange={handleFieldChange('layoutDensity', field.onChange)}
+                  value={optimisticSettings.layoutDensity}
+                  disabled={isPending}
                 >
                   <SelectTrigger className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-primary/50 transition-all font-mono">
                     <SelectValue placeholder="Wybierz gęstość" />
@@ -175,9 +187,9 @@ export const SettingsForm: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <Select
-                  onValueChange={handleFieldChange(field.onChange)}
-                  value={field.value}
-                  disabled={isSubmitting}
+                  onValueChange={handleFieldChange('animationSpeed', field.onChange)}
+                  value={optimisticSettings.animationSpeed}
+                  disabled={isPending}
                 >
                   <SelectTrigger className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-primary/50 transition-all font-mono">
                     <SelectValue placeholder="Wybierz szybkość" />
@@ -207,9 +219,9 @@ export const SettingsForm: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <Select
-                  onValueChange={handleFieldChange(field.onChange)}
-                  value={field.value}
-                  disabled={isSubmitting}
+                  onValueChange={handleFieldChange('glassIntensity', field.onChange)}
+                  value={optimisticSettings.glassIntensity}
+                  disabled={isPending}
                 >
                   <SelectTrigger className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-primary/50 transition-all font-mono">
                     <SelectValue placeholder="Wybierz intensywność" />
@@ -246,16 +258,16 @@ export const SettingsForm: React.FC = () => {
         </div>
 
         <div className="space-y-6">
-          <div className="flex items-start space-x-4 p-(--card-padding,1.5rem) backdrop-blur-(--glass-blur,16px) rounded-2xl bg-(--card-bg,rgba(255,255,255,0.03)) border border-white/10 hover:border-primary/30 transition-all duration-(--animation-duration,0.5s) ease-(--animation-easing,ease-in-out)">
+          <div className="flex items-start space-x-4 p-6 backdrop-blur-xl rounded-2xl bg-white/5 border border-white/10 hover:border-primary/30 transition-all">
             <Controller
               name="settings.newsletter"
               control={control}
               render={({ field }) => (
                 <Checkbox
                   id="newsletter"
-                  checked={field.value}
-                  disabled={isSubmitting}
-                  onCheckedChange={handleFieldChange(field.onChange)}
+                  checked={optimisticSettings.newsletter}
+                  disabled={isPending}
+                  onCheckedChange={handleFieldChange('newsletter', field.onChange)}
                   className="mt-1 border-white/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
               )}
@@ -281,9 +293,9 @@ export const SettingsForm: React.FC = () => {
               render={({ field }) => (
                 <Checkbox
                   id="marketing"
-                  checked={field.value}
-                  disabled={isSubmitting}
-                  onCheckedChange={handleFieldChange(field.onChange)}
+                  checked={optimisticSettings.marketing}
+                  disabled={isPending}
+                  onCheckedChange={handleFieldChange('marketing', field.onChange)}
                   className="mt-1 border-white/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
               )}
@@ -304,7 +316,7 @@ export const SettingsForm: React.FC = () => {
         </div>
       </section>
 
-      {isSubmitting && (
+      {isPending && (
         <div className="flex items-center gap-3 text-primary animate-pulse">
           <div className="w-2 h-2 rounded-full bg-primary" />
           <span className="text-[10px] font-mono uppercase tracking-[0.2em]">

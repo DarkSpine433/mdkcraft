@@ -17,10 +17,11 @@ import React, { useEffect, useRef, useState } from 'react'
 type Props = {
   ticket: Ticket
   currentUser: User
+  view?: 'table' | 'card'
 }
 
 const TicketsRow = (props: Props) => {
-  const { ticket, currentUser } = props
+  const { ticket, currentUser, view = 'table' } = props
   const { messages, priority, status, subject, createdAt } = ticket
 
   const router = useRouter()
@@ -67,35 +68,56 @@ const TicketsRow = (props: Props) => {
     }
   }
 
+  const statusBadge = (
+    <span
+      className={`text-[10px] px-2 py-1 rounded-full border uppercase tracking-tighter ${
+        status === 'open'
+          ? 'border-green-500/50 text-green-500'
+          : 'border-neutral-500/50 text-neutral-500'
+      }`}
+    >
+      {status === 'open' ? 'OTWARTY' : 'ZAMKNIĘTY'}
+    </span>
+  )
+
   return (
     <Dialog key={String(ticket.id)}>
       <DialogTrigger asChild>
-        <tr
-          className="hover:bg-white/5 transition-colors cursor-pointer group border-b border-white/5"
-          role="button"
-        >
-          <td className="px-6 py-4 font-medium group-hover:text-primary transition-colors">
-            {subject}
-          </td>
-          <td className="px-6 py-4">
-            <span
-              className={`text-[10px] px-2 py-1 rounded-full border uppercase tracking-tighter ${
-                status === 'open'
-                  ? 'border-green-500/50 text-green-500'
-                  : 'border-neutral-500/50 text-neutral-500'
-              }`}
-            >
-              {status === 'open' ? 'OTWARTY' : 'ZAMKNIĘTY'}
-            </span>
-          </td>
-          <td className="px-6 py-4 text-xs font-mono uppercase text-neutral-400">{priority}</td>
-          <td className="px-6 py-4 text-xs text-neutral-500 font-mono">
-            {new Date(createdAt).toLocaleDateString('pl-PL')}
-          </td>
-        </tr>
+        {view === 'table' ? (
+          <tr
+            className="hover:bg-white/5 transition-colors cursor-pointer group border-b border-white/5"
+            role="button"
+          >
+            <td className="px-6 py-4 font-medium group-hover:text-primary transition-colors">
+              {subject}
+            </td>
+            <td className="px-6 py-4">{statusBadge}</td>
+            <td className="px-6 py-4 text-xs font-mono uppercase text-neutral-400">{priority}</td>
+            <td className="px-6 py-4 text-xs text-neutral-500 font-mono">
+              {new Date(createdAt).toLocaleDateString('pl-PL')}
+            </td>
+          </tr>
+        ) : (
+          <div
+            className="p-6 hover:bg-white/5 transition-colors cursor-pointer group space-y-4"
+            role="button"
+          >
+            <div className="flex justify-between items-start">
+              <h3 className="font-bold text-sm group-hover:text-primary transition-colors line-clamp-2">
+                {subject}
+              </h3>
+              {statusBadge}
+            </div>
+            <div className="flex justify-between items-center text-[10px] font-mono uppercase tracking-widest text-neutral-500">
+              <span>Priorytet: {priority}</span>
+              <span>{new Date(createdAt).toLocaleDateString('pl-PL')}</span>
+            </div>
+          </div>
+        )
+      }
       </DialogTrigger>
 
-      <DialogContent className="max-w-2xl bg-[#050507] border-white/10 text-white shadow-2xl shadow-primary/20 p-0 overflow-hidden gap-0">
+      <DialogContent className="w-[95vw] max-w-2xl bg-[#050507] border-white/10 text-white shadow-2xl shadow-primary/20 p-0 overflow-hidden gap-0 rounded-2xl md:rounded-3xl">
         {/* HEADER */}
         <DialogHeader className="p-6 border-b border-white/5">
           <div className="flex items-center gap-3 mb-2">
