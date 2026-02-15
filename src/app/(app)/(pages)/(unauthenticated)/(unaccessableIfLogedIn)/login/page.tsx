@@ -29,7 +29,7 @@ export default async function Login() {
               <span className="text-2xl font-black tracking-tighter text-white">MDKcraft</span>
             </Link>
           </div>
-          <h1 className="text-4xl font-black tracking-tighter uppercase">Autoryzacja_Systemu</h1>
+          <h1 className="text-4xl font-black tracking-tighter uppercase">Autoryzacja Systemu</h1>
           <p className="text-neutral-500 font-mono text-xs uppercase tracking-widest leading-relaxed">
             Zaloguj się, aby uzyskać dostęp do swojego terminala projektowego.
           </p>
@@ -43,7 +43,7 @@ export default async function Login() {
         <p className="text-center text-neutral-500 text-xs font-mono uppercase tracking-widest">
           Nie masz konta?{' '}
           <Link href="/create-account" className="text-primary hover:underline transition-all">
-            Utwórz_Profil
+            Utwórz Profil
           </Link>
         </p>
       </div>

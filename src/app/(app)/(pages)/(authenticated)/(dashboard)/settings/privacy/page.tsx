@@ -66,7 +66,7 @@ export default async function PrivacyPage() {
             <Shield className="text-primary" size={24} />
           </div>
           <div>
-            <h1 className="text-4xl font-black tracking-tighter uppercase">Centrum_Prywatności</h1>
+            <h1 className="text-4xl font-black tracking-tighter uppercase">Centrum Prywatności</h1>
             <p className="text-neutral-500 font-mono text-xs uppercase tracking-widest leading-relaxed">
               Zarządzaj swoimi danymi i parametrami bezpieczeństwa.
             </p>
@@ -100,7 +100,7 @@ export default async function PrivacyPage() {
       <section className="space-y-8">
         <div className="flex items-center justify-between border-b border-white/5 pb-4">
           <h2 className="text-xl font-black uppercase tracking-tighter">
-            Ostatnie_Sesje_Logowania
+            Ostatnie Sesje Logowania
           </h2>
           <p className="text-[10px] text-neutral-500 font-mono uppercase tracking-widest">
             Wykryte Urządzenia
@@ -175,7 +175,7 @@ export default async function PrivacyPage() {
         <div className="flex items-start gap-4 mb-8">
           <Info className="text-primary shrink-0" size={20} />
           <div className="space-y-4 max-w-2xl relative z-10">
-            <h2 className="text-xl font-black uppercase tracking-tighter">Twoje_Prawa_Danych</h2>
+            <h2 className="text-xl font-black uppercase tracking-tighter">Twoje Prawa Danych</h2>
             <div className="text-neutral-400 font-mono text-xs leading-relaxed space-y-4">
               <p>
                 W MDKcraft traktujemy prywatność jako fundamentalną cechę systemu, a nie dodatek.

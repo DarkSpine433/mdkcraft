@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import type { Ticket } from '@/payload-types'
 import { User } from '@/payload-types'
 import configPromise from '@payload-config'
@@ -33,22 +34,21 @@ export default async function TicketsPage() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tighter uppercase">Centrum_Wsparcia</h1>
+          <h1 className="text-3xl font-black tracking-tighter uppercase">Centrum Wsparcia</h1>
           <p className="text-neutral-500 font-mono text-xs uppercase tracking-widest leading-relaxed">
             Zarządzaj swoimi zgłoszeniami i komunikuj się z zespołem MDKcraft.
           </p>
         </div>
-        <Link
-          href="/tickets/new"
-          className="inline-flex items-center gap-2 h-11 px-6 bg-primary hover:bg-primary/90 text-white rounded-xl font-bold transition-all text-sm uppercase tracking-wider shadow-lg shadow-primary/20"
-        >
-          <Plus size={18} /> Nowe Zgłoszenie
+        <Link href="/tickets/new">
+          <Button>
+            <Plus size={18} /> Nowe Zgłoszenie
+          </Button>
         </Link>
       </header>
 
       <div className="p-6 md:p-8 rounded-[30px] md:rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-2xl overflow-hidden">
         <h2 className="text-xl font-black tracking-tight uppercase mb-6 flex items-center gap-2">
-          <MessageSquare size={20} className="text-primary" /> Twoje_Zgłoszenia
+          <MessageSquare size={20} className="text-primary" /> Twoje Zgłoszenia
         </h2>
 
         <div className="bg-[#0a0a0c]/50 rounded-2xl border border-white/5 overflow-hidden">

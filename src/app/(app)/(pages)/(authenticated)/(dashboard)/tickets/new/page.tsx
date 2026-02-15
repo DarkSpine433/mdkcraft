@@ -48,7 +48,7 @@ export default function NewTicketPage() {
       </Link>
 
       <header>
-        <h1 className="text-4xl font-black tracking-tighter uppercase mb-2">NOWE_ZGŁOSZENIE</h1>
+        <h1 className="text-4xl font-black tracking-tighter uppercase mb-2">NOWE ZGŁOSZENIE</h1>
         <p className="text-neutral-500 font-mono text-xs uppercase tracking-widest leading-relaxed">
           Otwórz nowy kanał komunikacji z działem technicznym MDKcraft.
         </p>
@@ -59,7 +59,7 @@ export default function NewTicketPage() {
           <div className="space-y-4">
             <div className="space-y-2">
               <label className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest ml-1">
-                Temat_Zgłoszenia
+                Temat Zgłoszenia
               </label>
               <input
                 type="text"
@@ -72,7 +72,7 @@ export default function NewTicketPage() {
 
             <div className="space-y-2">
               <label className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest ml-1">
-                Priorytet_Operacji
+                Priorytet Operacji
               </label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {(['low', 'medium', 'high', 'critical'] as const).map((p) => (
@@ -103,7 +103,7 @@ export default function NewTicketPage() {
 
             <div className="space-y-2">
               <label className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest ml-1">
-                Treść_Wiadomości
+                Treść Wiadomości
               </label>
               <textarea
                 value={formData.message}
@@ -125,7 +125,7 @@ export default function NewTicketPage() {
                 'INICJALIZACJA...'
               ) : (
                 <>
-                  <Send size={16} /> Otwórz_Zgłoszenie
+                  <Send size={16} /> Otwórz Zgłoszenie
                 </>
               )}
             </Button>

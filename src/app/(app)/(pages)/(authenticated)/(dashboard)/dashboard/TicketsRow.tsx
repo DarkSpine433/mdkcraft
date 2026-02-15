@@ -123,14 +123,14 @@ const TicketsRow = (props: Props) => {
           <div className="flex items-center gap-3 mb-2">
             <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
             <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-neutral-500">
-              PROT_ZGŁOSZENIA // {String(ticket.id).slice(-8).toUpperCase()}
+              PROT ZGŁOSZENIA // {String(ticket.id).slice(-8).toUpperCase()}
             </span>
           </div>
           <DialogTitle className="text-2xl font-black tracking-tighter uppercase italic text-white">
             {ticket.subject}
           </DialogTitle>
           <DialogDescription className="text-neutral-500 font-mono text-xs flex items-center gap-2">
-            STATUS: <span className="text-primary animate-pulse">SESJA_AKTYWNA</span>
+            STATUS: <span className="text-primary animate-pulse">SESJA AKTYWNA</span>
           </DialogDescription>
         </DialogHeader>
 
@@ -156,7 +156,7 @@ const TicketsRow = (props: Props) => {
                   <span
                     className={`text-[9px] font-mono uppercase tracking-widest ${isClient ? 'text-primary' : 'text-neutral-500'}`}
                   >
-                    {isClient ? 'Użytkownik_Klient' : 'System_MDK_Core'}
+                    {isClient ? 'Użytkownik Klient' : 'System MDK Core'}
                   </span>
                   <span className="text-[9px] text-neutral-700 font-mono">[{formattedDate}]</span>
                 </div>
@@ -211,7 +211,7 @@ const TicketsRow = (props: Props) => {
               className="px-4 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/20 rounded-lg group/btn transition-all disabled:opacity-0"
             >
               <span className="text-[10px] font-mono text-primary uppercase tracking-tighter flex items-center gap-2">
-                {isSubmitting ? 'Procesowanie' : 'Wykonaj_Wyślij'}
+                {isSubmitting ? 'Procesowanie' : 'Wykonaj Wyślij'}
                 <div
                   className={`w-1 h-3 bg-primary shadow-[0_0_8px_#8b5cf6] ${isSubmitting ? 'animate-spin' : 'animate-bounce'}`}
                 />
@@ -231,13 +231,13 @@ const TicketsRow = (props: Props) => {
               <div className="hidden md:flex items-center gap-1.5">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary/50" />
                 <span className="text-neutral-500 uppercase">
-                  Kodowanie: <span className="text-neutral-300">AES_256_V2</span>
+                  Kodowanie: <span className="text-neutral-300">AES 256 V2</span>
                 </span>
               </div>
             </div>
 
             <div className="flex items-center gap-2 text-neutral-600">
-              <span className="uppercase italic opacity-50">Koniec_Transmisji</span>
+              <span className="uppercase italic opacity-50">Koniec Transmisji</span>
               <div className="flex gap-0.5">
                 <div className="w-[2px] h-3 bg-neutral-800 animate-[pulse_1.5s_infinite]" />
                 <div className="w-[2px] h-3 bg-neutral-800 animate-[pulse_1.5s_infinite_0.2s]" />

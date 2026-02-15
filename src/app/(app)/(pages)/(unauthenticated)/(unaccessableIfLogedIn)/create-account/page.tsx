@@ -2,10 +2,9 @@ import type { Metadata } from 'next'
 
 import { RenderParams } from '@/components/RenderParams'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
-import Link from 'next/link'
-import React from 'react'
-import { headers as getHeaders } from 'next/headers'
 import configPromise from '@payload-config'
+import { headers as getHeaders } from 'next/headers'
+import Link from 'next/link'
 import { getPayload } from 'payload'
 
 import { CreateAccountForm } from '@/components/forms/CreateAccountForm'
@@ -31,7 +30,7 @@ export default async function CreateAccount() {
               <span className="text-2xl font-black tracking-tighter text-white">MDKcraft</span>
             </Link>
           </div>
-          <h1 className="text-4xl font-black tracking-tighter uppercase">Inicjalizacja_Profilu</h1>
+          <h1 className="text-4xl font-black tracking-tighter uppercase">Inicjalizacja Profilu</h1>
           <p className="text-neutral-500 font-mono text-xs uppercase tracking-widest leading-relaxed">
             Dołącz do ekosystemu MDKcraft i zacznij budować swoją obecność w sieci.
           </p>
@@ -45,7 +44,7 @@ export default async function CreateAccount() {
         <p className="text-center text-neutral-500 text-xs font-mono uppercase tracking-widest">
           Masz już konto?{' '}
           <Link href="/login" className="text-primary hover:underline">
-            Zaloguj_Się
+            Zaloguj Się
           </Link>
         </p>
       </div>

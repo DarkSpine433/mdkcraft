@@ -31,7 +31,7 @@ export const LogoutPage: React.FC = () => {
             <span className="text-2xl font-black tracking-tighter text-white">MDKcraft</span>
           </Link>
         </div>
-        <h1 className="text-4xl font-black tracking-tighter uppercase">Sesja_Zakończona</h1>
+        <h1 className="text-4xl font-black tracking-tighter uppercase">Sesja Zakończona</h1>
         <p className="text-neutral-500 font-mono text-xs uppercase tracking-widest leading-relaxed">
           {error || success}
         </p>

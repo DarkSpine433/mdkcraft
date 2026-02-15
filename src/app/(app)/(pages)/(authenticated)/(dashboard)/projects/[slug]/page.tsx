@@ -1,5 +1,5 @@
 import { getStripeCustomerPortalUrl } from '@/app/actions/stripe'
-import { Project, User } from '@/payload-types'
+import { Project } from '@/payload-types'
 import configPromise from '@payload-config'
 import {
   ArrowLeft,
@@ -53,7 +53,8 @@ export default async function ProjectDetailsPage({
         overrideAccess: false,
       })
       // Double check client matches (though overrideAccess: false should handle it)
-      const clientId = typeof resultById.client === 'string' ? resultById.client : resultById.client.id
+      const clientId =
+        typeof resultById.client === 'string' ? resultById.client : resultById.client.id
       if (clientId === user?.id) {
         project = resultById as Project
       }
@@ -81,7 +82,7 @@ export default async function ProjectDetailsPage({
         href="/projects"
         className="inline-flex items-center gap-2 text-neutral-500 hover:text-white transition-colors text-xs font-mono uppercase tracking-[0.2em]"
       >
-        <ArrowLeft size={14} /> Powrót_Do_Listy
+        <ArrowLeft size={14} /> Powrót Do Listy
       </Link>
 
       <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
@@ -128,7 +129,7 @@ export default async function ProjectDetailsPage({
                 size={20}
                 className="text-[#F24E1E] group-hover:scale-110 transition-transform"
               />
-              <span className="text-[10px] font-black uppercase tracking-widest">Design_Figma</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">Design Figma</span>
             </a>
           )}
           {project.stagingLink && (
@@ -142,7 +143,7 @@ export default async function ProjectDetailsPage({
                 size={20}
                 className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
               />
-              <span className="text-[10px] font-black uppercase tracking-widest">Podgląd_Live</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">Podgląd Live</span>
             </a>
           )}
         </div>
@@ -160,7 +161,7 @@ export default async function ProjectDetailsPage({
               <div className="flex items-end justify-between">
                 <div className="space-y-1">
                   <h2 className="text-2xl font-black uppercase tracking-tight">
-                    Status_Realizacji
+                    Status Realizacji
                   </h2>
                   <p className="text-[10px] text-neutral-500 font-mono uppercase tracking-[0.2em]">
                     Aktualny postęp prac deweloperskich
@@ -203,7 +204,7 @@ export default async function ProjectDetailsPage({
           <section className="space-y-6">
             <div className="flex items-center gap-3">
               <div className="h-6 w-1 bg-primary rounded-full" />
-              <h2 className="text-xl font-black tracking-tighter uppercase">Dziennik_Operacji</h2>
+              <h2 className="text-xl font-black tracking-tighter uppercase">Dziennik Operacji</h2>
             </div>
 
             <div className="space-y-4">
@@ -260,13 +261,13 @@ export default async function ProjectDetailsPage({
               href="/tickets/new"
               className="w-full h-12 bg-primary text-white rounded-xl flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all"
             >
-              <MessageSquare size={14} /> Kontakt_Z_PM
+              <MessageSquare size={14} /> Kontakt Z PM
             </Link>
           </section>
 
           <section className="p-8 rounded-[40px] bg-white/5 border border-white/10 space-y-6">
             <h3 className="text-xs font-black uppercase tracking-widest border-b border-white/10 pb-4">
-              Szczegóły_Subskrypcji
+              Szczegóły Subskrypcji
             </h3>
             <div className="space-y-4">
               <div className="flex justify-between items-center text-[10px] font-mono uppercase">
@@ -274,7 +275,7 @@ export default async function ProjectDetailsPage({
                 <span className="text-white font-bold">
                   {typeof project.subscription === 'object'
                     ? project.subscription?.name
-                    : 'BASIC_PLAN'}
+                    : 'BASIC PLAN'}
                 </span>
               </div>
               <div className="flex justify-between items-center text-[10px] font-mono uppercase">
@@ -299,7 +300,7 @@ export default async function ProjectDetailsPage({
                 type="submit"
                 className="w-full h-10 bg-white/5 hover:bg-white/10 text-neutral-400 rounded-lg text-[9px] font-mono uppercase tracking-widest transition-all"
               >
-                Zarządzaj_Planem
+                Zarządzaj Planem
               </button>
             </form>
           </section>

@@ -1,10 +1,8 @@
-import { getStripeCustomerPortalUrl } from '@/app/actions/stripe'
-
 import { Button } from '@/components/ui/button'
 import type { ClientFile, Project, SubscriptionPlan, Ticket } from '@/payload-types'
 import { User } from '@/payload-types'
 import configPromise from '@payload-config'
-import { Box, ExternalLink, FileText, Layout, MessageSquare, Zap } from 'lucide-react'
+import { Box, FileText, Layout, MessageSquare, Zap } from 'lucide-react'
 import type { Metadata } from 'next'
 import { headers as getHeaders } from 'next/headers.js'
 import Link from 'next/link'
@@ -64,10 +62,10 @@ export default async function DashboardPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-4xl font-black tracking-tighter mb-2 uppercase">
-            Witaj_Ponownie, {user.name || user.email}!
+            Witaj Ponownie, {user.name || user.email}!
           </h1>
           <p className="text-neutral-500 font-mono text-xs uppercase tracking-widest leading-relaxed">
-            SYSTEM_MDKCRAFT :: ZARZĄDZANIE_PROJEKTAMI :: STATUS_AKTYWNY
+            SYSTEM MDKCRAFT :: ZARZĄDZANIE PROJEKTAMI :: STATUS AKTYWNY
           </p>
         </div>
         <div className="flex gap-2">
@@ -85,10 +83,10 @@ export default async function DashboardPage() {
               <Zap className="text-primary h-5 w-5" />
             </div>
             <div className="text-[10px] text-neutral-500 uppercase font-mono mb-1 tracking-widest leading-none">
-              Plan_Taryfowy
+              Plan Taryfowy
             </div>
             <div className="text-xl font-black tracking-tighter uppercase">
-              {(user.activeSubscription as SubscriptionPlan)?.name || 'DEMO_VERSION'}
+              {(user.activeSubscription as SubscriptionPlan)?.name || 'DEMO VERSION'}
             </div>
           </div>
           {user.stripeCustomerID && <StripePortalButton />}
@@ -99,7 +97,7 @@ export default async function DashboardPage() {
             <Layout className="text-primary h-5 w-5" />
           </div>
           <div className="text-[10px] text-neutral-500 uppercase font-mono mb-1 tracking-widest leading-none">
-            Projekty_W_Toku
+            Projekty W Toku
           </div>
           <div className="text-xl font-black tracking-tighter uppercase">
             {projects.totalDocs} Aktywnych
@@ -111,7 +109,7 @@ export default async function DashboardPage() {
             <MessageSquare className="text-primary h-5 w-5" />
           </div>
           <div className="text-[10px] text-neutral-500 uppercase font-mono mb-1 tracking-widest leading-none">
-            Zgłoszenia_Support
+            Zgłoszenia Support
           </div>
           <div className="text-xl font-black tracking-tighter uppercase">
             {tickets.totalDocs} Razem
@@ -155,14 +153,14 @@ export default async function DashboardPage() {
           <div className="flex items-center gap-3">
             <div className="h-6 w-1 bg-primary rounded-full" />
             <h2 className="text-xl font-black tracking-tighter uppercase flex items-center gap-2">
-              <FileText size={20} className="text-primary" /> Ostatnie_Dokumenty
+              <FileText size={20} className="text-primary" /> Ostatnie Dokumenty
             </h2>
           </div>
           <Link
             href="/files"
             className="text-[10px] font-mono text-primary hover:text-white transition-colors uppercase tracking-widest font-bold"
           >
-            Vault_Klienta {'->'}
+            Vault Klienta {'->'}
           </Link>
         </div>
 
@@ -205,14 +203,14 @@ export default async function DashboardPage() {
           <div className="flex items-center gap-3">
             <div className="h-6 w-1 bg-primary rounded-full" />
             <h2 className="text-xl font-black tracking-tighter uppercase flex items-center gap-2">
-              <MessageSquare size={20} className="text-primary" /> Wsparcie_Techniczne
+              <MessageSquare size={20} className="text-primary" /> Wsparcie Techniczne
             </h2>
           </div>
           <Link
             href="/tickets"
             className="text-[10px] font-mono text-primary hover:text-white transition-colors uppercase tracking-widest font-bold"
           >
-            Pełna_Lista_Zgłoszeń
+            Pełna Lista Zgłoszeń
           </Link>
         </div>
 

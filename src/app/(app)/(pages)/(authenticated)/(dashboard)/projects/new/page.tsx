@@ -91,13 +91,6 @@ export default function ContactPage() {
       {/* Decorative Grid */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-20 pointer-events-none" />
 
-      {/* Side Decorative Text (MDK Style) */}
-      <div className="absolute -left-12 top-1/2 -rotate-90 origin-left hidden xl:block opacity-20">
-        <span className="text-sm font-mono uppercase tracking-[1em] text-white">
-          MDK // ESTABLISHED_2024
-        </span>
-      </div>
-
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-20">
         {/* Header Section */}
         <header className="mb-20">
@@ -119,7 +112,7 @@ export default function ContactPage() {
           >
             ROZPOCZNIJ <br />
             <span className="bg-gradient-to-r from-primary via-purple-400 to-blue-500 bg-clip-text text-transparent">
-              PROJEKT_
+              PROJEKT
             </span>
           </motion.h1>
 
@@ -194,7 +187,7 @@ export default function ContactPage() {
             {/* Status Section */}
             <div className="p-8 rounded-2xl border border-white/5 bg-gradient-to-br from-primary/5 to-transparent h-fit self-end">
               <h3 className="text-sm font-bold mb-6 flex items-center gap-2 uppercase tracking-tighter">
-                <Zap size={16} className="text-primary" /> System_Status: Online
+                <Zap size={16} className="text-primary" /> System Status: Online
               </h3>
               <ul className="space-y-4">
                 {[
@@ -222,13 +215,13 @@ export default function ContactPage() {
           className="mt-24 flex flex-wrap justify-center gap-12 opacity-40 grayscale hover:grayscale-0 transition-all duration-700"
         >
           <div className="flex items-center gap-2 text-xs font-mono tracking-tighter">
-            <ShieldCheck size={14} className="text-primary" /> ENCRYPTED_DATA
+            <ShieldCheck size={14} className="text-primary" /> ENCRYPTED DATA
           </div>
           <div className="flex items-center gap-2 text-xs font-mono tracking-tighter">
-            <Zap size={14} className="text-primary" /> INSTANT_TICKET
+            <Zap size={14} className="text-primary" /> INSTANT TICKET
           </div>
           <div className="flex items-center gap-2 text-xs font-mono tracking-tighter">
-            <MousePointer2 size={14} className="text-primary" /> HUMAN_CENTERED
+            <MousePointer2 size={14} className="text-primary" /> HUMAN CENTERED
           </div>
         </motion.div>
       </div>

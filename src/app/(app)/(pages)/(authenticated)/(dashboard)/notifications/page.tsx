@@ -83,7 +83,7 @@ export default async function NotificationsPage({
             <Bell className="text-primary" size={24} />
           </div>
           <div>
-            <h1 className="text-4xl font-black tracking-tighter uppercase">Ekran_Powiadomień</h1>
+            <h1 className="text-4xl font-black tracking-tighter uppercase">Ekran Powiadomień</h1>
             <p className="text-neutral-500 font-mono text-xs uppercase tracking-widest leading-relaxed">
               Twoje centrum komunikatów systemowych i aktualizacji.
             </p>
@@ -99,7 +99,7 @@ export default async function NotificationsPage({
             <div className="p-6 bg-white/5 rounded-full mb-4">
               <Bell size={40} className="text-neutral-600" />
             </div>
-            <h3 className="text-xl font-bold uppercase tracking-tight">Cisza_Radiowa</h3>
+            <h3 className="text-xl font-bold uppercase tracking-tight">Cisza Radiowa</h3>
             <p className="text-neutral-500 font-mono text-xs uppercase tracking-widest max-w-xs leading-relaxed">
               Obecnie nie masz żadnych nowych powiadomień. Sprawdź ponownie później.
             </p>
@@ -162,7 +162,6 @@ export default async function NotificationsPage({
           >
             <ChevronLeft size={20} />
           </Link>
-
           <div className="flex items-center gap-2">
             {Array.from({ length: totalPages }).map((_, i) => (
               <Link
@@ -178,7 +177,6 @@ export default async function NotificationsPage({
               </Link>
             ))}
           </div>
-
           <Link
             href={`/notifications?page=${currentPage + 1}`}
             className={`p-3 rounded-xl bg-white/5 border border-white/10 transition-all ${

@@ -24,7 +24,7 @@ export default async function SettingsPage() {
             <SlidersHorizontal className="text-primary" size={24} />
           </div>
           <div>
-            <h1 className="text-4xl font-black tracking-tighter uppercase">Panel_Konfiguracyjny</h1>
+            <h1 className="text-4xl font-black tracking-tighter uppercase">Panel Konfiguracyjny</h1>
             <p className="text-neutral-500 font-mono text-xs uppercase tracking-widest leading-relaxed">
               Zarządzaj pełnym zakresem swojego ekosystemu MDKcraft.
             </p>
