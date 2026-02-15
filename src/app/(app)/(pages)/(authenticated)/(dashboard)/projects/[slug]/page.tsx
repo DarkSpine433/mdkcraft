@@ -1,4 +1,5 @@
-import { Project } from '@/payload-types'
+import { getStripeCustomerPortalUrl } from '@/app/actions/stripe'
+import { Project, User } from '@/payload-types'
 import configPromise from '@payload-config'
 import {
   ArrowLeft,
@@ -14,7 +15,7 @@ import {
 import type { Metadata } from 'next'
 import { headers as getHeaders } from 'next/headers'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 
 export default async function ProjectDetailsPage({
@@ -32,6 +33,8 @@ export default async function ProjectDetailsPage({
 
   const resultBySlug = await payload.find({
     collection: 'projects',
+    user,
+    overrideAccess: false,
     where: {
       slug: { equals: slug },
       client: { equals: user?.id },
@@ -46,12 +49,12 @@ export default async function ProjectDetailsPage({
       const resultById = await payload.findByID({
         collection: 'projects',
         id: slug,
+        user,
+        overrideAccess: false,
       })
-      if (
-        typeof resultById.client === 'string'
-          ? resultById.client === user?.id
-          : resultById.client.id === user?.id
-      ) {
+      // Double check client matches (though overrideAccess: false should handle it)
+      const clientId = typeof resultById.client === 'string' ? resultById.client : resultById.client.id
+      if (clientId === user?.id) {
         project = resultById as Project
       }
     } catch (_e) {
@@ -216,7 +219,7 @@ export default async function ProjectDetailsPage({
                       <div className="w-2 h-2 rounded-full bg-primary" />
                       <div className="w-px h-12 bg-white/10 group-last:bg-transparent" />
                     </div>
-                    <div className="flex-1 space-y-2">
+                    <div className="flex-1 space-y-2 overflow-hidden">
                       <div className="flex justify-between items-center">
                         <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-500">
                           {new Date(log.date).toLocaleDateString('pl-PL')} {' // '}
@@ -226,7 +229,11 @@ export default async function ProjectDetailsPage({
                           })}
                         </span>
                       </div>
-                      <p className="text-neutral-300 font-light leading-relaxed">{log.message}</p>
+                      <div className="overflow-x-auto custom-scrollbar pb-2">
+                        <p className="text-neutral-300 font-mono text-sm leading-relaxed whitespace-pre sm:whitespace-pre-wrap">
+                          {log.message}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 )) || (
@@ -275,9 +282,26 @@ export default async function ProjectDetailsPage({
                 <span className="text-green-500 font-bold">AKTYWNA</span>
               </div>
             </div>
-            <button className="w-full h-10 bg-white/5 hover:bg-white/10 text-neutral-400 rounded-lg text-[9px] font-mono uppercase tracking-widest transition-all">
-              Zarządzaj_Planem
-            </button>
+            <form
+              action={async () => {
+                'use server'
+                let url: string | undefined
+                try {
+                  const result = await getStripeCustomerPortalUrl()
+                  url = result.url
+                } catch (err) {
+                  console.error(err)
+                }
+                if (url) redirect(url)
+              }}
+            >
+              <button
+                type="submit"
+                className="w-full h-10 bg-white/5 hover:bg-white/10 text-neutral-400 rounded-lg text-[9px] font-mono uppercase tracking-widest transition-all"
+              >
+                Zarządzaj_Planem
+              </button>
+            </form>
           </section>
         </div>
       </div>

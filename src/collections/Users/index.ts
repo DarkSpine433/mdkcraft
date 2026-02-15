@@ -37,6 +37,15 @@ export const Users: CollectionConfig = {
       label: 'Nazwisko',
     },
     {
+      name: 'handle',
+      type: 'text',
+      label: 'Pseudonim / Handle',
+      unique: true,
+      admin: {
+        description: 'Tylko małe litery, cyfry i podkreślniki (hacker style).',
+      },
+    },
+    {
       name: 'phone',
       type: 'text',
       label: 'Numer telefonu',

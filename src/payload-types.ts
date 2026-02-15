@@ -230,6 +230,10 @@ export interface User {
   id: string;
   name?: string | null;
   surname?: string | null;
+  /**
+   * Tylko małe litery, cyfry i podkreślniki (hacker style).
+   */
+  handle?: string | null;
   phone?: string | null;
   company?: string | null;
   roles?: ('admin' | 'manager' | 'developer' | 'editor' | 'customer')[] | null;
@@ -2291,6 +2295,7 @@ export interface PayloadMigration {
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
   surname?: T;
+  handle?: T;
   phone?: T;
   company?: T;
   roles?: T;

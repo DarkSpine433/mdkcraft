@@ -1,5 +1,6 @@
 'use client'
 
+import { updateUserData } from '@/app/actions/dashboard'
 import { FormError } from '@/components/forms/FormError'
 import { FormItem } from '@/components/forms/FormItem'
 import { Button } from '@/components/ui/button'
@@ -16,6 +17,7 @@ import { toast } from 'sonner'
 type AccountInfoData = {
   name: string
   surname: string
+  handle?: string
   phone?: string
   company?: string
 }
@@ -33,6 +35,7 @@ export const AccountForm: React.FC = () => {
   const [unlocked, setUnlocked] = useState({
     name: false,
     surname: false,
+    handle: false,
     phone: false,
     company: false,
   })
@@ -62,39 +65,29 @@ export const AccountForm: React.FC = () => {
     async (data: AccountInfoData) => {
       if (user) {
         try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${user.id}`,
-            {
-              body: JSON.stringify(data),
-              credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              method: 'PATCH',
-            },
-          )
-
-          if (response.ok) {
-            const json = await response.json()
-            setUser(json.doc)
-            toast.success('Dane osobowe zostały zaktualizowane.')
-            setUnlocked({
-              name: false,
-              surname: false,
-              phone: false,
-              company: false,
-            })
-            resetInfo({
-              name: json.doc.name,
-              surname: json.doc.surname,
-              phone: json.doc.phone,
-              company: json.doc.company,
-            })
-          } else {
-            toast.error('Wystąpił problem podczas aktualizacji danych.')
-          }
-        } catch (_error) {
-          toast.error('Błąd połączenia z serwerem.')
+          const updatedUser = await updateUserData(data)
+          setUser(updatedUser as User)
+          toast.success('System_Zaktualizowany', {
+            description: 'Twoje dane zostały pomyślnie zapisane.',
+          })
+          setUnlocked({
+            name: false,
+            surname: false,
+            handle: false,
+            phone: false,
+            company: false,
+          })
+          resetInfo({
+            name: updatedUser.name ?? '',
+            surname: updatedUser.surname ?? '',
+            handle: updatedUser.handle ?? '',
+            phone: updatedUser.phone ?? '',
+            company: updatedUser.company ?? '',
+          })
+        } catch (error: any) {
+          toast.error('Błąd Synchronizacji', {
+            description: error.message || 'Wystąpił problem podczas aktualizacji danych.',
+          })
         }
       }
     },
@@ -105,29 +98,18 @@ export const AccountForm: React.FC = () => {
     async (data: PasswordFormData) => {
       if (user) {
         try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${user.id}`,
-            {
-              body: JSON.stringify({ password: data.password }),
-              credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              method: 'PATCH',
-            },
-          )
-
-          if (response.ok) {
-            toast.success('Hasło zostało zmienione.')
-            resetPass({
-              password: '',
-              passwordConfirm: '',
-            })
-          } else {
-            toast.error('Nie udało się zmienić hasła.')
-          }
-        } catch (_error) {
-          toast.error('Błąd połączenia z serwerem.')
+          await updateUserData({ password: data.password })
+          toast.success('Hasło_Zmienione', {
+            description: 'Zabezpieczenia konta zostały zaktualizowane.',
+          })
+          resetPass({
+            password: '',
+            passwordConfirm: '',
+          })
+        } catch (error: any) {
+          toast.error('Błąd Bezpieczeństwa', {
+            description: error.message || 'Nie udało się zmienić hasła.',
+          })
         }
       }
     },
@@ -148,6 +130,7 @@ export const AccountForm: React.FC = () => {
       resetInfo({
         name: u.name ?? '',
         surname: u.surname ?? '',
+        handle: u.handle ?? '',
         phone: u.phone ?? '',
         company: u.company ?? '',
       })
@@ -234,6 +217,38 @@ export const AccountForm: React.FC = () => {
           <FormItem>
             <div className="flex justify-between items-center mb-2">
               <Label
+                htmlFor="info-handle"
+                className="text-[10px] font-mono uppercase tracking-widest text-neutral-500"
+              >
+                Pseudonim / Handle
+              </Label>
+              <button
+                type="button"
+                onClick={() => toggleLock('handle')}
+                className="text-[10px] font-mono uppercase text-primary hover:text-primary/80 flex items-center gap-1 transition-colors"
+              >
+                {unlocked.handle ? <Unlock size={10} /> : <Lock size={10} />}
+                {unlocked.handle ? 'Zablokuj' : 'Odblokuj'}
+              </button>
+            </div>
+            <Input
+              id="info-handle"
+              disabled={!unlocked.handle}
+              {...registerInfo('handle', {
+                pattern: {
+                  value: /^[a-z0-9_]+$/,
+                  message: 'Użyj tylko małych liter, cyfr i podkreślników.',
+                },
+              })}
+              className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-primary/50 transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
+              placeholder="hacker_name_24"
+            />
+            {infoErrors.handle && <FormError message={infoErrors.handle.message} />}
+          </FormItem>
+
+          <FormItem>
+            <div className="flex justify-between items-center mb-2">
+              <Label
                 htmlFor="info-phone"
                 className="text-[10px] font-mono uppercase tracking-widest text-neutral-500"
               >
@@ -251,10 +266,16 @@ export const AccountForm: React.FC = () => {
             <Input
               id="info-phone"
               disabled={!unlocked.phone}
-              {...registerInfo('phone')}
+              {...registerInfo('phone', {
+                pattern: {
+                  value: /^\+[1-9]\d{1,14}$/,
+                  message: 'Wymagany format międzynarodowy (np. +48123456789).',
+                },
+              })}
               className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-primary/50 transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
-              placeholder="+48 000 000 000"
+              placeholder="+48000000000"
             />
+            {infoErrors.phone && <FormError message={infoErrors.phone.message} />}
           </FormItem>
 
           <FormItem>

@@ -26,8 +26,8 @@ export default async function Orders() {
   try {
     const ordersResult = await payload.find({
       collection: 'orders',
-      limit: 0,
-      pagination: false,
+      limit: 50,
+      pagination: true,
       user,
       overrideAccess: false,
       where: {
@@ -58,7 +58,7 @@ export default async function Orders() {
               Nie masz jeszcze żadnych zamówień.
             </p>
             <Link
-              href="/shop"
+              href="/projects/new"
               className="inline-flex items-center justify-center h-12 px-8 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl transition-all"
             >
               Rozpocznij nowy projekt

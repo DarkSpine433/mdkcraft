@@ -17,6 +17,7 @@ import {
 import type { Metadata } from 'next'
 import { headers as getHeaders } from 'next/headers'
 import { getPayload } from 'payload'
+import { PrivacyActions } from './PrivacyActions'
 
 export default async function PrivacyPage() {
   const headers = await getHeaders()
@@ -190,14 +191,7 @@ export default async function PrivacyPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-4 pt-10 border-t border-white/5 relative z-10">
-          <button className="h-11 px-8 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl font-bold transition-all text-[10px] uppercase tracking-widest">
-            Eksportuj_Dane (JSON)
-          </button>
-          <button className="h-11 px-8 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-500 rounded-xl font-bold transition-all text-[10px] uppercase tracking-widest">
-            Usuń_Prywatne_Informacje
-          </button>
-        </div>
+        <PrivacyActions />
       </section>
     </div>
   )

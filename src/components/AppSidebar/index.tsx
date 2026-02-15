@@ -57,11 +57,21 @@ export const AppSidebar = ({
     }
   }, [])
 
+  const navItems = [
+    { icon: LayoutDashboard, label: 'Pulpit', href: '/dashboard' },
+    { icon: PanelsTopLeftIcon, label: 'Projekty', href: '/projects' },
+    { icon: FolderOpenDotIcon, label: 'Pliki', href: '/files' },
+    { icon: LifeBuoy, label: 'Zgłoszenia', href: '/tickets' },
+    { icon: User, label: 'Mój Profil', href: '/account' },
+    { icon: Bell, label: 'Powiadomienia', href: '/notifications', badge: unreadCount },
+    { icon: Settings, label: 'Ustawienia', href: '/settings' },
+  ]
+
   return (
     <motion.aside
       initial={false}
       animate={{ width: isOpen ? '240px' : '80px' }}
-      className="fixed left-0 top-0 h-screen bg-[#050507] border-r border-white/5 flex flex-col z-50 overflow-hidden"
+      className="fixed left-0 top-0 h-screen bg-[#050507] border-r border-white/5 hidden lg:flex flex-col z-50 overflow-hidden"
     >
       {/* Header / Logo */}
       <div className="p-5 flex items-center justify-between">
@@ -103,16 +113,7 @@ export const AppSidebar = ({
       </div>
       {/* Navigation Links */}
       <nav className="flex-1 px-4 space-y-2 mt-4">
-        {[
-          { icon: LayoutDashboard, label: 'Pulpit', href: '/dashboard' },
-
-          { icon: PanelsTopLeftIcon, label: 'Projekty', href: '/projects' },
-          { icon: FolderOpenDotIcon, label: 'Pliki', href: '/files' },
-          { icon: LifeBuoy, label: 'Zgłoszenia', href: '/tickets' },
-          { icon: User, label: 'Mój Profil', href: '/account' },
-          { icon: Bell, label: 'Powiadomienia', href: '/notifications', badge: unreadCount },
-          { icon: Settings, label: 'Ustawienia', href: '/settings' },
-        ].map((item, i) => (
+        {navItems.map((item, i) => (
           <SidebarItem
             key={i}
             icon={item.icon}
@@ -147,6 +148,80 @@ export const AppSidebar = ({
         )}
       </div>
     </motion.aside>
+  )
+}
+
+export const MobileSidebarContent = ({
+  breadcrumbs = [],
+  onItemClick,
+}: {
+  breadcrumbs?: string[]
+  onItemClick?: () => void
+}) => {
+  const [unreadCount, setUnreadCount] = useState(0)
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      try {
+        const count = await getUnreadNotificationsCount()
+        setUnreadCount(count)
+      } catch (_error) {
+        console.error('Failed to fetch unread count')
+      }
+    }
+    fetchCount()
+    const interval = setInterval(fetchCount, 60000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const navItems = [
+    { icon: LayoutDashboard, label: 'Pulpit', href: '/dashboard' },
+    { icon: PanelsTopLeftIcon, label: 'Projekty', href: '/projects' },
+    { icon: FolderOpenDotIcon, label: 'Pliki', href: '/files' },
+    { icon: LifeBuoy, label: 'Zgłoszenia', href: '/tickets' },
+    { icon: User, label: 'Mój Profil', href: '/account' },
+    { icon: Bell, label: 'Powiadomienia', href: '/notifications', badge: unreadCount },
+    { icon: Settings, label: 'Ustawienia', href: '/settings' },
+  ]
+
+  return (
+    <div className="flex flex-col h-full bg-[#050507]/80 backdrop-blur-xl">
+      <div className="p-6">
+        <span className="font-black tracking-tighter text-2xl bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent flex items-center gap-2">
+          <Logo /> MDKcraft
+        </span>
+      </div>
+
+      <nav className="flex-1 px-4 space-y-2">
+        {navItems.map((item, i) => (
+          <div key={i} onClick={onItemClick}>
+            <SidebarItem
+              icon={item.icon}
+              label={item.label}
+              href={item.href}
+              isOpen={true}
+              breadcrumbs={breadcrumbs}
+              badge={item.badge}
+            />
+          </div>
+        ))}
+      </nav>
+
+      <div className="p-6 border-t border-white/5 space-y-4">
+        <div onClick={onItemClick}>
+          <SidebarItem
+            icon={LogOut}
+            label="Wyloguj się"
+            href="/logout"
+            isOpen={true}
+            breadcrumbs={breadcrumbs}
+          />
+        </div>
+        <p className="text-[10px] text-neutral-600 font-mono uppercase tracking-widest">
+          MDKcraft &copy; {new Date().getFullYear()} // SYSTEM_ONLINE
+        </p>
+      </div>
+    </div>
   )
 }
 

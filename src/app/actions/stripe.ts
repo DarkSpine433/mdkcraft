@@ -52,7 +52,7 @@ export async function createSubscriptionCheckoutSession(priceId: string) {
       },
     ],
     mode: 'subscription',
-    success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/account/dashboard?success=Subscription+active`,
+    success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/dashboard?success=Subscription+active`,
     cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/kontakt`,
   })
 
@@ -70,7 +70,7 @@ export async function getStripeCustomerPortalUrl() {
 
   const session = await stripeClient.billingPortal.sessions.create({
     customer: user.stripeCustomerID,
-    return_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/account/dashboard`,
+    return_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/dashboard`,
   })
 
   return { url: session.url }
