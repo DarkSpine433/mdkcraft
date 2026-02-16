@@ -3,8 +3,7 @@
 import { createTicket } from '@/app/actions/dashboard'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { ArrowLeft, MessageSquare, Send } from 'lucide-react'
-import Link from 'next/link'
+import { MessageSquare, Send } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
@@ -39,14 +38,7 @@ export default function NewTicketPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <Link
-        href="/tickets"
-        className="inline-flex items-center gap-2 text-neutral-500 hover:text-white transition-colors text-xs font-mono uppercase tracking-widest"
-      >
-        <ArrowLeft size={14} /> Powrót do listy
-      </Link>
-
+    <div className="max-w-4xl mx-auto space-y-8">
       <header>
         <h1 className="text-4xl font-black tracking-tighter uppercase mb-2">NOWE ZGŁOSZENIE</h1>
         <p className="text-neutral-500 font-mono text-xs uppercase tracking-widest leading-relaxed">
@@ -76,7 +68,7 @@ export default function NewTicketPage() {
               </label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {(['low', 'medium', 'high', 'critical'] as const).map((p) => (
-                  <button
+                  <Button
                     key={p}
                     type="button"
                     onClick={() => setFormData({ ...formData, priority: p })}
@@ -84,8 +76,8 @@ export default function NewTicketPage() {
                       h-12 rounded-xl border font-mono text-[10px] uppercase tracking-widest transition-all
                       ${
                         formData.priority === p
-                          ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20'
-                          : 'bg-white/5 border-white/10 text-neutral-500 hover:border-white/20'
+                          ? 'bg-primary border-primary'
+                          : 'bg-white/5 border-white/10 text-neutral-500 hover:border-primary hover:bg-transparent'
                       }
                     `}
                   >
@@ -96,7 +88,7 @@ export default function NewTicketPage() {
                         : p === 'high'
                           ? 'WYSOKI'
                           : 'KRYTYCZNY'}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -116,11 +108,7 @@ export default function NewTicketPage() {
           </div>
 
           <div className="pt-4 flex justify-end">
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="h-14 px-10 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 transition-all gap-3"
-            >
+            <Button type="submit" disabled={isSubmitting} className="h-14 px-10 ">
               {isSubmitting ? (
                 'INICJALIZACJA...'
               ) : (

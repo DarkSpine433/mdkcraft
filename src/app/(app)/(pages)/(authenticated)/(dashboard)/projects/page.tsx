@@ -6,6 +6,7 @@ import { CheckCircle2, Clock, ExternalLink, PanelsTopLeft, Plus, Search } from '
 import type { Metadata } from 'next'
 import { headers as getHeaders } from 'next/headers'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 
 export default async function ProjectsPage({
@@ -49,7 +50,7 @@ export default async function ProjectsPage({
   const projects = projectsResult.docs as Project[]
 
   return (
-    <div className="space-y-12 animate-in fade-in duration-500">
+    <div className="space-y-12">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="flex items-center gap-4">
           <div className="p-3 bg-primary/10 rounded-2xl">

@@ -11,6 +11,7 @@ import { getPayload } from 'payload'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { MarkAsReadButton, NotificationActions } from './NotificationClient'
 
 export default async function NotificationsPage({
@@ -76,7 +77,7 @@ export default async function NotificationsPage({
   }
 
   return (
-    <div className="space-y-12 animate-in fade-in duration-500">
+    <div className="space-y-12">
       <header className="space-y-4 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="flex items-center gap-4">
           <div className="p-3 bg-primary/10 rounded-2xl">

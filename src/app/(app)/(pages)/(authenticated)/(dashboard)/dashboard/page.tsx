@@ -58,7 +58,7 @@ export default async function DashboardPage() {
   })) as unknown as { docs: ClientFile[] }
 
   return (
-    <div className="flex flex-1 flex-col gap-8 p-4 animate-in fade-in duration-700">
+    <div className="flex flex-1 flex-col gap-8 p-4">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-4xl font-black tracking-tighter mb-2 uppercase">

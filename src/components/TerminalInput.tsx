@@ -55,7 +55,7 @@ export const TerminalInput: React.FC<TerminalInputProps> = ({
         {isFocused && (
           <motion.div
             animate={{ opacity: [1, 0] }}
-            transition={{ duration: 0.8, repeat: Infinity, ease: 'stepStart' }}
+            transition={{ duration: 0.8, repeat: Infinity, ease: 'easeInOut' }}
             className="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-4 bg-primary/50 pointer-events-none"
           />
         )}
@@ -113,7 +113,7 @@ export const TerminalTextarea: React.FC<TerminalTextareaProps> = ({
         {isFocused && (
           <motion.div
             animate={{ opacity: [1, 0] }}
-            transition={{ duration: 0.8, repeat: Infinity, ease: 'stepStart' }}
+            transition={{ duration: 0.8, repeat: Infinity, ease: 'easeInOut' }}
             className="absolute bottom-6 right-4 w-2 h-4 bg-primary/50 pointer-events-none"
           />
         )}

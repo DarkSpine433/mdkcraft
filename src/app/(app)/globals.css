@@ -317,3 +317,16 @@ button {
     @apply bg-background text-foreground;
   }
 }
+
+/* Loading animation for progress bars */
+@keyframes loading {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}

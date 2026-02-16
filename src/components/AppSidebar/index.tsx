@@ -218,7 +218,7 @@ export const MobileSidebarContent = ({
           />
         </div>
         <p className="text-[10px] text-neutral-600 font-mono uppercase tracking-widest">
-          MDKcraft &copy; {new Date().getFullYear()} // SYSTEM_ONLINE
+          MDKcraft &copy; {new Date().getFullYear()}
         </p>
       </div>
     </div>

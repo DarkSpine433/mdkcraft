@@ -20,7 +20,7 @@ export default async function CreateAccount() {
   }
 
   return (
-    <div className="relative min-h-screen bg-[#020204] text-white flex items-center justify-center py-20 px-6">
+    <div className="relative min-h-screen flex items-center justify-center py-20 px-6">
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10 pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-md space-y-8">

@@ -31,7 +31,7 @@ export default async function TicketsPage() {
   })) as unknown as { docs: Ticket[] }
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black tracking-tighter uppercase">Centrum Wsparcia</h1>

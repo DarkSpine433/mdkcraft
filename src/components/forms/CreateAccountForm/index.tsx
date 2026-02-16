@@ -1,13 +1,11 @@
 'use client'
 
 import { FormError } from '@/components/forms/FormError'
-import { FormItem } from '@/components/forms/FormItem'
 import { Message } from '@/components/Message'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/providers/Auth'
-import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useCallback, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -62,10 +60,7 @@ export const CreateAccountForm: React.FC = () => {
         await login(data)
         clearTimeout(timer)
         if (redirect) router.push(redirect)
-        else
-          router.push(
-            `/dashboard?success=${encodeURIComponent('Account created successfully')}`,
-          )
+        else router.push(`/dashboard?success=${encodeURIComponent('Account created successfully')}`)
       } catch (_) {
         clearTimeout(timer)
         setError('There was an error with the credentials provided. Please try again.')
@@ -80,8 +75,11 @@ export const CreateAccountForm: React.FC = () => {
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-xs font-mono uppercase tracking-widest text-neutral-500">
-            Email_Address
+          <Label
+            htmlFor="email"
+            className="text-xs font-mono uppercase tracking-widest text-neutral-500"
+          >
+            Email Address
           </Label>
           <Input
             id="email"
@@ -94,8 +92,12 @@ export const CreateAccountForm: React.FC = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password" title="Password" className="text-xs font-mono uppercase tracking-widest text-neutral-500">
-            Nowe_Hasło
+          <Label
+            htmlFor="password"
+            title="Password"
+            className="text-xs font-mono uppercase tracking-widest text-neutral-500"
+          >
+            Nowe Hasło
           </Label>
           <Input
             id="password"
@@ -108,8 +110,11 @@ export const CreateAccountForm: React.FC = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="passwordConfirm" className="text-xs font-mono uppercase tracking-widest text-neutral-500">
-            Potwierdź_Hasło
+          <Label
+            htmlFor="passwordConfirm"
+            className="text-xs font-mono uppercase tracking-widest text-neutral-500"
+          >
+            Potwierdź Hasło
           </Label>
           <Input
             id="passwordConfirm"
@@ -128,9 +133,9 @@ export const CreateAccountForm: React.FC = () => {
       <Button
         disabled={loading}
         type="submit"
-        className="w-full bg-primary hover:bg-primary/80 text-white font-bold py-6 rounded-xl shadow-lg shadow-primary/20 transition-all uppercase tracking-widest"
+        className="w-full bg-primary hover:bg-primary/80 font-bold py-6 rounded-xl transition-all uppercase tracking-widest"
       >
-        {loading ? 'Inicjalizacja...' : 'Utwórz_Konto'}
+        {loading ? 'Inicjalizacja...' : 'Utwórz Konto'}
       </Button>
     </form>
   )

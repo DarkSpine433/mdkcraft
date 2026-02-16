@@ -77,7 +77,7 @@ export default async function ProjectDetailsPage({
   }
 
   return (
-    <div className="space-y-12 animate-in fade-in duration-700">
+    <div className="space-y-12">
       <Link
         href="/projects"
         className="inline-flex items-center gap-2 text-neutral-500 hover:text-white transition-colors text-xs font-mono uppercase tracking-[0.2em]"

@@ -41,7 +41,7 @@ export default async function AccountPage() {
   }
 
   return (
-    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-12">
       <div className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-2xl">
         <h1 className="text-3xl font-black tracking-tighter uppercase mb-8">Ustawienia Konta</h1>
         <AccountForm />

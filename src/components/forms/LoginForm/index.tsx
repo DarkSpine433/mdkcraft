@@ -52,7 +52,7 @@ export const LoginForm: React.FC = () => {
             htmlFor="email"
             className="text-xs font-mono uppercase tracking-widest text-neutral-500"
           >
-            Email_Address
+            Email
           </Label>
           <Input
             id="email"
@@ -69,7 +69,7 @@ export const LoginForm: React.FC = () => {
             htmlFor="password"
             className="text-xs font-mono uppercase tracking-widest text-neutral-500"
           >
-            Access_Key
+            Hasło
           </Label>
           <Input
             id="password"
@@ -86,17 +86,18 @@ export const LoginForm: React.FC = () => {
             href={`/recover-password${allParams}`}
             className="text-neutral-500 hover:text-primary transition-colors"
           >
-            Resetuj_Hasło
+            Resetuj Hasło
           </Link>
         </div>
       </div>
 
       <Button
-        className="w-full bg-primary hover:bg-primary/80 text-white font-bold py-6 rounded-xl shadow-lg shadow-primary/20 transition-all uppercase tracking-widest"
+        className="w-full bg-primary hover:bg-primary/80 
+         font-bold py-6 rounded-xl transition-all uppercase tracking-widest"
         disabled={isLoading}
         type="submit"
       >
-        {isLoading ? 'Przetwarzanie...' : 'Autoryzuj_Wejście'}
+        {isLoading ? 'Przetwarzanie...' : 'Autoryzuj Wejście'}
       </Button>
     </form>
   )
