@@ -63,7 +63,7 @@ export function HeaderClient({ header: _header, user }: Props) {
 
         {/* ŚRODEK: Desktop Menu */}
         <div
-          className={`hiddena transition-all md:flex items-center justify-center  rounded-full  ${scrolled ? '' : 'shadow-2xl shadow-black border-white/10 bg-white/5 border'}`}
+          className={`hidden transition-all md:flex items-center justify-center  rounded-full  ${scrolled ? '' : 'shadow-2xl shadow-black border-white/10 bg-white/5 border'}`}
         >
           {navLinks.map((link, i) => (
             <Link
