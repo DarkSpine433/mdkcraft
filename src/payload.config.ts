@@ -18,9 +18,9 @@ import { fileURLToPath } from 'url'
 import { Categories } from '@/collections/Categories'
 import { Media } from '@/collections/Media'
 import { Notifications } from '@/collections/Notifications'
-import { Opinions } from '@/collections/Opinions'
 import { Pages } from '@/collections/Pages'
 import { Users } from '@/collections/Users'
+import { Opinions } from '@/globals/Opinions'
 import { ClientFiles } from './collections/ClientFiles'
 import { ConfiguratorOptions } from './collections/ConfiguratorOptions'
 import { FAQ } from './collections/FAQ'
@@ -48,6 +48,7 @@ import { plugins } from './plugins'
 
 // Endpoints
 import { sessionHandler, trackHandler } from './endpoints/analytics'
+import { Redirects } from './globals/Redirects'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -138,7 +139,7 @@ export default buildConfig({
       handler: trackHandler,
     },
   ],
-  globals: [Header, Footer, SiteSettings, Opinions],
+  globals: [Header, Footer, SiteSettings, Opinions, Redirects],
   plugins,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

@@ -24,6 +24,9 @@ export const Users: CollectionConfig = {
   },
   auth: {
     tokenExpiration: 1209600,
+    verify: true,
+    maxLoginAttempts: 15,
+    lockTime: 1800000,
   },
   fields: [
     {

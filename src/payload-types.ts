@@ -174,12 +174,14 @@ export interface Config {
     footer: Footer;
     'site-settings': SiteSetting;
     opinions: Opinion;
+    redirects: Redirect;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     opinions: OpinionsSelect<false> | OpinionsSelect<true>;
+    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
   };
   locale: null;
   user: User;
@@ -295,6 +297,8 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -2327,6 +2331,8 @@ export interface UsersSelect<T extends boolean = true> {
   resetPasswordExpiration?: T;
   salt?: T;
   hash?: T;
+  _verified?: T;
+  _verificationToken?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
@@ -3567,6 +3573,28 @@ export interface Opinion {
   createdAt?: string | null;
 }
 /**
+ * Protokół mapowania i przekierowań ruchu przychodzącego (Redirects Manager).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects".
+ */
+export interface Redirect {
+  id: string;
+  items?:
+    | {
+        from: string;
+        to: string;
+        enabled?: boolean | null;
+        redirectbuttontext: string;
+        maintenancepagesdescription?: string | null;
+        'estimated-time-of-completion-of-maintenance-work'?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
@@ -3640,6 +3668,26 @@ export interface OpinionsSelect<T extends boolean = true> {
         rating?: T;
         image?: T;
         role?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects_select".
+ */
+export interface RedirectsSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        from?: T;
+        to?: T;
+        enabled?: T;
+        redirectbuttontext?: T;
+        maintenancepagesdescription?: T;
+        'estimated-time-of-completion-of-maintenance-work'?: T;
         id?: T;
       };
   updatedAt?: T;

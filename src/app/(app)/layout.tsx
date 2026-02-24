@@ -1,11 +1,13 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
+import MaintenanceController from '@/components/MaintenanceController'
+import OfflineBarStatus from '@/components/OfflineBarStatus'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Media } from '@/payload-types'
 import { AnalyticsProvider } from '@/providers/AnalyticsProvider'
 import { InitTheme } from '@/providers/Theme/InitTheme'
-import configPromise from '@payload-config'
+import { default as configPromise } from '@payload-config'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import { getPayload } from 'payload'
@@ -54,6 +56,37 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
+  // Parsowanie obiektu z ENV
+  const payload = await getPayload({ config: configPromise })
+
+  const result = await payload.findGlobal({
+    slug: 'redirects', // required
+    depth: 2,
+    overrideAccess: false,
+    showHiddenFields: true,
+  })
+
+  let maintenanceConfig = {
+    maintenancePages: [],
+    redirectTo: '/',
+    redirectButtonText: 'Strona główna',
+    maintenancePagesDescription:
+      'Obecnie wprowadzamy nowe systemy i zabezpieczenia, aby Twoja gra była jeszcze bardziej płynna.',
+  }
+
+  if (process.env.MAINTENANCE_PAGES) {
+    try {
+      const parsed = JSON.parse(process.env.MAINTENANCE_PAGES)
+      maintenanceConfig = {
+        maintenancePages: parsed.maintenancePages || [],
+        redirectTo: parsed.redirectTo || '/',
+        redirectButtonText: parsed.redirectButtonText || 'Strona główna',
+        maintenancePagesDescription: parsed.maintenancePagesDescription || '',
+      }
+    } catch (e) {
+      console.error('Błąd parsowania MAINTENANCE_PAGES:', e)
+    }
+  }
   return (
     <html
       className={[GeistSans.variable, GeistMono.variable].filter(Boolean).join(' ')}
@@ -67,7 +100,18 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       </head>
       <body>
         <TooltipProvider>
-          <AnalyticsProvider enabled={true}>{children}</AnalyticsProvider>
+          <AnalyticsProvider enabled={true}>
+            <MaintenanceController
+              maintenancePaths={maintenanceConfig.maintenancePages}
+              redirectTo={maintenanceConfig.redirectTo}
+              redirectButtonText={maintenanceConfig.redirectButtonText}
+              maintenancePagesDescription={maintenanceConfig.maintenancePagesDescription}
+            >
+              {children}
+            </MaintenanceController>
+
+            <OfflineBarStatus />
+          </AnalyticsProvider>
         </TooltipProvider>
       </body>
     </html>
