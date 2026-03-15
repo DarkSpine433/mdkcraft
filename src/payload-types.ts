@@ -236,6 +236,7 @@ export interface User {
   name?: string | null;
   verificationEmailCount?: number | null;
   lastVerificationEmailSent?: string | null;
+  banned?: boolean | null;
   surname?: string | null;
   /**
    * Tylko małe litery, cyfry i podkreślniki (hacker style).
@@ -2388,6 +2389,7 @@ export interface UsersSelect<T extends boolean = true> {
   name?: T;
   verificationEmailCount?: T;
   lastVerificationEmailSent?: T;
+  banned?: T;
   surname?: T;
   handle?: T;
   phone?: T;

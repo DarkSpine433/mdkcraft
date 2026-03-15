@@ -200,6 +200,14 @@ export const Users: CollectionConfig = {
       },
     },
     {
+      name: 'banned',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
       name: 'surname',
       type: 'text',
       label: 'Nazwisko',
