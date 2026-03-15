@@ -23,10 +23,10 @@ export const NotificationActions: React.FC = () => {
   return (
     <button
       onClick={onReadAll}
-      className="flex items-center gap-2 px-6 h-11 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl font-bold transition-all text-[10px] uppercase tracking-widest"
+      className="flex items-center gap-2 px-6 h-11 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl font-bold transition-all text-[10px] uppercase tracking-widest cursor-pointer"
     >
       <CheckCircle2 size={14} />
-      Oznacz Wszystkie
+      Oznacz Wszystkie jako przeczytane
     </button>
   )
 }

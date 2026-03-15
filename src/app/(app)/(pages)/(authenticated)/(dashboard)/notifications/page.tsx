@@ -78,7 +78,7 @@ export default async function NotificationsPage({
 
   return (
     <div className="space-y-12">
-      <header className="space-y-4 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <header className="space-y-4 flex flex-col justify-between gap-6">
         <div className="flex items-center gap-4">
           <div className="p-3 bg-primary/10 rounded-2xl">
             <Bell className="text-primary" size={24} />
