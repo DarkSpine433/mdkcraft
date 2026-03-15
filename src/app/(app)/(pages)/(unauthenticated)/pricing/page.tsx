@@ -29,7 +29,7 @@ export default async function PricingPage() {
         {/* Sekcja Dodatków (Addons) */}
         <div className="mt-24 px-6">
           <div className="flex items-center gap-4 mb-12">
-            <h2 className="text-xl font-mono text-white uppercase tracking-tighter">
+            <h2 className="text-xl  text-white uppercase tracking-tighter">
               Dostępne Moduły Dodatkowe
             </h2>
             <div className="h-[1px] flex-grow bg-white/5" />
@@ -41,11 +41,11 @@ export default async function PricingPage() {
                 key={addon.id}
                 className="p-4 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-colors"
               >
-                <div className="text-[9px] font-mono text-neutral-500 uppercase tracking-[0.2em] mb-1">
+                <div className="text-[9px]  text-neutral-500 uppercase tracking-[0.2em] mb-1">
                   {addon.type === 'recurring' ? 'Miesięcznie' : 'Jednorazowo'}
                 </div>
                 <div className="text-sm font-bold text-white mb-1">{addon.name}</div>
-                <div className="text-xs text-violet-400 font-mono">+{addon.price} PLN</div>
+                <div className="text-xs text-violet-400 ">+{addon.price} PLN</div>
               </div>
             ))}
           </div>

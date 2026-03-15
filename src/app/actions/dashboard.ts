@@ -187,7 +187,16 @@ export async function markAllNotificationsAsRead() {
   const broadcasts = await payload.find({
     collection: 'notifications',
     where: {
-      broadcast: { equals: true },
+      and: [
+        {
+          broadcast: { equals: true },
+        },
+        {
+          onlyForUsersCreatedBefore: {
+            greater_than_equal: user.createdAt,
+          },
+        },
+      ],
     },
     limit: 100,
   })
@@ -308,7 +317,16 @@ export async function getUnreadNotificationsCount() {
   const broadcasts = await payload.find({
     collection: 'notifications',
     where: {
-      broadcast: { equals: true },
+      and: [
+        {
+          broadcast: { equals: true },
+        },
+        {
+          onlyForUsersCreatedBefore: {
+            greater_than_equal: user.createdAt,
+          },
+        },
+      ],
     },
     limit: 100, // Reasonable limit for active broadcasts
   })

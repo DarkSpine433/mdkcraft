@@ -7,7 +7,7 @@ const PricingHero = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex items-center gap-3 mb-4">
           <div className="h-[1px] w-12 bg-violet-500/50" />
-          <span className="text-[10px] font-mono text-violet-400 uppercase tracking-[0.3em]">
+          <span className="text-[10px]  text-violet-400 uppercase tracking-[0.3em]">
             Protokół_Cenowy_v2.0.6
           </span>
         </div>
@@ -19,7 +19,7 @@ const PricingHero = () => {
           </span>
         </h1>
 
-        <p className="max-w-2xl text-neutral-400 text-sm md:text-base font-mono leading-relaxed border-l-2 border-violet-500/30 pl-6">
+        <p className="max-w-2xl text-neutral-400 text-sm md:text-base  leading-relaxed border-l-2 border-violet-500/30 pl-6">
           Transparentne plany subskrypcyjne i opcje konfiguracji dostosowane do skali Twojej
           operacji. Wybierz fundament, na którym zbudujemy Twoją cyfrową obecność.
         </p>

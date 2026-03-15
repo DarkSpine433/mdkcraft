@@ -42,17 +42,20 @@ export const MarkAsReadButton: React.FC<{ id: string }> = ({ id }) => {
       window.dispatchEvent(new CustomEvent('notificationsUpdated'))
       router.refresh()
     } catch (_error) {
-      toast.error('Błąd.')
+      toast.error('Błąd. Podczas odczytania powiadomienia. Spróbuj ponownie.')
     }
   }
 
   return (
-    <button
-      onClick={onRead}
-      className="p-2 bg-white/5 hover:bg-primary/20 text-neutral-500 hover:text-primary rounded-lg transition-all"
-      title="Oznacz jako przeczytane"
-    >
-      <CheckCircle2 size={16} />
-    </button>
+    <>
+      <div onClick={onRead} className="absolute w-full h-full left-0 top-0  cursor-pointer"></div>
+      <button
+        onClick={onRead}
+        className="p-2 bg-white/5 hover:bg-primary/20 text-neutral-500 hover:text-primary rounded-lg transition-all z-10 cursor-pointer"
+        title="Oznacz jako przeczytane"
+      >
+        <CheckCircle2 size={16} />
+      </button>
+    </>
   )
 }

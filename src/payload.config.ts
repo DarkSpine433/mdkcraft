@@ -60,28 +60,28 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     meta: {
-      title: 'LSBets Admin Panel',
-      titleSuffix: ' - LSBets',
-      description: 'LsBet Admin Panel - Manage your LSBet website content',
+      title: 'MDKCraft Admin Panel',
+      titleSuffix: ' - MDKCraft',
+      description: 'MDKCraft Admin Panel - Manage your MDKCraft website content',
       icons: [
         {
           rel: 'icon',
-          type: 'image/jpeg',
-          url: 'https://ut91p27j9t.ufs.sh/f/CI2WZ5YUTq1beVeh3Fwfw9glnXS4C6WAJcNBbrvIad7PD2yU',
+          type: 'image/svg+xml',
+          url: '/logo.svg',
         },
       ],
       openGraph: {
         images: [
           {
-            url: '/https://ut91p27j9t.ufs.sh/f/CI2WZ5YUTq1bdEX04uQDXpVt0zI3oulY6iq2RyfQ8bOh4wP7',
+            url: '/logo.svg',
             width: 1200,
             height: 630,
-            alt: 'LSBets Admin Panel',
+            alt: 'MDKCraft Admin Panel',
           },
         ],
-        description: 'Admin panel for LSBets website',
-        siteName: 'LSBets Admin Panel',
-        title: 'LSBets Panel - ',
+        description: 'Admin panel for MDKCraft website',
+        siteName: 'MDKCraft Admin Panel',
+        title: 'MDKCraft Panel - ',
       },
     },
 

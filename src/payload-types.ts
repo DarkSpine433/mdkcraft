@@ -1692,6 +1692,10 @@ export interface Notification {
   type?: ('info' | 'win' | 'bonus' | 'alert') | null;
   recipient?: (string | null) | User;
   broadcast?: boolean | null;
+  /**
+   * Użytkownicy zarejestrowani po tej dacie nie zobaczą tego powiadomienia.
+   */
+  onlyForUsersCreatedBefore?: string | null;
   isReadBy?: (string | User)[] | null;
   isRead?: boolean | null;
   updatedAt: string;
@@ -2927,6 +2931,7 @@ export interface NotificationsSelect<T extends boolean = true> {
   type?: T;
   recipient?: T;
   broadcast?: T;
+  onlyForUsersCreatedBefore?: T;
   isReadBy?: T;
   isRead?: T;
   updatedAt?: T;

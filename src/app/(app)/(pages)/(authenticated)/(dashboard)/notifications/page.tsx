@@ -33,20 +33,8 @@ export default async function NotificationsPage({
 
   const notificationsResult = await payload.find({
     collection: 'notifications',
-    where: {
-      or: [
-        {
-          recipient: {
-            equals: user?.id,
-          },
-        },
-        {
-          broadcast: {
-            equals: true,
-          },
-        },
-      ],
-    },
+    user,
+    overrideAccess: false,
     sort: '-createdAt',
     limit,
     page: currentPage,
@@ -127,7 +115,7 @@ export default async function NotificationsPage({
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                      <h3 className="font-bold text-sm uppercase tracking-tight text-white group-hover:text-primary transition-colors">
+                      <h3 className="font-bold text-sm uppercase tracking-tight text-white group-hover:text-primary transition-colors z-10">
                         {notif.title}
                       </h3>
                       {unread && (
@@ -143,7 +131,7 @@ export default async function NotificationsPage({
                       {unread && <MarkAsReadButton id={notif.id} />}
                     </div>
                   </div>
-                  <p className="text-neutral-400 text-[11px] leading-relaxed font-mono uppercase">
+                  <p className="text-neutral-400 text-[11px] leading-relaxed font-mono uppercase z-50">
                     {notif.message}
                   </p>
                 </div>

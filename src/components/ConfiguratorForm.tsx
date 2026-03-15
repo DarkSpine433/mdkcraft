@@ -235,25 +235,6 @@ Wiadomość dodatkowa: ${contactData.message}
                     </button>
                   ))}
               </div>
-
-              <div className="space-y-4 pt-4">
-                <label className="text-sm font-mono text-neutral-500 uppercase">
-                  Ilość Podstron
-                </label>
-                <div className="flex flex-wrap gap-3">
-                  {options
-                    .filter((o) => o.category === 'pages')
-                    .map((o) => (
-                      <button
-                        key={o.value}
-                        onClick={() => setSelections((prev) => ({ ...prev, pages: o.value }))}
-                        className={`px-6 py-3 rounded-xl border transition-all ${selections.pages === o.value ? 'border-primary bg-primary/10' : 'border-white/5 bg-white/5 hover:border-white/20'}`}
-                      >
-                        {o.label}
-                      </button>
-                    ))}
-                </div>
-              </div>
             </motion.div>
           )}
 

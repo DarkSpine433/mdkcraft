@@ -19,7 +19,7 @@ const PricingTiers = ({ plans }: Props) => {
             {/* Header */}
             <div className="mb-8">
               <div className="flex justify-between items-start mb-4">
-                <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest">
+                <span className="text-[10px]  text-neutral-500 uppercase tracking-widest">
                   Package_ID: {plan.id.slice(0, 8)}
                 </span>
                 {plan.name === 'Pro' && (
@@ -31,7 +31,7 @@ const PricingTiers = ({ plans }: Props) => {
               <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
               <div className="flex items-baseline gap-1">
                 <span className="text-4xl font-black text-white">{plan.price} PLN</span>
-                <span className="text-xs text-neutral-500 font-mono">
+                <span className="text-xs text-neutral-500 ">
                   / {plan.billingCycle === 'monthly' ? 'msc' : 'rok'}
                 </span>
               </div>
@@ -50,7 +50,7 @@ const PricingTiers = ({ plans }: Props) => {
             </div>
 
             {/* Action */}
-            <GlowingButton className="w-full justify-center py-6 text-xs uppercase tracking-widest font-bold">
+            <GlowingButton className="w-full justify-center text-xs uppercase tracking-widest font-bold">
               Inicjuj Projekt
             </GlowingButton>
 

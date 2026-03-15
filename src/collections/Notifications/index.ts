@@ -23,9 +23,18 @@ export const Notifications: CollectionConfig = {
             },
           },
           {
-            broadcast: {
-              equals: true,
-            },
+            and: [
+              {
+                broadcast: {
+                  equals: true,
+                },
+              },
+              {
+                onlyForUsersCreatedBefore: {
+                  greater_than_equal: user.createdAt,
+                },
+              },
+            ],
           },
         ],
       }
@@ -54,6 +63,21 @@ export const Notifications: CollectionConfig = {
       admin: { condition: (data) => !data.broadcast },
     },
     { name: 'broadcast', label: 'Wyślij do wszystkich', type: 'checkbox', defaultValue: false },
+    {
+      name: 'onlyForUsersCreatedBefore',
+      label: 'Pokaż użytkownikom zarejestrowanym przed',
+      type: 'date',
+      admin: {
+        condition: (data) => data?.broadcast,
+        description: 'Użytkownicy zarejestrowani po tej dacie nie zobaczą tego powiadomienia.',
+      },
+      validate: (val, { data }) => {
+        if (data?.broadcast && !val) {
+          return 'To pole jest wymagane, gdy wysyłasz do wszystkich.'
+        }
+        return true
+      },
+    },
     {
       name: 'isReadBy',
       type: 'relationship',

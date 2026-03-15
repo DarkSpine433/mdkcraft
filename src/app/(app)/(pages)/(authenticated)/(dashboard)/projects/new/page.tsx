@@ -2,19 +2,11 @@
 
 import { ConfiguratorForm } from '@/components/ConfiguratorForm'
 import { Mail, MousePointer2, Phone, ShieldCheck, Zap } from 'lucide-react'
-import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useSpring } from 'motion/react'
+import { motion, useMotionTemplate, useMotionValue, useSpring } from 'motion/react'
 import { useEffect, useState } from 'react'
 
 const SystemBoot = ({ onComplete }: { onComplete: () => void }) => {
   const [lines, setLines] = useState<string[]>([])
-  const bootSequence = [
-    'INITIALIZING MDK_CORE_v3.0.4...',
-    'LOADING MODULES: [AUTH, PROJECTS, ANALYTICS]',
-    'CONNECTING TO SECURE_DATABASE...',
-    'ESTABLISHING ENCRYPTED_CHANNEL...',
-    'MOUNTING SYSTEM_UI...',
-    'READY_FOR_INPUT.',
-  ]
 
   useEffect(() => {
     let currentLine = 0
@@ -81,11 +73,8 @@ const MouseGlow = () => {
 }
 
 export default function ContactPage() {
-  const [isBooting, setIsBooting] = useState(true)
-
   return (
     <div className="relative min-h-screen bg-[#020204] text-white overflow-hidden selection:bg-primary/30">
-      <AnimatePresence>{isBooting && <SystemBoot onComplete={() => setIsBooting(false)} />}</AnimatePresence>
       <MouseGlow />
 
       {/* Decorative Grid */}
