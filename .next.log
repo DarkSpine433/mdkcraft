@@ -1,0 +1,125 @@
+
+> mdkcraft@1.0.0 dev /home/darkspine/Coding/Websites/mdkcraft
+> pnpm run generate:importmap && pnpm run generate:types && cross-env NODE_OPTIONS=--no-deprecation next dev --turbopack
+
+
+> mdkcraft@1.0.0 generate:importmap /home/darkspine/Coding/Websites/mdkcraft
+> cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap
+
+Generating import map
+No new imports found, skipping writing import map
+
+> mdkcraft@1.0.0 generate:types /home/darkspine/Coding/Websites/mdkcraft
+> cross-env NODE_OPTIONS=--no-deprecation payload generate:types
+
+[20:54:47] [32mINFO[39m: [36mCompiling TS types for Collections and Globals...[39m
+   ▲ Next.js 15.4.11 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://172.21.193.240:3000
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 793ms
+ ○ Compiling /projectsArchive ...
+ ✓ Compiled /projectsArchive in 3.5s
+[20:54:53] [33mWARN[39m: [36mNo email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.[39m
+ GET /login 200 in 5357ms
+ GET /projectsArchive 200 in 5367ms
+ GET /login 200 in 1841ms
+ ○ Compiling /api/[...slug] ...
+ ✓ Compiled /api/[...slug] in 2.2s
+[ 'account' ]
+ GET /api/users/me 200 in 2237ms
+ GET /api/users/me?depth=0&select%5Bid%5D=true&select%5Bcart%5D=true 200 in 2236ms
+ GET /account?warning=Jeste%C5%9B%20ju%C5%BC%20zalogowany. 200 in 2237ms
+ POST /account?warning=Jeste%C5%9B%20ju%C5%BC%20zalogowany. 200 in 109ms
+ GET /api/users/me?depth=0&select%5Bid%5D=true&select%5Bcart%5D=true 200 in 2905ms
+ GET /api/users/me 200 in 2911ms
+ GET /api/users/me?depth=0&select%5Bid%5D=true&select%5Bcart%5D=true 200 in 524ms
+ GET /api/users/me 200 in 518ms
+ GET /api/media/file/seed-image-hero1-3.webp 200 in 3264ms
+ GET /api/users/me?depth=0&select%5Bid%5D=true&select%5Bcart%5D=true 200 in 42ms
+ GET /api/users/me 200 in 48ms
+ GET /api/users/me 200 in 60ms
+ GET /api/addresses?depth=0&limit=0&pagination=false 200 in 68ms
+ GET /api/users/me 200 in 27ms
+ GET /api/users/me 200 in 31ms
+ ○ Compiling /logout ...
+ ✓ Compiled /logout in 580ms
+ GET /logout 200 in 703ms
+ GET /api/users/me?depth=0&select%5Bid%5D=true&select%5Bcart%5D=true 200 in 96ms
+ GET /api/users/me 200 in 98ms
+ POST /api/users/logout 200 in 122ms
+[20:55:30] [32mINFO[39m: [36mYou are not allowed to perform this action.[39m
+ GET /api/addresses?depth=0&limit=0&pagination=false 403 in 51ms
+ GET /login 200 in 147ms
+ GET /api/users/me 200 in 79ms
+ GET /api/users/me?depth=0&select%5Bid%5D=true&select%5Bcart%5D=true 200 in 81ms
+ GET /api/users/me 200 in 23ms
+ POST /api/users/login 200 in 146ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 749ms
+ GET /dashboard 200 in 849ms
+ POST /dashboard 200 in 41ms
+ POST /dashboard 200 in 37ms
+ POST /api/analytics/track 200 in 78ms
+ POST /dashboard 200 in 48ms
+ POST /dashboard 200 in 47ms
+ POST /dashboard 200 in 61ms
+ POST /dashboard 200 in 38ms
+ POST /dashboard 200 in 42ms
+ POST /dashboard 200 in 39ms
+ POST /api/users/login 200 in 147ms
+ GET /dashboard 200 in 70ms
+ POST /dashboard 200 in 33ms
+ POST /dashboard 200 in 28ms
+ GET /logout 200 in 45ms
+ POST /api/users/logout 200 in 73ms
+ POST /api/users/logout 200 in 73ms
+ GET /login 200 in 73ms
+ GET /api/users/me 200 in 73ms
+ GET /api/users/me 200 in 20ms
+ POST /dashboard 200 in 39ms
+ POST /dashboard 200 in 34ms
+ POST /dashboard 200 in 74ms
+ POST /dashboard 200 in 67ms
+ POST /dashboard 200 in 74ms
+ POST /dashboard 200 in 69ms
+ POST /dashboard 200 in 83ms
+ POST /dashboard 200 in 53ms
+ POST /dashboard 200 in 79ms
+ POST /dashboard 200 in 38ms
+ POST /dashboard 200 in 70ms
+ POST /dashboard 200 in 75ms
+ POST /dashboard 200 in 93ms
+ POST /dashboard 200 in 51ms
+ POST /dashboard 200 in 68ms
+ POST /dashboard 200 in 42ms
+ POST /dashboard 200 in 67ms
+ POST /dashboard 200 in 69ms
+ POST /dashboard 200 in 71ms
+ POST /dashboard 200 in 46ms
+ POST /dashboard 200 in 59ms
+ POST /dashboard 200 in 73ms
+ POST /dashboard 200 in 74ms
+ POST /dashboard 200 in 62ms
+ POST /dashboard 200 in 60ms
+
+  #  Node.js[71861]: void node::ResetStdio() at ../src/node.cc:760
+  #  Assertion failed: !(err != 0) || (err == -1 && (*__errno_location ()) == 1)
+
+----- Native stack trace -----
+
+ 1: 0xf5c517 node::Assert(node::AssertionInfo const&) [node]
+ 2: 0xf061e4  [node]
+ 3: 0x71fb34647a76  [/lib/x86_64-linux-gnu/libc.so.6]
+ 4: 0x71fb34647bbe  [/lib/x86_64-linux-gnu/libc.so.6]
+ 5: 0xe58b5f node::DefaultProcessExitHandlerInternal(node::Environment*, node::ExitCode) [node]
+ 6: 0xec46ff node::Environment::Exit(node::ExitCode) [node]
+ 7: 0x71fb2be0f5e2 
+
+  #  Node.js[71861]: void node::ResetStdio() at ../src/node.cc:760
+  #  Assertion failed: !(err != 0) || (err == -1 && (*__errno_location ()) == 1)
+
+----- Native stack trace -----
+

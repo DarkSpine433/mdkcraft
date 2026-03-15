@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { ReactNode } from 'react'
 
-import { AdminBar } from '@/components/AdminBar'
 import { Header } from '@/components/Header'
 
 import { Footer } from '@/components/Footer'
@@ -50,7 +49,6 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
       {/* Silnik Wizualny: Obsługuje interakcje, SVG i animacje tła */}
       <VisualEngine />
 
-      <AdminBar />
       <Header />
 
       <main className="w-full max-w-[100vw]">{children}</main>

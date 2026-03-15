@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
 
 import { AuthBackground } from '@/components/AuthBackground'
-import { ForgotPasswordForm } from '@/components/forms/ForgotPasswordForm'
+import { ResetPasswordForm } from '@/components/forms/ResetPasswordForm'
 import { RenderParams } from '@/components/RenderParams'
 import { Command } from 'lucide-react'
 import Link from 'next/link'
 
-export default async function ForgotPassword() {
+export default async function ResetPassword({ params }: { params: Promise<{ token: string }> }) {
+  const { token } = await params
+
   return (
     <div className="relative min-h-screen flex items-center justify-center py-20 px-4 sm:px-6 overflow-hidden">
       <AuthBackground />
@@ -15,16 +17,16 @@ export default async function ForgotPassword() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-primary/20 rounded-full blur-[60px] pointer-events-none" />
           <Link
             href="/"
-            className="inline-flex items-center justify-center p-4 bg-white/[0.02] border border-white/10 rounded-[2rem] shadow-2xl backdrop-blur-xl mb-6 hover:bg-white/[0.04] hover:scale-110 hover:-rotate-3 transition-all duration-500 ease-out group"
+            className="inline-flex items-center justify-center p-4 bg-white/2 border border-white/10 rounded-4xl shadow-2xl backdrop-blur-xl mb-6 hover:bg-white/4 hover:scale-110 hover:-rotate-3 transition-all duration-500 ease-out group"
           >
             <Command className="w-8 h-8 text-white group-hover:text-primary transition-colors duration-500" />
             <span className="ml-3 text-2xl font-black tracking-tighter text-white">MDKcraft</span>
           </Link>
           <h1 className="text-4xl sm:text-5xl font-black tracking-tighter uppercase text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-            Resetowanie
+            Nowy Klucz
           </h1>
-          <p className="mt-4 text-neutral-400 font-mono text-xs sm:text-sm uppercase tracking-[0.2em] leading-relaxed">
-            odzyskaj dostęp do terminala
+          <p className="mt-4 text-neutral-400 font-mono text-xs sm:text-sm uppercase tracking-[0.15em] leading-relaxed">
+            zdefiniuj nową sygnaturę dostępu
           </p>
         </div>
 
@@ -33,20 +35,8 @@ export default async function ForgotPassword() {
           <div className="absolute top-0 right-0 w-125 h-125 bg-primary/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none opacity-50" />
           <div className="relative z-10">
             <RenderParams />
-            <ForgotPasswordForm />
+            <ResetPasswordForm token={token} />
           </div>
-        </div>
-
-        <div className="mt-8 text-center bg-black/40 backdrop-blur-md py-4 px-6 rounded-3xl border border-white/[0.02] inline-block w-full">
-          <p className="text-neutral-500 text-[11px] font-mono uppercase tracking-[0.1em]">
-            Pamiętasz swój klucz?{' '}
-            <Link
-              href="/login"
-              className="text-white hover:text-primary transition-colors ml-1 font-bold underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
-            >
-              LOGOWANIE
-            </Link>
-          </p>
         </div>
       </div>
     </div>
@@ -54,10 +44,10 @@ export default async function ForgotPassword() {
 }
 
 export const metadata: Metadata = {
-  description: 'Zresetuj swój klucz dostępu do terminala MDKcraft.',
+  description: 'Zdefinuj nową sygnaturę dostępu (hasło) do swojego konta MDKcraft.',
   openGraph: {
-    title: 'Resetowanie Klucza | MDKcraft',
+    title: 'Nowy Klucz | MDKcraft',
     url: '/forgot-password',
   },
-  title: 'Reset Hasła',
+  title: 'Nowe Hasło',
 }

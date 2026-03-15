@@ -62,7 +62,7 @@ export default async function DashboardPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-4xl font-black tracking-tighter mb-2 uppercase">
-            Witaj Ponownie, {user.name || user.email}!
+            Witaj Ponownie {user.name && `, ${user.name}`}!
           </h1>
           <p className="text-neutral-500 font-mono text-xs uppercase tracking-widest leading-relaxed">
             SYSTEM MDKCRAFT :: ZARZĄDZANIE PROJEKTAMI :: STATUS AKTYWNY

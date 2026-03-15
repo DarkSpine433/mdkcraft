@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { User } from '@/payload-types'
 import { useAuth } from '@/providers/Auth'
-import { Lock, ShieldCheck, Unlock, UserCircle2 } from 'lucide-react'
+import { Eye, EyeOff, Lock, ShieldCheck, Unlock, UserCircle2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -39,6 +39,10 @@ export const AccountForm: React.FC = () => {
     phone: false,
     company: false,
   })
+
+  // Password visibility states
+  const [showPassNew, setShowPassNew] = useState(false)
+  const [showPassConfirm, setShowPassConfirm] = useState(false)
 
   // Form 1: Account Info
   const infoForm = useForm<AccountInfoData>()
@@ -337,13 +341,22 @@ export const AccountForm: React.FC = () => {
               >
                 Nowe hasło
               </Label>
-              <Input
-                id="pass-new"
-                {...registerPass('password', { required: 'Podaj nowe hasło.' })}
-                type="password"
-                className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-primary/50 transition-all"
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <Input
+                  id="pass-new"
+                  {...registerPass('password', { required: 'Podaj nowe hasło.' })}
+                  type={showPassNew ? 'text' : 'password'}
+                  className="pr-12 bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-primary/50 transition-all"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassNew(!showPassNew)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white transition-colors focus:outline-none"
+                >
+                  {showPassNew ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
               {passErrors.password && <FormError message={passErrors.password.message} />}
             </FormItem>
 
@@ -354,16 +367,25 @@ export const AccountForm: React.FC = () => {
               >
                 Potwierdź hasło
               </Label>
-              <Input
-                id="pass-confirm"
-                {...registerPass('passwordConfirm', {
-                  required: 'Potwierdź hasło.',
-                  validate: (value) => value === watchNewPassword || 'Hasła nie są identyczne',
-                })}
-                type="password"
-                className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-primary/50 transition-all"
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <Input
+                  id="pass-confirm"
+                  {...registerPass('passwordConfirm', {
+                    required: 'Potwierdź hasło.',
+                    validate: (value) => value === watchNewPassword || 'Hasła nie są identyczne',
+                  })}
+                  type={showPassConfirm ? 'text' : 'password'}
+                  className="pr-12 bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-primary/50 transition-all"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassConfirm(!showPassConfirm)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white transition-colors focus:outline-none"
+                >
+                  {showPassConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
               {passErrors.passwordConfirm && (
                 <FormError message={passErrors.passwordConfirm.message} />
               )}

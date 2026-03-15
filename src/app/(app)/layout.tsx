@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
+import { AdminBar } from '@/components/AdminBar'
 import MaintenanceController from '@/components/MaintenanceController'
 import OfflineBarStatus from '@/components/OfflineBarStatus'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Media } from '@/payload-types'
+import { Providers } from '@/providers'
 import { AnalyticsProvider } from '@/providers/AnalyticsProvider'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { default as configPromise } from '@payload-config'
@@ -55,38 +57,50 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default async function RootLayout({ children }: { children: ReactNode }) {
-  // Parsowanie obiektu z ENV
-  const payload = await getPayload({ config: configPromise })
+import { headers as nextHeaders } from 'next/headers'
 
-  const result = await payload.findGlobal({
-    slug: 'redirects', // required
-    depth: 2,
-    overrideAccess: false,
-    showHiddenFields: true,
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const payload = await getPayload({ config: configPromise })
+  const headers = await nextHeaders()
+  const { user } = await payload.auth({ headers })
+
+  const siteSettings = await payload.findGlobal({
+    slug: 'site-settings',
+    depth: 1,
   })
 
+  const isAdmin = user?.roles?.includes('admin')
+  const isMaintenanceMode = siteSettings.maintenanceMode
+  const isDevelopmentMode = siteSettings.developmentMode
+
   let maintenanceConfig = {
-    maintenancePages: [],
+    maintenancePages: isMaintenanceMode || (isDevelopmentMode && !isAdmin) ? ['*'] : [],
     redirectTo: '/',
     redirectButtonText: 'Strona główna',
-    maintenancePagesDescription:
-      'Obecnie wprowadzamy nowe systemy i zabezpieczenia, aby Twoja gra była jeszcze bardziej płynna.',
+    maintenancePagesDescription: isDevelopmentMode
+      ? 'Strona jest obecnie w trybie deweloperskim. Dostęp mają tylko administratorzy.'
+      : siteSettings.description || 'Obecnie wprowadzamy nowe systemy i zabezpieczenia.',
   }
 
+  // Preserve ability to override via ENV if needed
   if (process.env.MAINTENANCE_PAGES) {
     try {
       const parsed = JSON.parse(process.env.MAINTENANCE_PAGES)
       maintenanceConfig = {
-        maintenancePages: parsed.maintenancePages || [],
-        redirectTo: parsed.redirectTo || '/',
-        redirectButtonText: parsed.redirectButtonText || 'Strona główna',
-        maintenancePagesDescription: parsed.maintenancePagesDescription || '',
+        maintenancePages: [
+          ...maintenanceConfig.maintenancePages,
+          ...(parsed.maintenancePages || []),
+        ],
+        redirectTo: parsed.redirectTo || maintenanceConfig.redirectTo,
+        redirectButtonText: parsed.redirectButtonText || maintenanceConfig.redirectButtonText,
+        maintenancePagesDescription:
+          parsed.maintenancePagesDescription || maintenanceConfig.maintenancePagesDescription,
       }
     } catch (e) {
       console.error('Błąd parsowania MAINTENANCE_PAGES:', e)
     }
   }
+
   return (
     <html
       className={[GeistSans.variable, GeistMono.variable].filter(Boolean).join(' ')}
@@ -107,7 +121,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
               redirectButtonText={maintenanceConfig.redirectButtonText}
               maintenancePagesDescription={maintenanceConfig.maintenancePagesDescription}
             >
-              {children}
+              <Providers>
+                <AdminBar />
+                {children}
+              </Providers>
             </MaintenanceController>
 
             <OfflineBarStatus />

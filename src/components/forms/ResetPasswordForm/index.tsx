@@ -6,27 +6,25 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/providers/Auth'
-import { Eye, EyeOff, Loader2, Lock, Mail, ShieldCheck, UserPlus } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Lock, ShieldCheck } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import React, { useCallback, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 type FormData = {
-  email: string
   password: string
   passwordConfirm: string
 }
 
-export const CreateAccountForm: React.FC = () => {
-  const { create } = useAuth()
-  const searchParams = useSearchParams()
+export const ResetPasswordForm: React.FC<{ token: string }> = ({ token }) => {
+  const { resetPassword } = useAuth()
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<null | string>(null)
   const [isFocused, setIsFocused] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const {
     formState: { errors },
@@ -43,20 +41,21 @@ export const CreateAccountForm: React.FC = () => {
       setLoading(true)
       setError(null)
       try {
-        await create({
-          email: data.email,
+        await resetPassword({
           password: data.password,
           passwordConfirm: data.passwordConfirm,
+          token,
         })
-
-        router.push(`/verify?success=${encodeURIComponent('Konto utworzone pomyślnie')}`)
+        router.push(
+          '/dashboard?success=' + encodeURIComponent('Hasło zostało pomyślnie zmienione.'),
+        )
       } catch (e) {
-        setError(e instanceof Error ? e.message : 'Wystąpił błąd podczas tworzenia konta.')
+        setError(e instanceof Error ? e.message : 'Wystąpił błąd podczas resetowania hasła.')
       } finally {
         setLoading(false)
       }
     },
-    [create, router, searchParams],
+    [resetPassword, router, token],
   )
 
   const containerVariants = {
@@ -100,36 +99,10 @@ export const CreateAccountForm: React.FC = () => {
       <div className="space-y-5">
         <motion.div variants={itemVariants} className="space-y-2 relative group">
           <Label
-            htmlFor="email"
-            className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 ml-1 mb-1 block transition-colors group-hover:text-neutral-300"
-          >
-            Identyfikator E-mail
-          </Label>
-          <div className="relative">
-            <Mail
-              className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${isFocused === 'email' ? 'text-primary' : 'text-neutral-500'}`}
-            />
-            <Input
-              id="email"
-              {...register('email', {
-                required: 'Adres email jest wymagany.',
-                onBlur: () => setIsFocused(null),
-              })}
-              type="email"
-              onFocus={() => setIsFocused('email')}
-              className="pl-12 bg-white/[0.03] border-white/10 text-white rounded-2xl h-14 focus:border-primary/50 focus:bg-primary/[0.02] transition-all duration-300 backdrop-blur-sm"
-              placeholder="example@example.com"
-            />
-          </div>
-          {errors.email && <FormError message={errors.email.message} />}
-        </motion.div>
-
-        <motion.div variants={itemVariants} className="space-y-2 relative group">
-          <Label
             htmlFor="password"
             className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 ml-1 mb-1 block transition-colors group-hover:text-neutral-300"
           >
-            Klucz Główcy (Hasło)
+            Nowy Klucz Dostępu
           </Label>
           <div className="relative">
             <Lock
@@ -137,19 +110,20 @@ export const CreateAccountForm: React.FC = () => {
             />
             <Input
               id="password"
-              {...register('password', {
-                required: 'Hasło jest wymagane.',
-                onBlur: () => setIsFocused(null),
-              })}
               type={showPassword ? 'text' : 'password'}
               onFocus={() => setIsFocused('password')}
-              className="pl-12 pr-12 bg-white/[0.03] border-white/10 text-white rounded-2xl h-14 focus:border-primary/50 focus:bg-primary/[0.02] transition-all duration-300 backdrop-blur-sm tracking-widest"
+              className="pl-12 pr-12 bg-white/3 border-white/10 text-white rounded-2xl h-14 focus:border-primary/50 focus:bg-primary/2 transition-all duration-300 backdrop-blur-sm"
               placeholder="••••••••"
+              {...register('password', {
+                required: 'Proszę podać nowe hasło.',
+                minLength: { value: 8, message: 'Hasło musi mieć co najmniej 8 znaków.' },
+                onBlur: () => setIsFocused(null),
+              })}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white transition-colors focus:outline-none"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white transition-colors"
             >
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
@@ -162,28 +136,28 @@ export const CreateAccountForm: React.FC = () => {
             htmlFor="passwordConfirm"
             className="text-[10px] font-mono uppercase tracking-widest text-neutral-400 ml-1 mb-1 block transition-colors group-hover:text-neutral-300"
           >
-            Potwierdzenie Klucza
+            Potwierdź Nowy Klucz
           </Label>
           <div className="relative">
             <ShieldCheck
-              className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${isFocused === 'passwordConfirm' ? 'text-green-500' : 'text-neutral-500'}`}
+              className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${isFocused === 'passwordConfirm' ? 'text-primary' : 'text-neutral-500'}`}
             />
             <Input
               id="passwordConfirm"
-              {...register('passwordConfirm', {
-                required: 'Proszę potwierdzić hasło.',
-                validate: (value) => value === password.current || 'Hasła nie zgadzają się.',
-                onBlur: () => setIsFocused(null),
-              })}
               type={showPasswordConfirm ? 'text' : 'password'}
               onFocus={() => setIsFocused('passwordConfirm')}
-              className="pl-12 pr-12 bg-white/[0.03] border-white/10 text-white rounded-2xl h-14 focus:border-green-500/50 focus:bg-green-500/[0.02] transition-all duration-300 backdrop-blur-sm tracking-widest"
+              className="pl-12 pr-12 bg-white/3 border-white/10 text-white rounded-2xl h-14 focus:border-primary/50 focus:bg-primary/2 transition-all duration-300 backdrop-blur-sm"
               placeholder="••••••••"
+              {...register('passwordConfirm', {
+                required: 'Proszę potwierdzić hasło.',
+                validate: (value) => value === password.current || 'Hasła nie są identyczne.',
+                onBlur: () => setIsFocused(null),
+              })}
             />
             <button
               type="button"
               onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white transition-colors focus:outline-none"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white transition-colors"
             >
               {showPasswordConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
@@ -194,22 +168,20 @@ export const CreateAccountForm: React.FC = () => {
 
       <motion.div variants={itemVariants} className="pt-2">
         <Button
+          className="relative w-full overflow-hidden bg-primary text-black hover:bg-primary/90 
+           font-bold h-14 rounded-2xl transition-all duration-500 uppercase tracking-widest text-xs group shadow-[0_0_40px_-10px_rgba(var(--primary),0.5)]"
           disabled={loading}
           type="submit"
-          className="relative w-full overflow-hidden bg-primary text-white hover:bg-primary/90 font-bold h-14 rounded-2xl transition-all duration-500 uppercase tracking-widest text-xs group shadow-[0_0_40px_-10px_rgba(var(--primary),0.5)] hover:shadow-[0_0_60px_-15px_rgba(var(--primary),0.8)]"
         >
-          <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
-          <span className="flex items-center justify-center gap-2 relative z-10 text-black">
+          <div className="absolute inset-0 w-full h-full bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+          <span className="flex items-center justify-center gap-2 relative z-10">
             {loading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                Inicjalizacja Węzła...
+                Aktualizacja...
               </>
             ) : (
-              <>
-                <UserPlus className="w-5 h-5" />
-                Utwórz Profil
-              </>
+              <>Zresetuj Klucz Dostępu</>
             )}
           </span>
         </Button>

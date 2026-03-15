@@ -91,33 +91,12 @@ export default function MaintenancePage({
           </p>
         </motion.div>
 
-        {/* TECH PROGRESS BAR */}
-        <div className="mt-12 mb-12 max-w-xs mx-auto space-y-2">
-          <div className="flex justify-between font-mono text-[9px] text-neutral-600 uppercase tracking-widest">
-            <span>Updating_Core</span>
-            <motion.span
-              animate={{ opacity: [1, 0, 1] }}
-              transition={{ duration: 1, repeat: Infinity }}
-            >
-              88%
-            </motion.span>
-          </div>
-          <div className="h-[2px] bg-white/5 rounded-full overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: '88%' }}
-              transition={{ delay: 0.5, duration: 1.5, ease: 'easeOut' }}
-              className="h-full bg-gradient-to-r from-violet-600 to-fuchsia-500 shadow-[0_0_10px_rgba(124,58,237,0.5)]"
-            />
-          </div>
-        </div>
-
         {/* ACTIONS */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="flex flex-col items-center justify-center"
+          className="flex flex-col items-center justify-center mt-10"
         >
           <div onClick={() => router.push(redirectTo)}>
             <GlowingButton className=" text-[11px] font-black uppercase tracking-[0.2em]">

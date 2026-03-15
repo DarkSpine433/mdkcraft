@@ -1,5 +1,5 @@
-import type { GlobalConfig } from 'payload'
 import { adminOnly } from '@/access/adminOnly'
+import type { GlobalConfig } from 'payload'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
@@ -40,6 +40,20 @@ export const SiteSettings: GlobalConfig = {
       name: 'maintenanceMode',
       type: 'checkbox',
       defaultValue: false,
+    },
+    {
+      name: 'developmentMode',
+      type: 'checkbox',
+      label: 'Tryb Deweloperski (Tylko dla administratorów)',
+      defaultValue: false,
+    },
+    {
+      name: 'developmentBypassSecret',
+      type: 'text',
+      label: 'Sekretny klucz obejścia trybu deweloperskiego',
+      admin: {
+        description: 'Dodaj ?bypass=TWÓJ_KLUCZ do URL, aby uzyskać dostęp w trybie deweloperskim.',
+      },
     },
   ],
 }

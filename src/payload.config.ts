@@ -49,15 +49,85 @@ import { plugins } from './plugins'
 // Endpoints
 import { sessionHandler, trackHandler } from './endpoints/analytics'
 import { Redirects } from './globals/Redirects'
+import { getAllowedDomains } from './utilities/getAllowedDomains'
+import { validateEnv } from './utilities/validateEnv'
+
+import { resendAdapter } from '@payloadcms/email-resend'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
   admin: {
+    meta: {
+      title: 'LSBets Admin Panel',
+      titleSuffix: ' - LSBets',
+      description: 'LsBet Admin Panel - Manage your LSBet website content',
+      icons: [
+        {
+          rel: 'icon',
+          type: 'image/jpeg',
+          url: 'https://ut91p27j9t.ufs.sh/f/CI2WZ5YUTq1beVeh3Fwfw9glnXS4C6WAJcNBbrvIad7PD2yU',
+        },
+      ],
+      openGraph: {
+        images: [
+          {
+            url: '/https://ut91p27j9t.ufs.sh/f/CI2WZ5YUTq1bdEX04uQDXpVt0zI3oulY6iq2RyfQ8bOh4wP7',
+            width: 1200,
+            height: 630,
+            alt: 'LSBets Admin Panel',
+          },
+        ],
+        description: 'Admin panel for LSBets website',
+        siteName: 'LSBets Admin Panel',
+        title: 'LSBets Panel - ',
+      },
+    },
+    suppressHydrationWarning: true,
+    timezones: ['UTC'],
+
     components: {
       beforeLogin: ['@/components/BeforeLogin#BeforeLogin'],
       beforeDashboard: ['@/components/BeforeDashboard#BeforeDashboard'],
+      graphics: {
+        Logo: '@/components/Logo/Logo#Logo',
+        Icon: '@/components/Logo/Logo#Logo',
+      },
+    },
+    importMap: {
+      baseDir: path.resolve(dirname, 'src'),
+      importMapFile: path.resolve(
+        dirname,
+        'app',
+        '(payloadAuth)',
+        '(payload)',
+        'admin',
+        'importMap.js',
+      ),
+    },
+    avatar: 'default' as const,
+    livePreview: {
+      breakpoints: [
+        {
+          label: 'Mobile',
+          name: 'mobile',
+          width: 375,
+          height: 667,
+        },
+        {
+          label: 'Tablet',
+          name: 'tablet',
+          width: 768,
+          height: 1024,
+        },
+        {
+          label: 'Desktop',
+          name: 'desktop',
+          width: 1440,
+          height: 900,
+        },
+      ],
     },
     user: Users.slug,
   },
@@ -88,9 +158,17 @@ export default buildConfig({
     ContactInquiries,
     NewsletterSubscribers,
   ],
+  email:
+    process.env.RESEND_API_KEY && !process.env.RESEND_API_KEY.includes('placeholder')
+      ? resendAdapter({
+          defaultFromAddress: 'no-reply@mdktech.pl',
+          defaultFromName: 'MDKCraft',
+          apiKey: process.env.RESEND_API_KEY,
+        })
+      : undefined, // Payload will fallback to console logging in dev if no email adapter is provided
   sharp,
   db: mongooseAdapter({
-    url: process.env.DATABASE_URL || '',
+    url: validateEnv('DATABASE_URL'),
   }),
   editor: lexicalEditor({
     features: () => {
@@ -140,8 +218,10 @@ export default buildConfig({
     },
   ],
   globals: [Header, Footer, SiteSettings, Opinions, Redirects],
+  csrf: getAllowedDomains(),
+  cors: getAllowedDomains(),
   plugins,
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: validateEnv('PAYLOAD_SECRET'),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },

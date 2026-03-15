@@ -21,7 +21,6 @@ export default function MaintenanceController({
   const isMaintenance = maintenancePaths.some((path) => pathname === path || path === '*')
 
   if (isMaintenance) {
-    // Przekazujemy parametry do strony technicznej
     return (
       <MaintenancePage
         redirectTo={redirectTo!}
