@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 
 import { AccountForm } from '@/components/forms/AccountForm'
-import { Order } from '@/payload-types'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import configPromise from '@payload-config'
 import { headers as getHeaders } from 'next/headers.js'
@@ -13,31 +12,10 @@ export default async function AccountPage() {
   const payload = await getPayload({ config: configPromise })
   const { user } = await payload.auth({ headers })
 
-  let orders: Order[] | null = null
-
   if (!user) {
     redirect(
       `/login?warning=${encodeURIComponent('Zaloguj się, aby uzyskać dostęp do ustawień konta.')}`,
     )
-  }
-
-  try {
-    const ordersResult = await payload.find({
-      collection: 'orders',
-      limit: 5,
-      user,
-      overrideAccess: false,
-      pagination: false,
-      where: {
-        customer: {
-          equals: user?.id,
-        },
-      },
-    })
-
-    orders = ordersResult?.docs || []
-  } catch (error) {
-    console.error('Error fetching orders:', error)
   }
 
   return (

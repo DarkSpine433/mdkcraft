@@ -1,5 +1,6 @@
 import type { CollectionBeforeOperationHook } from 'payload'
 import { APIError } from 'payload'
+import { generateVerificationEmailHtml } from '../utilities/generateVerificationEmail'
 
 export const checkForgotPasswordVerification: CollectionBeforeOperationHook = async ({
   args,
@@ -7,12 +8,13 @@ export const checkForgotPasswordVerification: CollectionBeforeOperationHook = as
   req,
 }) => {
   if (operation === 'forgotPassword') {
-    const { email } = args
+    const { email } = (args as { email?: string }) || {}
 
     if (!email) return args
 
     const userQuery = await req.payload.find({
       collection: 'users',
+      showHiddenFields: true,
       where: {
         email: {
           equals: email.toLowerCase(),
@@ -47,22 +49,24 @@ export const checkForgotPasswordVerification: CollectionBeforeOperationHook = as
 
         // Resend verification email
         try {
-          // In Payload 3.0, we can use the forgotPassword operation's logic or custom
-          // But for verification, we use sendVerificationEmail if available or trigger it.
-          // Since we are in beforeOperation 'forgotPassword', we want to stop this and send Verification instead.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const token = (user as any)._verificationToken
 
-          await req.payload.sendVerificationEmail({
-            collection: 'users',
-            user,
-          })
+          if (token) {
+            await req.payload.sendEmail({
+              html: generateVerificationEmailHtml({ token }),
+              subject: 'Weryfikacja Konta - MDKCraft',
+              to: user.email,
+            })
+          }
 
           // Update counters
           await req.payload.update({
             collection: 'users',
             id: user.id,
             data: {
-              verificationEmailCount: count + 1,
               lastVerificationEmailSent: now.toISOString(),
+              verificationEmailCount: count + 1,
             },
           })
 
@@ -70,8 +74,8 @@ export const checkForgotPasswordVerification: CollectionBeforeOperationHook = as
             'Twoje konto nie jest zweryfikowane. Wysłaliśmy nowy e-mail weryfikacyjny. Sprawdź swoją skrzynkę.',
             403,
           )
-        } catch (err) {
-          if (err instanceof APIError) throw err
+        } catch (_) {
+          if (_ instanceof APIError) throw _
           throw new APIError(
             'Konto niezweryfikowane. Wystąpił błąd podczas wysyłania e-maila weryfikacyjnego.',
             500,

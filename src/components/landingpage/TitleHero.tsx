@@ -17,7 +17,7 @@ function useMousePosition() {
     }
     window.addEventListener('mousemove', updateMousePosition)
     return () => window.removeEventListener('mousemove', updateMousePosition)
-  }, [])
+  }, [setMousePosition])
   return mousePosition
 }
 
@@ -144,7 +144,7 @@ const TextSwitcher = () => {
       setIndex((prev) => (prev + 1) % words.length)
     }, 3000)
     return () => clearInterval(interval)
-  }, [])
+  }, [words.length])
 
   return (
     <div className="relative h-12 md:h-20 w-full overflow-hidden flex justify-center items-center mt-2">
@@ -157,7 +157,7 @@ const TextSwitcher = () => {
           transition={{ duration: 0.5, ease: 'circOut' }}
           className="absolute text-center"
         >
-          <span className="text-3xl md:text-5xl lg:text-7xl font-bold bg-gradient-to-r from-white via-primary/80 to-white bg-clip-text text-transparent drop-shadow-sm">
+          <span className="text-3xl md:text-5xl lg:text-7xl font-bold bg-linear-to-r from-white via-primary/80 to-white bg-clip-text text-transparent drop-shadow-sm">
             {words[index].split('').map((char, i) => (
               <span
                 key={i}
@@ -179,7 +179,7 @@ const ModernTitleHero = () => {
   return (
     <div className="relative w-full flex flex-col items-center justify-center z-20 perspective-1000">
       {/* GLOW EFFECT BEHIND TITLE */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[200px] bg-primary/20 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-50 bg-primary/20 blur-[100px] rounded-full pointer-events-none" />
 
       {/* STATIC TOP TITLE */}
       <motion.div
@@ -189,10 +189,10 @@ const ModernTitleHero = () => {
         className="relative z-10"
       >
         <h1 className="text-5xl md:text-8xl lg:text-9xl font-extrabold tracking-tighter text-center">
-          <span className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-100 via-neutral-300 to-neutral-500">
+          <span className="bg-clip-text text-transparent bg-linear-to-b from-neutral-100 via-neutral-300 to-neutral-500">
             Modern
           </span>
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-400 to-primary ml-4">
+          <span className="bg-clip-text text-transparent bg-linear-to-r from-primary via-purple-400 to-primary ml-4">
             Web
           </span>
         </h1>
@@ -200,7 +200,7 @@ const ModernTitleHero = () => {
 
       {/* DECORATIVE LINE */}
       <div className="relative w-full max-w-2xl mx-auto my-6 md:my-10 flex items-center justify-center">
-        <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
+        <div className="h-px w-full bg-linear-to-r from-transparent via-primary to-transparent opacity-50" />
         <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-20 h-1 bg-primary blur-lg animate-pulse" />
         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-primary rounded-full blur-[1px]" />
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-primary rounded-full blur-[1px]" />
@@ -258,7 +258,7 @@ const HeroSection = () => {
       className="relative w-full min-h-screen flex flex-col justify-center items-center overflow-hidden bg-background text-foreground"
     >
       {/* 1. TŁO */}
-      <div className="absolute inset-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neutral-900 via-black to-black z-0">
+      <div className="absolute inset-0 w-full h-full bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-neutral-900 via-black to-black z-0">
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
       </div>
       <ParticlesBackground />
@@ -267,17 +267,17 @@ const HeroSection = () => {
       {/* 2. ELEMENTY PŁYWAJĄCE (Dekoracje) */}
       <FloatingCard
         icon={<Globe size={24} />}
-        className="top-[20%] left-[10%] rotate-[-6deg]"
+        className="top-[20%] left-[10%] -rotate-6"
         delay={0}
       />
       <FloatingCard
         icon={<Layers size={24} />}
-        className="bottom-[30%] right-[10%] rotate-[6deg]"
+        className="bottom-[30%] right-[10%] rotate-6"
         delay={1.5}
       />
       <FloatingCard
         icon={<Sparkles size={24} />}
-        className="top-[30%] right-[15%] rotate-[-3deg] scale-75 blur-[1px]"
+        className="top-[30%] right-[15%] -rotate-3 scale-75 blur-[1px]"
         delay={0.5}
       />
 
@@ -316,7 +316,7 @@ const HeroSection = () => {
               <strong className="text-white relative z-10 transition-colors group-hover:text-primary duration-300">
                 Zyskaj przewagę w sieci!
               </strong>
-              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
             </span>
             &nbsp;Sprawdź naszą ofertę już teraz.
           </p>
@@ -359,9 +359,9 @@ const HeroSection = () => {
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-neutral-500"
       >
         <span className="text-xs uppercase tracking-[0.2em]">Scrolluj</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-primary via-primary/50 to-transparent" />
+        <div className="w-px h-12 bg-linear-to-b from-primary via-primary/50 to-transparent" />
       </motion.div>
-      <div className="absolute bottom-0 left-0 w-full h-[2px] overflow-hidden">
+      <div className="absolute bottom-0 left-0 w-full h-0.5 overflow-hidden">
         {/* 1. Podstawa linii (ciemniejsza, nadaje strukturę) */}
         <div className="absolute inset-0 bg-white/5" />
 
@@ -391,14 +391,14 @@ const HeroSection = () => {
             ease: 'linear',
             repeatDelay: 0.5,
           }}
-          className="absolute inset-y-0 w-1/4 blur-[4px] z-0 opacity-50"
+          className="absolute inset-y-0 w-1/4 blur-xs z-0 opacity-50"
           style={{
             background: `linear-gradient(90deg, transparent, var(--color-primary), transparent)`,
           }}
         />
 
         {/* 4. Statyczna poświata punktowa na środku (opcjonalnie, dla głębi) */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary/10 to-transparent" />
       </div>
     </section>
   )

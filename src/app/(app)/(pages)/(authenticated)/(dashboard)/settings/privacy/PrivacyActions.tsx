@@ -36,7 +36,7 @@ export const PrivacyActions = () => {
       toast.success('Eksport_Zakończony', {
         description: 'Twoje dane zostały przygotowane i pobrane.',
       })
-    } catch (error) {
+    } catch (_) {
       toast.error('Błąd Eksportu', {
         description: 'Nie udało się wygenerować pliku danych.',
       })
@@ -53,7 +53,7 @@ export const PrivacyActions = () => {
         description: 'Twoje dane osobowe zostały usunięte z systemu.',
       })
       window.location.reload()
-    } catch (error) {
+    } catch (_) {
       toast.error('Błąd Operacji', {
         description: 'Wystąpił problem podczas anonimizacji danych.',
       })

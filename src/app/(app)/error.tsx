@@ -6,13 +6,6 @@ import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useSpring }
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-interface DiagnosticLog {
-  id: string
-  text: string
-  type: 'info' | 'error' | 'warning' | 'success' | 'system'
-  timestamp: string
-}
-
 interface ErrorProps {
   error: Error & { digest?: string }
   reset: () => void
@@ -93,7 +86,6 @@ export default function ErrorPage({ error, reset }: ErrorProps) {
   const [retryCount, setRetryCount] = useState(0)
   const [isRetrying, setIsRetrying] = useState(false)
   const [countdown, setCountdown] = useState(10)
-  const [showDetails, setShowDetails] = useState(false)
 
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)

@@ -2,53 +2,13 @@
 
 import MagneticButton from '@/components/ui/magneticBotton'
 import { cn } from '@/utilities/cn'
-import {
-  Box,
-  Code2,
-  Database,
-  Globe,
-  Layers,
-  LucideIcon,
-  Network,
-  Search,
-  Server,
-  Settings,
-  Shield,
-  Smartphone,
-  Terminal,
-  Zap,
-} from 'lucide-react'
+import { Box, Globe, Layers, LucideIcon, Search, Shield, Terminal, Zap } from 'lucide-react'
 import { Variants, motion, useInView, useMotionValue, useScroll, useTransform } from 'motion/react'
-import React, { ReactNode, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useRef } from 'react'
 
 // -----------------------------------------------------------------------------
 // TYPES & INTERFACES
 // -----------------------------------------------------------------------------
-
-type SectionIdentifier = 'intro' | 'philosophy' | 'stack' | 'process' | 'security' | 'team'
-
-interface Coordinate {
-  x: number
-  y: number
-}
-
-interface Particle {
-  x: number
-  y: number
-  vx: number
-  vy: number
-  size: number
-  alpha: number
-  targetAlpha: number
-}
-
-interface TechStackItem {
-  name: string
-  category: 'frontend' | 'backend' | 'devops' | 'mobile'
-  icon: LucideIcon
-  description: string
-  proficiency: number // 0-100
-}
 
 interface ProcessStep {
   id: number
@@ -64,8 +24,6 @@ interface ProcessStep {
 // -----------------------------------------------------------------------------
 
 const SECTION_SPACING = 'py-32 md:py-48'
-const PRIMARY_COLOR = '#8b5cf6' // violet-500
-const SECONDARY_COLOR = '#d946ef' // fuchsia-500
 
 const ANIMATION_VARIANTS: Record<string, Variants> = {
   fadeInUp: {
@@ -103,65 +61,6 @@ const ANIMATION_VARIANTS: Record<string, Variants> = {
     },
   },
 }
-
-const TECH_STACK: TechStackItem[] = [
-  {
-    name: 'Next.js 14',
-    category: 'frontend',
-    icon: Box,
-    description: 'App Router ready framework',
-    proficiency: 98,
-  },
-  {
-    name: 'React 19',
-    category: 'frontend',
-    icon: Code2,
-    description: 'Cutting edge UI library',
-    proficiency: 99,
-  },
-  {
-    name: 'TypeScript',
-    category: 'frontend',
-    icon: Code2,
-    description: 'Type-safe development',
-    proficiency: 95,
-  },
-  {
-    name: 'Rust',
-    category: 'backend',
-    icon: Settings,
-    description: 'High-performance systems',
-    proficiency: 85,
-  },
-  {
-    name: 'PostgreSQL',
-    category: 'backend',
-    icon: Database,
-    description: 'Advanced relational data',
-    proficiency: 92,
-  },
-  {
-    name: 'Kubernetes',
-    category: 'devops',
-    icon: Server,
-    description: 'Container orchestration',
-    proficiency: 88,
-  },
-  {
-    name: 'AWS',
-    category: 'devops',
-    icon: Network,
-    description: 'Cloud infrastructure',
-    proficiency: 90,
-  },
-  {
-    name: 'React Native',
-    category: 'mobile',
-    icon: Smartphone,
-    description: 'Cross-platform mobile',
-    proficiency: 94,
-  },
-]
 
 const PROCESS_STEPS: ProcessStep[] = [
   {
@@ -266,107 +165,6 @@ const SectionHeading = ({ children, subtitle }: { children: string; subtitle?: s
  * StarfieldCanvas: A procedural particle system interacting with mouse
  * Renders on a canvas for max performance
  */
-const StarfieldCanvas = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [size, setSize] = useState({ w: 0, h: 0 })
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (containerRef.current) {
-        setSize({
-          w: containerRef.current.clientWidth,
-          h: containerRef.current.clientHeight,
-        })
-      }
-    }
-    window.addEventListener('resize', handleResize)
-    handleResize()
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas || size.w === 0) return
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    canvas.width = size.w
-    canvas.height = size.h
-
-    const particles: Particle[] = Array.from({ length: 150 }, () => ({
-      x: Math.random() * size.w,
-      y: Math.random() * size.h,
-      vx: (Math.random() - 0.5) * 0.2,
-      vy: (Math.random() - 0.5) * 0.2,
-      size: Math.random() * 1.5,
-      alpha: Math.random() * 0.5 + 0.1,
-      targetAlpha: Math.random() * 0.5 + 0.1,
-    }))
-
-    let animationId: number
-    let time = 0
-
-    const render = () => {
-      time++
-      ctx.clearRect(0, 0, size.w, size.h)
-
-      // Draw connecting lines
-      ctx.strokeStyle = `rgba(255, 255, 255, 0.05)`
-      ctx.lineWidth = 0.5
-
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i]
-
-        // Update position
-        p.x += p.vx
-        p.y += p.vy
-
-        // Bounce
-        if (p.x < 0 || p.x > size.w) p.vx *= -1
-        if (p.y < 0 || p.y > size.h) p.vy *= -1
-
-        // Twinkle
-        if (time % 10 === 0 && Math.random() > 0.9) {
-          p.targetAlpha = Math.random() * 0.8 + 0.2
-        }
-        p.alpha += (p.targetAlpha - p.alpha) * 0.05
-
-        // Draw particle
-        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-        ctx.fill()
-
-        // Connect nearby
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j]
-          const dx = p.x - p2.x
-          const dy = p.y - p2.y
-          const dist = Math.sqrt(dx * dx + dy * dy)
-
-          if (dist < 100) {
-            ctx.beginPath()
-            ctx.moveTo(p.x, p.y)
-            ctx.lineTo(p2.x, p2.y)
-            ctx.stroke()
-          }
-        }
-      }
-      animationId = requestAnimationFrame(render)
-    }
-
-    render()
-    return () => cancelAnimationFrame(animationId)
-  }, [size])
-
-  return (
-    <div ref={containerRef} className="absolute inset-0 z-0 pointer-events-none opacity-40">
-      <canvas ref={canvasRef} />
-    </div>
-  )
-}
 
 /**
  * HoloCard: 3D Tilt Effect Card
@@ -680,7 +478,10 @@ const FinalCTA = () => {
 
 export default function AboutPage() {
   return (
-    <section className="bg-[#020408] min-h-screen text-slate-200 selection:bg-violet-500/30 selection:text-white overflow-hidden  relative  " id='about'>
+    <section
+      className="bg-[#020408] min-h-screen text-slate-200 selection:bg-violet-500/30 selection:text-white overflow-hidden  relative  "
+      id="about"
+    >
       <ProcessTimeline />
 
       <MetricsSection />

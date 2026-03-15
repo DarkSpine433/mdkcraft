@@ -54,7 +54,7 @@ const PixelGrid = () => (
   </div>
 )
 
-const FloatingCard = ({ opinion, index }: { opinion: OpinionItem; index: number }) => {
+const FloatingCard = ({ opinion, _index }: { opinion: OpinionItem; _index: number }) => {
   const cardRef = useRef<HTMLDivElement>(null)
 
   const mouseX = useMotionValue(0)
@@ -68,16 +68,10 @@ const FloatingCard = ({ opinion, index }: { opinion: OpinionItem; index: number 
     damping: 20,
   })
 
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress: _scrollYProgress } = useScroll({
     target: cardRef,
     offset: ['start start', 'end end'],
   })
-
-  const translateY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [50 * ((index % 3) + 1), -50 * ((index % 3) + 1)],
-  )
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = cardRef.current?.getBoundingClientRect()
@@ -172,8 +166,8 @@ const OpinionsClient = ({ opinions }: Props) => {
       ref={containerRef}
       className="relative bg-[#050505] min-h-[min(200vh,auto)] py-[15vh] overflow-hidden border-y border-white/5"
     >
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-violet-600/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-125 h-125 bg-violet-600/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-150 h-150 bg-indigo-600/10 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
 
       <PixelGrid />
 
@@ -208,7 +202,7 @@ const OpinionsClient = ({ opinions }: Props) => {
 
         {/* --- METRICS GRID --- */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-[20vh]">
-          {METRICS.map((metric, i) => (
+          {METRICS.map((metric, _i) => (
             <motion.div
               key={metric.label}
               initial={{ opacity: 0, y: 30 }}
@@ -237,12 +231,12 @@ const OpinionsClient = ({ opinions }: Props) => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 relative">
             <div className="space-y-12 lg:space-y-24">
               {col1.map((opinion, i) => (
-                <FloatingCard key={opinion.id || i} opinion={opinion} index={i} />
+                <FloatingCard key={opinion.id || i} opinion={opinion} _index={i} />
               ))}
             </div>
             <div className="space-y-12 lg:space-y-24 pt-12 lg:pt-32">
               {col2.map((opinion, i) => (
-                <FloatingCard key={opinion.id || i + half} opinion={opinion} index={i + half} />
+                <FloatingCard key={opinion.id || i + half} opinion={opinion} _index={i + half} />
               ))}
             </div>
           </div>

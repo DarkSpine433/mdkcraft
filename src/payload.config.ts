@@ -84,8 +84,6 @@ export default buildConfig({
         title: 'LSBets Panel - ',
       },
     },
-    suppressHydrationWarning: true,
-    timezones: ['UTC'],
 
     components: {
       beforeLogin: ['@/components/BeforeLogin#BeforeLogin'],

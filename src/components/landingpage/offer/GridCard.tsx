@@ -15,8 +15,6 @@ import {
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'motion/react'
 import React, { useRef } from 'react'
 
-// --- TYPY ---
-
 interface FeatureCardProps {
   title: string
   description: string
@@ -24,8 +22,6 @@ interface FeatureCardProps {
   className?: string
   index: number
 }
-
-// --- KOMPONENT POMOCNICZY: ANIMOWANA IKONA SVG ---
 
 const AnimatedIcon = ({ icon }: { icon: React.ReactNode }) => {
   return (
@@ -38,14 +34,11 @@ const AnimatedIcon = ({ icon }: { icon: React.ReactNode }) => {
   )
 }
 
-// --- KOMPONENT: BENTO CARD (Sercem jest interakcja myszy) ---
-
 const FeatureCard = ({ title, description, icon, className, index }: FeatureCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null)
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
-  // Fizyka podążania światła
   const springConfig = { damping: 20, stiffness: 100 }
   const smoothX = useSpring(mouseX, springConfig)
   const smoothY = useSpring(mouseY, springConfig)
@@ -86,7 +79,6 @@ const FeatureCard = ({ title, description, icon, className, index }: FeatureCard
         className,
       )}
     >
-      {/* Dynamiczne podświetlenie krawędzi (Border Beam) */}
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-3xl z-10"
         style={{
@@ -98,13 +90,11 @@ const FeatureCard = ({ title, description, icon, className, index }: FeatureCard
         }}
       />
 
-      {/* Holograficzny Gradient Tła */}
       <motion.div
         className="pointer-events-none absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
         style={{ background }}
       />
 
-      {/* Treść Karty */}
       <div className="relative z-20">
         <div className="flex justify-between items-start mb-6">
           <AnimatedIcon icon={icon} />
@@ -124,13 +114,12 @@ const FeatureCard = ({ title, description, icon, className, index }: FeatureCard
         </p>
       </div>
 
-      {/* Dekoracyjny szlaczek SVG na dole karty */}
       <div className="absolute bottom-0 left-0 right-0 h-1 w-full overflow-hidden opacity-20 group-hover:opacity-100 transition-opacity duration-500">
         <svg width="100%" height="4">
           <motion.line
             x1="0"
             y1="2"
-            x2="100%"
+            x2="150%"
             y2="2"
             stroke="currentColor"
             strokeWidth="2"
@@ -145,10 +134,7 @@ const FeatureCard = ({ title, description, icon, className, index }: FeatureCard
   )
 }
 
-// --- GŁÓWNY KOMPONENT ---
-
 const GridCard = () => {
-  // Dane dla pierwszej sekcji Bento (Usługi)
   const features = [
     {
       title: 'SEO & Visibility',
@@ -186,7 +172,6 @@ const GridCard = () => {
     },
   ]
 
-  // Dane dla drugiej sekcji (Dlaczego my)
   const advantages = [
     {
       title: 'Indywidualne podejście',
@@ -212,12 +197,10 @@ const GridCard = () => {
   ]
 
   return (
-    <section id='services' className="relative w-full py-24 bg-black overflow-hidden">
-      {/* Efekt tła (Grid) - identyczny jak w Hero dla spójności */}
+    <section id="services" className="relative w-full py-24 bg-black overflow-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]" />
 
       <div className="relative z-10 container mx-auto px-6">
-        {/* NAGŁÓWEK */}
         <div className="text-center mb-16">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -246,7 +229,6 @@ const GridCard = () => {
           </p>
         </div>
 
-        {/* BENTO GRID 1 - USŁUGI */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 mb-12">
           {features.map((feature, i) => (
             <FeatureCard
@@ -260,7 +242,6 @@ const GridCard = () => {
           ))}
         </div>
 
-        {/* PRZERWA / DEKORACJA */}
         <div className="flex items-center gap-4 my-20">
           <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-white/10 to-transparent" />
           <div className="p-2 rounded-full border border-white/10">
@@ -269,7 +250,6 @@ const GridCard = () => {
           <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         </div>
 
-        {/* BENTO GRID 2 - WARTOŚCI */}
         <div className="text-center mb-12">
           <h3 className="text-2xl md:text-3xl font-bold text-white">Dlaczego warto nam zaufać?</h3>
         </div>
@@ -288,7 +268,6 @@ const GridCard = () => {
         </div>
       </div>
 
-      {/* BACKGROUND BLOBS - Subtelne dekoracje w tle */}
       <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 w-[500px] h-[500px] bg-purple-600/5 blur-[120px] rounded-full pointer-events-none" />
     </section>

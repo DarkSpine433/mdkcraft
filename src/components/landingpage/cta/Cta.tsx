@@ -23,7 +23,7 @@ import {
   Send,
   ShieldCheck,
   Sparkles,
-  Zap
+  Zap,
 } from 'lucide-react'
 import { motion, useInView, useMotionTemplate, useMotionValue, useSpring } from 'motion/react'
 import Link from 'next/link'
@@ -43,7 +43,7 @@ const MouseGlowBackground = () => {
     }
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+  }, [mouseX, mouseY])
 
   return (
     <motion.div
@@ -113,14 +113,19 @@ export function AlertDialogPopUp() {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <div className="relative group">
-          <MagneticButton icon={<MessageCircleCode className="ml-2 group-hover:rotate-[5deg] transition-transform" />} variant="outline" className="h-16 border-dashed">
+          <MagneticButton
+            icon={
+              <MessageCircleCode className="ml-2 group-hover:rotate-[5deg] transition-transform" />
+            }
+            variant="outline"
+            className="h-16 border-dashed"
+          >
             Skontaktuj Się
-    
           </MagneticButton>
         </div>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="bg-[#0a0a0a] border border-white/10 p-2 rounded-[2rem] max-w-xl overflow-hidden shadow-2xl">
+      <AlertDialogContent className="bg-[#0a0a0a] border border-white/10 p-2 rounded-4xl max-w-xl overflow-hidden shadow-2xl">
         <div className="p-8">
           <AlertDialogHeader>
             <div className="p-3 w-fit rounded-xl bg-primary/10 text-primary mb-4">
@@ -140,7 +145,7 @@ export function AlertDialogPopUp() {
                 key={i}
                 href={opt.link}
                 className={cn(
-                  'group flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/5 transition-all duration-300',
+                  'group flex items-center justify-between p-4 rounded-2xl bg-white/3 border border-white/5 transition-all duration-300',
                   opt.color,
                 )}
               >
@@ -184,8 +189,8 @@ const Cta = () => {
 
       {/* Dynamiczne linie w tle (Spójność z TitleHero) */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[1px] h-full bg-gradient-to-b from-transparent via-primary to-transparent" />
-        <div className="absolute top-0 right-1/4 w-[1px] h-full bg-gradient-to-b from-transparent via-primary to-transparent" />
+        <div className="absolute top-0 left-1/4 w-px h-full bg-linear-to-b from-transparent via-primary to-transparent" />
+        <div className="absolute top-0 right-1/4 w-px h-full bg-linear-to-b from-transparent via-primary to-transparent" />
       </div>
 
       <div className="container relative z-10 max-w-5xl mx-auto text-center">
@@ -219,9 +224,13 @@ const Cta = () => {
           <div className="relative group">
             {/* Dekoracyjny efekt pod przyciskiem */}
             <div className="absolute -inset-4 bg-primary/20 rounded-[2rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <MagneticButton icon={  <Rocket className="ml-2 size-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />} className="min-w-[240px] text-background hover:text-violet-500">
+            <MagneticButton
+              icon={
+                <Rocket className="ml-2 size-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              }
+              className="min-w-60 text-background hover:text-violet-500"
+            >
               Zapisz się
-            
             </MagneticButton>
           </div>
 
@@ -254,7 +263,7 @@ const Cta = () => {
 
       {/* Side Decorative Text (identyczny jak w Twoim pliku Projects.tsx) */}
       <div className="absolute -left-10 bottom-10 rotate-90 origin-left hidden xl:block">
-        <span className="text-[100px] font-black text-white/[0.02] select-none uppercase tracking-tighter">
+        <span className="text-[100px] font-black text-white/2 select-none uppercase tracking-tighter">
           Contact Now
         </span>
       </div>

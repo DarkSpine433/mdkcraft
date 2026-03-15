@@ -17,10 +17,7 @@ type Props = {
   imgSrc: string
 }
 
-const Opinion = ({ name, lastName, imgSrc, opinionText, stars, starHalf }: Props) => {
-  const roundeStars = typeof stars !== 'number' ? 0 : Math.floor(stars)
-  const EmptyStars = 5 - (typeof roundeStars !== 'number' ? 0 : roundeStars) - (starHalf ? 1 : 0)
-
+const Opinion = ({ name, lastName, imgSrc, opinionText }: Props) => {
   return (
     <Card className="border-y-primary border-x-0 w-fit flex flex-col bg-transparent ">
       <CardHeader>
