@@ -95,7 +95,9 @@ export async function submitContactForm(data: ContactSubmission) {
         // IV. Logistyka i Treści
         contentProvider: data.contentProvider as any,
         hasDomainHosting: data.hasDomainHosting as any,
-        plannedLaunchDate: data.plannedLaunchDate ? new Date(data.plannedLaunchDate) : null,
+        plannedLaunchDate: data.plannedLaunchDate
+          ? new Date(data.plannedLaunchDate).toISOString()
+          : null,
         budgetRange: data.budgetRange,
 
         // Systemowe

@@ -3,48 +3,7 @@
 import { ConfiguratorForm } from '@/components/ConfiguratorForm'
 import { Mail, MousePointer2, Phone, ShieldCheck, Zap } from 'lucide-react'
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'motion/react'
-import { useEffect, useState } from 'react'
-
-const SystemBoot = ({ onComplete }: { onComplete: () => void }) => {
-  const [lines, setLines] = useState<string[]>([])
-
-  useEffect(() => {
-    let currentLine = 0
-    const interval = setInterval(() => {
-      if (currentLine < bootSequence.length) {
-        setLines((prev) => [...prev, bootSequence[currentLine]])
-        currentLine++
-      } else {
-        clearInterval(interval)
-        setTimeout(onComplete, 1000)
-      }
-    }, 400)
-    return () => clearInterval(interval)
-  }, [])
-
-  return (
-    <div className="fixed inset-0 z-[100] bg-[#020204] flex flex-col items-start justify-center p-12 font-mono">
-      <div className="max-w-xl w-full space-y-2">
-        {lines.map((line, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="text-primary text-sm tracking-wider"
-          >
-            <span className="text-neutral-700 mr-4">[{i.toString().padStart(2, '0')}]</span>
-            {line}
-          </motion.div>
-        ))}
-        <motion.div
-          animate={{ opacity: [1, 0] }}
-          transition={{ duration: 0.8, repeat: Infinity }}
-          className="w-2 h-5 bg-primary ml-[4.5rem]"
-        />
-      </div>
-    </div>
-  )
-}
+import { useEffect } from 'react'
 
 // --- KOMPONENT TŁA (Podobny do Cta.tsx) ---
 const MouseGlow = () => {

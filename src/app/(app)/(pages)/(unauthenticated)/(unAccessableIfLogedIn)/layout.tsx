@@ -2,6 +2,7 @@ import configPromise from '@payload-config'
 import { headers as getHeaders } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
+import { ReactNode } from 'react'
 
 export default async function UnaccessableIfLogedInLayout({ children }: { children: ReactNode }) {
   const headers = await getHeaders()

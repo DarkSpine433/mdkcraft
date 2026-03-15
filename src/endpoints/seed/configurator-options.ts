@@ -90,7 +90,8 @@ export const seedConfiguratorOptions = async ({
     try {
       await payload.create({
         collection: 'configurator-options',
-        data: option,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data: option as any,
         req,
       })
     } catch (err) {

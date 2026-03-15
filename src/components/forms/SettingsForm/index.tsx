@@ -14,7 +14,7 @@ import {
 import { User } from '@/payload-types'
 import { useAuth } from '@/providers/Auth'
 import { Mail, Palette } from 'lucide-react'
-import React, { useCallback, useEffect, useOptimistic, useTransition } from 'react'
+import React, { useCallback, useEffect, useMemo, useOptimistic, useTransition } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -35,15 +35,20 @@ export const SettingsForm: React.FC = () => {
   const { setUser, user } = useAuth()
   const [isPending, startTransition] = useTransition()
 
-  const initialSettings: SettingsData = {
-    newsletter: user?.settings?.newsletter ?? false,
-    marketing: user?.settings?.marketing ?? false,
-    fontSize: (user?.settings?.fontSize as SettingsData['fontSize']) ?? 'medium',
-    layoutDensity:
-      (user?.settings?.layoutDensity as SettingsData['layoutDensity']) ?? 'comfortable',
-    animationSpeed: (user?.settings?.animationSpeed as SettingsData['animationSpeed']) ?? 'normal',
-    glassIntensity: (user?.settings?.glassIntensity as SettingsData['glassIntensity']) ?? 'medium',
-  }
+  const initialSettings: SettingsData = useMemo(
+    () => ({
+      newsletter: user?.settings?.newsletter ?? false,
+      marketing: user?.settings?.marketing ?? false,
+      fontSize: (user?.settings?.fontSize as SettingsData['fontSize']) ?? 'medium',
+      layoutDensity:
+        (user?.settings?.layoutDensity as SettingsData['layoutDensity']) ?? 'comfortable',
+      animationSpeed:
+        (user?.settings?.animationSpeed as SettingsData['animationSpeed']) ?? 'normal',
+      glassIntensity:
+        (user?.settings?.glassIntensity as SettingsData['glassIntensity']) ?? 'medium',
+    }),
+    [user?.settings],
+  )
 
   const [optimisticSettings, setOptimisticSettings] = useOptimistic(
     initialSettings,
@@ -61,7 +66,7 @@ export const SettingsForm: React.FC = () => {
     if (user) {
       reset({ settings: initialSettings })
     }
-  }, [user, reset])
+  }, [user, reset, initialSettings])
 
   const onSave = useCallback(
     async (data: SettingsFormData) => {
@@ -81,7 +86,7 @@ export const SettingsForm: React.FC = () => {
         if (user) reset({ settings: initialSettings })
       }
     },
-    [setUser, user, reset],
+    [setUser, user, reset, initialSettings],
   )
 
   const handleFieldChange =

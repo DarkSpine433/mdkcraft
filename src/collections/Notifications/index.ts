@@ -72,7 +72,8 @@ export const Notifications: CollectionConfig = {
         description: 'Użytkownicy zarejestrowani po tej dacie nie zobaczą tego powiadomienia.',
       },
       validate: (val, { data }) => {
-        if (data?.broadcast && !val) {
+        const typedData = data as { broadcast?: boolean }
+        if (typedData?.broadcast && !val) {
           return 'To pole jest wymagane, gdy wysyłasz do wszystkich.'
         }
         return true
