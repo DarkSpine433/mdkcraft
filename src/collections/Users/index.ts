@@ -11,6 +11,8 @@ import { ensureFirstUserIsAdmin } from './hooks/ensureFirstUserIsAdmin'
 import { generateForgotPasswordEmailHtml } from './utilities/generateForgotPasswordEmail'
 import { generateVerificationEmailHtml } from './utilities/generateVerificationEmail'
 
+import { syncNewsletterSubscription } from './hooks/syncNewsletterSubscription'
+
 export const Users: CollectionConfig = {
   slug: 'users',
   access: {
@@ -22,6 +24,7 @@ export const Users: CollectionConfig = {
   },
   hooks: {
     beforeOperation: [checkForgotPasswordVerification],
+    beforeChange: [syncNewsletterSubscription],
   },
   admin: {
     group: 'Users',

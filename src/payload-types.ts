@@ -1371,19 +1371,27 @@ export interface ContactInquiry {
   email: string;
   phone?: string | null;
   company?: string | null;
-  projectType:
-    | 'ecommerce'
-    | 'ai_ml'
-    | 'blockchain'
-    | 'custom_app'
-    | 'mobile'
-    | 'design'
-    | 'consulting'
-    | 'maintenance'
-    | 'other';
+  projectType: 'business_card' | 'landing_page' | 'ecommerce' | 'portal' | 'other';
   budget?: ('under_10k' | '10k_50k' | '50k_100k' | '100k_250k' | 'over_250k' | 'not_sure') | null;
   timeline?: ('urgent' | '1_3_months' | '3_6_months' | '6_plus_months' | 'flexible') | null;
-  message: string;
+  companyName?: string | null;
+  currentUrl?: string | null;
+  businessDescription?: string | null;
+  targetAudience?: string | null;
+  mainGoal?: string | null;
+  subpagesCount?: string | null;
+  extraFeatures?: ('contact_form' | 'booking' | 'multi_lang' | 'social' | 'blog' | 'payments' | 'other')[] | null;
+  designLevel?: ('standard' | 'strategic' | 'experience') | null;
+  brandingStatus?: ('full' | 'logo_only' | 'none') | null;
+  inspirationLinks?: string | null;
+  contentProvider?: ('client' | 'agency' | 'mixed') | null;
+  hasDomainHosting?: ('yes' | 'no') | null;
+  plannedLaunchDate?: string | null;
+  budgetRange?: string | null;
+  /**
+   * Dodatkowe uwagi od klienta
+   */
+  message?: string | null;
   submittedAt: string;
   /**
    * Lead status in the sales pipeline
@@ -1660,7 +1668,7 @@ export interface ConfiguratorOption {
   id: string;
   label: string;
   value: string;
-  category: 'type' | 'pages' | 'design' | 'features' | 'marketing';
+  category: 'type' | 'pages' | 'design' | 'features' | 'marketing' | 'logistics';
   price: number;
   description?: string | null;
   updatedAt: string;
@@ -3137,6 +3145,20 @@ export interface ContactInquiriesSelect<T extends boolean = true> {
   projectType?: T;
   budget?: T;
   timeline?: T;
+  companyName?: T;
+  currentUrl?: T;
+  businessDescription?: T;
+  targetAudience?: T;
+  mainGoal?: T;
+  subpagesCount?: T;
+  extraFeatures?: T;
+  designLevel?: T;
+  brandingStatus?: T;
+  inspirationLinks?: T;
+  contentProvider?: T;
+  hasDomainHosting?: T;
+  plannedLaunchDate?: T;
+  budgetRange?: T;
   message?: T;
   submittedAt?: T;
   status?: T;

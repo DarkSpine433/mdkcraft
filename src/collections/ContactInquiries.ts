@@ -47,15 +47,11 @@ export const ContactInquiries: CollectionConfig = {
       type: 'select',
       required: true,
       options: [
-        { label: 'E-commerce Development', value: 'ecommerce' },
-        { label: 'AI/ML Integration', value: 'ai_ml' },
-        { label: 'Blockchain/Web3', value: 'blockchain' },
-        { label: 'Custom Web Application', value: 'custom_app' },
-        { label: 'Mobile App', value: 'mobile' },
-        { label: 'UI/UX Design', value: 'design' },
-        { label: 'Consulting', value: 'consulting' },
-        { label: 'Maintenance/Support', value: 'maintenance' },
-        { label: 'Other', value: 'other' },
+        { label: 'Wizytówka', value: 'business_card' },
+        { label: 'Landing Page', value: 'landing_page' },
+        { label: 'Sklep E-commerce', value: 'ecommerce' },
+        { label: 'System / Portal', value: 'portal' },
+        { label: 'Inny', value: 'other' },
       ],
     },
     {
@@ -82,9 +78,96 @@ export const ContactInquiries: CollectionConfig = {
       ],
     },
     {
+      name: 'companyName',
+      type: 'text',
+    },
+    {
+      name: 'currentUrl',
+      type: 'text',
+    },
+    {
+      name: 'businessDescription',
+      type: 'textarea',
+    },
+    {
+      name: 'targetAudience',
+      type: 'textarea',
+    },
+    {
+      name: 'mainGoal',
+      type: 'textarea',
+    },
+    {
+      name: 'subpagesCount',
+      type: 'text',
+    },
+    {
+      name: 'extraFeatures',
+      type: 'select',
+      hasMany: true,
+      options: [
+        { label: 'Formularz kontaktowy', value: 'contact_form' },
+        { label: 'System rezerwacji / Kalendarz', value: 'booking' },
+        { label: 'Wielojęzyczność', value: 'multi_lang' },
+        { label: 'Social Media', value: 'social' },
+        { label: 'Blog / Aktualności', value: 'blog' },
+        { label: 'Płatności online', value: 'payments' },
+        { label: 'Inne', value: 'other' },
+      ],
+    },
+    {
+      name: 'designLevel',
+      type: 'select',
+      options: [
+        { label: 'Profil Standard', value: 'standard' },
+        { label: 'Strategic Design', value: 'strategic' },
+        { label: 'Experience (High-End)', value: 'experience' },
+      ],
+    },
+    {
+      name: 'brandingStatus',
+      type: 'select',
+      options: [
+        { label: 'Pełna (Logo, księga znaku, kolory)', value: 'full' },
+        { label: 'Tylko Logo', value: 'logo_only' },
+        { label: 'Brak', value: 'none' },
+      ],
+    },
+    {
+      name: 'inspirationLinks',
+      type: 'textarea',
+    },
+    {
+      name: 'contentProvider',
+      type: 'select',
+      options: [
+        { label: 'Klient', value: 'client' },
+        { label: 'Agencja (MDKcraft)', value: 'agency' },
+        { label: 'Mieszane', value: 'mixed' },
+      ],
+    },
+    {
+      name: 'hasDomainHosting',
+      type: 'select',
+      options: [
+        { label: 'Tak', value: 'yes' },
+        { label: 'Nie', value: 'no' },
+      ],
+    },
+    {
+      name: 'plannedLaunchDate',
+      type: 'date',
+    },
+    {
+      name: 'budgetRange',
+      type: 'text',
+    },
+    {
       name: 'message',
       type: 'textarea',
-      required: true,
+      admin: {
+        description: 'Dodatkowe uwagi od klienta',
+      },
     },
     {
       name: 'submittedAt',

@@ -1,7 +1,9 @@
 'use server'
 
+import { generateNewsletterConfirmationEmailHtml } from '@/collections/NewsletterSubscribers/utilities/generateNewsletterConfirmationEmail'
 import configPromise from '@payload-config'
 import crypto from 'crypto'
+import { headers as getHeaders } from 'next/headers'
 import { getPayload } from 'payload'
 import { validateCaptchaToken } from './verifyCaptcha'
 
@@ -40,8 +42,32 @@ export async function subscribeToNewsletter(data: NewsletterSubscription) {
     }
 
     const payload = await getPayload({ config: configPromise })
+    const headers = await getHeaders()
+    const { user: authUser } = await payload.auth({ headers })
 
-    // Check if email already exists
+    // 1. If user is logged in and it's their email
+    if (authUser && authUser.email === data.email) {
+      return {
+        success: true,
+        redirect: '/settings#newsletter',
+        message: 'Przekierowywanie do ustawień...',
+      }
+    }
+
+    // Check if email exists in Users collection (even if not logged in)
+    const existingUsers = await payload.find({
+      collection: 'users',
+      where: {
+        email: {
+          equals: data.email,
+        },
+      },
+      limit: 1,
+    })
+
+    const userExists = existingUsers.docs.length > 0
+
+    // Check if email already exists in NewsletterSubscribers
     const existingSubscribers = await payload.find({
       collection: 'newsletter-subscribers',
       where: {
@@ -51,6 +77,11 @@ export async function subscribeToNewsletter(data: NewsletterSubscription) {
       },
       limit: 1,
     })
+
+    const confirmationToken = crypto
+      .createHash('sha256')
+      .update(`${data.email}-${Date.now()}-${Math.random()}`)
+      .digest('hex')
 
     if (existingSubscribers.docs.length > 0) {
       const subscriber = existingSubscribers.docs[0]
@@ -63,49 +94,44 @@ export async function subscribeToNewsletter(data: NewsletterSubscription) {
         }
       }
 
-      // If not confirmed, resend confirmation
-      return {
-        success: true,
-        message: 'Email potwierdzający został wysłany ponownie. Sprawdź swoją skrzynkę pocztową.',
-      }
+      // If not confirmed, update token and resend
+      await payload.update({
+        collection: 'newsletter-subscribers',
+        id: subscriber.id,
+        data: {
+          confirmationToken,
+          confirmationSentAt: new Date().toISOString(),
+        },
+      })
+    } else {
+      // Create new subscriber
+      await payload.create({
+        collection: 'newsletter-subscribers',
+        data: {
+          email: data.email,
+          name: data.name,
+          subscribedAt: new Date().toISOString(),
+          status: 'pending',
+          source: (data.source || 'landing_page') as any,
+          doubleOptInConfirmed: false,
+          confirmationToken,
+          confirmationSentAt: new Date().toISOString(),
+        },
+      })
     }
 
-    // Generate confirmation token
-    const confirmationToken = crypto
-      .createHash('sha256')
-      .update(`${data.email}-${Date.now()}-${Math.random()}`)
-      .digest('hex')
-
-    // Create new subscriber
-    await payload.create({
-      collection: 'newsletter-subscribers',
-      data: {
-        email: data.email,
-        name: data.name,
-        subscribedAt: new Date().toISOString(),
-        status: 'pending',
-        source: (data.source || 'landing_page') as
-          | 'homepage_footer'
-          | 'blog'
-          | 'project_page'
-          | 'popup'
-          | 'contact_form'
-          | 'landing_page'
-          | 'manual_import',
-        doubleOptInConfirmed: false,
-        confirmationToken,
-        confirmationSentAt: new Date().toISOString(),
-        preferences: {
-          frequency: 'weekly',
-          interests: [],
-          language: 'pl',
-        },
-      },
+    // Send confirmation email
+    await payload.sendEmail({
+      to: data.email,
+      subject: 'Potwierdź subskrypcję Newslettera - MDKCraft',
+      html: generateNewsletterConfirmationEmailHtml({ token: confirmationToken }),
     })
 
     return {
       success: true,
-      message: 'Sprawdź swoją skrzynkę pocztową, aby potwierdzić subskrypcję',
+      message: userExists
+        ? 'Wysłaliśmy link potwierdzający na Twój adres email powiązany z kontem.'
+        : 'Sprawdź swoją skrzynkę pocztową, aby potwierdzić subskrypcję.',
     }
   } catch (error) {
     console.error('Newsletter subscription error:', error)

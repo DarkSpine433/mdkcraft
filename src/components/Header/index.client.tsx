@@ -103,18 +103,13 @@ export function HeaderClient({ header: _header, user }: Props) {
                   href={link.href}
                   className={cn(
                     'text-sm font-medium transition-all whitespace-nowrap px-5 py-2.5 relative group/link',
-                    isActive ? 'text-primary' : 'text-neutral-400 hover:text-white',
+
                     i === 0 ? 'rounded-l-full ' : '',
                     i === navLinks.length - 1 ? 'rounded-r-full' : '',
                   )}
                 >
                   <div className="relative z-10 flex items-center gap-2">{link.name}</div>
-                  {isActive && (
-                    <motion.div
-                      layoutId="desktop-nav-active"
-                      className="absolute inset-0 bg-primary/10  z-0"
-                    />
-                  )}
+
                   <div
                     className={`absolute inset-0 bg-white/5 opacity-0 group-hover/link:opacity-100 transition-opacity border-x border-white/5  z-0 ${i === 0 ? 'rounded-l-full' : ''} ${i === navLinks.length - 1 ? 'rounded-r-full' : ''}`}
                   />
@@ -205,14 +200,12 @@ export function HeaderClient({ header: _header, user }: Props) {
                         onClick={() => setMobileMenu(false)}
                         className={cn(
                           'group flex items-center justify-between  py-5 border-b border-white/5 transition-all',
-                          isActive ? 'border-primary' : 'hover:border-primary/50',
                         )}
                       >
                         <div className="flex flex-col">
                           <span
                             className={cn(
-                              'text-4xl font-black uppercase tracking-tighter transition-all group-hover:pl-2',
-                              isActive ? 'text-primary' : 'text-white group-hover:text-primary',
+                              'text-4xl font-black uppercase tracking-tighter transition-all group-hover:pl-2 group-hover:text-primary',
                             )}
                           >
                             {link.name}

@@ -1,6 +1,6 @@
-import type { CollectionConfig } from 'payload'
 import { adminOnly } from '@/access/adminOnly'
 import { publicAccess } from '@/access/publicAccess'
+import type { CollectionConfig } from 'payload'
 
 export const ConfiguratorOptions: CollectionConfig = {
   slug: 'configurator-options',
@@ -36,6 +36,7 @@ export const ConfiguratorOptions: CollectionConfig = {
         { label: 'Design', value: 'design' },
         { label: 'Funkcje', value: 'features' },
         { label: 'SEO & Marketing', value: 'marketing' },
+        { label: 'Logistyka', value: 'logistics' },
       ],
     },
     {

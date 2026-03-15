@@ -3,6 +3,7 @@ import type { CollectionSlug, File, GlobalSlug, Payload, PayloadRequest } from '
 import { Address, Transaction, VariantOption } from '@/payload-types'
 import { seedAnalytics } from './analytics'
 import { seedClientFiles } from './client-files'
+import { seedConfiguratorOptions } from './configurator-options'
 import { contactFormData } from './contact-form'
 import { contactPageData } from './contact-page'
 import { seedFaq } from './faq'
@@ -50,6 +51,7 @@ const collections: CollectionSlug[] = [
   'user-sessions',
   'user-behavior-events',
   'heatmap-data',
+  'configurator-options',
 ]
 
 const categories = ['Accessories', 'T-Shirts', 'Hats', 'Opinions']
@@ -428,6 +430,7 @@ export const seed = async ({
   await seedClientFiles({ req, payload, user: customer })
   await seedSiteSettings({ req, payload })
   await seedAnalytics({ req, payload })
+  await seedConfiguratorOptions({ req, payload })
 
   payload.logger.info(`— Seeding opinions...`)
 

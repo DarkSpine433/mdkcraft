@@ -116,10 +116,10 @@ export default async function ProjectsPage({
               Nie masz jeszcze żadnych przypisanych projektów. Rozpocznij współpracę już teraz.
             </p>
             <Link
-              href="/kontakt"
+              href="/projects/new"
               className="px-8 h-12 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl flex items-center justify-center font-black text-[10px] uppercase tracking-widest transition-all"
             >
-              Kontakt Z Zespołem
+              Nowy Projekt
             </Link>
           </div>
         ) : (

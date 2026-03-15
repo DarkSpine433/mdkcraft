@@ -27,10 +27,35 @@ export interface MathChallenge {
 }
 
 export type ContactSubmission = {
+  // Osobiste/Bazowe
   name: string
   email: string
-  phone: string
-  company: string
+  phone?: string
+  company?: string
+
+  // I. Informacje Ogólne
+  companyName?: string
+  currentUrl?: string
+  businessDescription?: string
+  targetAudience?: string
+
+  // II. Zakres i Cele
+  mainGoal?: string
+  subpagesCount?: string
+  extraFeatures?: string[]
+
+  // III. Design i Estetyka
+  designLevel?: string // ID of ConfiguratorOption
+  brandingStatus?: string
+  inspirationLinks?: string
+
+  // IV. Logistyka i Treści
+  contentProvider?: string
+  hasDomainHosting?: string
+  plannedLaunchDate?: string
+  budgetRange?: string
+
+  // Systemowe
   projectType: string
   budget: string
   timeline: string

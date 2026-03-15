@@ -1,17 +1,16 @@
 'use server'
 
-import type { ContactInquiry as ContactInquiryType } from '@/payload-types'
-import configPromise from '@payload-config'
 import { ContactSubmission } from '@/types/captcha'
+import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { validateCaptchaToken } from './verifyCaptcha'
 export async function submitContactForm(data: ContactSubmission) {
   try {
     // 1. Validate required fields
-    if (!data.name || !data.email || !data.projectType || !data.message) {
+    if (!data.name || !data.email || !data.projectType) {
       return {
         success: false,
-        error: 'Wszystkie wymagane pola muszą być wypełnione',
+        error: 'Wszystkie podstawowe dane kontaktowe muszą być wypełnione',
       }
     }
 
@@ -66,16 +65,6 @@ export async function submitContactForm(data: ContactSubmission) {
         error: 'Wiadomość została już wysłana. Proszę poczekać przed kolejną próbą.',
       }
     }
-    const collectionDesc = payload.config.collections.find((c) => c.slug === 'contact-inquiries')
-
-    const options = (
-      collectionDesc?.fields.find((f) => 'name' in f && f.name === 'projectType') as any
-    )?.options
-    const validValues = options?.map((o: any) => (typeof o === 'object' ? o.value : o)) || []
-
-    const validatedProjectType = (
-      validValues.includes(data.projectType) ? data.projectType : 'other'
-    ) as ContactInquiryType['projectType']
 
     // 6. Create contact inquiry
     await payload.create({
@@ -86,22 +75,31 @@ export async function submitContactForm(data: ContactSubmission) {
         email: data.email,
         phone: data.phone || '',
         company: data.company || '',
-        projectType: validatedProjectType == undefined ? 'other' : validatedProjectType,
-        budget: (data.budget || undefined) as
-          | 'under_10k'
-          | '10k_50k'
-          | '50k_100k'
-          | '100k_250k'
-          | 'over_250k'
-          | 'not_sure'
-          | undefined,
-        timeline: (data.timeline || undefined) as
-          | 'urgent'
-          | '1_3_months'
-          | '3_6_months'
-          | '6_plus_months'
-          | 'flexible'
-          | undefined,
+
+        // I. Informacje Ogólne
+        companyName: data.companyName,
+        currentUrl: data.currentUrl,
+        businessDescription: data.businessDescription,
+        targetAudience: data.targetAudience,
+
+        // II. Zakres i Cele
+        mainGoal: data.mainGoal,
+        subpagesCount: data.subpagesCount,
+        extraFeatures: data.extraFeatures as any,
+
+        // III. Design i Estetyka
+        designLevel: data.designLevel as any,
+        brandingStatus: data.brandingStatus as any,
+        inspirationLinks: data.inspirationLinks,
+
+        // IV. Logistyka i Treści
+        contentProvider: data.contentProvider as any,
+        hasDomainHosting: data.hasDomainHosting as any,
+        plannedLaunchDate: data.plannedLaunchDate ? new Date(data.plannedLaunchDate) : null,
+        budgetRange: data.budgetRange,
+
+        // Systemowe
+        projectType: data.projectType as any,
         message: data.message,
         submittedAt: new Date().toISOString(),
         status: 'new',

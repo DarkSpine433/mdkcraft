@@ -15,19 +15,20 @@ import {
 } from 'lucide-react'
 import { motion, useMotionTemplate, useMotionValue } from 'motion/react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React, { useRef, useState } from 'react'
 import { AdvancedCaptcha, useAdvancedCaptcha } from '../Captcha'
 import { Logo } from '../Logo/Logo'
 import { Button } from '../ui/button'
 import MagneticButton from '../ui/magneticBotton'
 
-// --- TYPY ---
-
 const NewsletterForm = () => {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
   const { captchaToken, isVerified, handleVerify, handleError } = useAdvancedCaptcha()
+
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,7 +41,12 @@ const NewsletterForm = () => {
         captchaToken: captchaToken || '',
         source: 'homepage_footer',
       })
+
       if (result.success) {
+        if (result.redirect) {
+          router.push(result.redirect)
+          return
+        }
         setStatus('success')
         setMessage(result.message || 'Zapisano!')
         setEmail('')
@@ -89,7 +95,6 @@ const NewsletterForm = () => {
   )
 }
 
-// --- KOMPONENT 2: INTERAKTNYWNY LOGOTYP (Spójność z Twoim stylem) ---
 const FooterBrand = () => {
   const text = 'MDKcraft'
   return (
@@ -125,14 +130,12 @@ const FooterBrand = () => {
   )
 }
 
-// --- GŁÓWNY KOMPONENT: FOOTER ---
 export default function FooterClient() {
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
   const containerRef = useRef<HTMLElement>(null)
   const currentYear = new Date().getFullYear()
 
-  // Track mouse for global glow effect
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = containerRef.current?.getBoundingClientRect()
     if (rect) {
@@ -162,9 +165,7 @@ export default function FooterClient() {
       onMouseMove={handleMouseMove}
       className="relative w-full bg-black pt-32 pb-12 overflow-hidden border-t border-white/5"
     >
-      {/* 1. BACKGROUND ENGINE */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Glow Follower */}
         <motion.div
           className="absolute inset-0 z-0 opacity-20"
           style={{
@@ -177,13 +178,11 @@ export default function FooterClient() {
             `,
           }}
         />
-        {/* Grid Pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-size-[64px_64px]" />
       </div>
 
       <div className="container relative z-10 mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 mb-24">
-          {/* KOLUMNA 1: BRANDING & NEWSLETTER */}
           <div className="lg:col-span-5 space-y-8">
             <FooterBrand />
             <p className="text-neutral-400 text-lg max-w-md leading-relaxed">
@@ -199,7 +198,6 @@ export default function FooterClient() {
             </div>
           </div>
 
-          {/* KOLUMNA 2: MENU */}
           <div className="lg:col-span-3">
             <h4 className="font-mono text-[10px] tracking-[0.4em] uppercase text-primary mb-8 flex items-center gap-2">
               <Sparkles size={12} /> Nawigacja
@@ -222,7 +220,6 @@ export default function FooterClient() {
             </ul>
           </div>
 
-          {/* KOLUMNA 3: KONTAKT BENTO-STYLE */}
           <div className="lg:col-span-4">
             <h4 className="font-mono text-[10px] tracking-[0.4em] uppercase text-primary mb-8">
               Kontakt
@@ -256,7 +253,6 @@ export default function FooterClient() {
           </div>
         </div>
 
-        {/* BOTTOM BAR */}
         <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
             <span className="text-neutral-600 font-mono text-[10px] tracking-widest uppercase">
@@ -290,7 +286,6 @@ export default function FooterClient() {
         </div>
       </div>
 
-      {/* Side Label (Spójność z Projects.tsx) */}
       <div className="absolute -left-16 bottom-10 rotate-90 origin-center opacity-[0.03] select-none pointer-events-none hidden xl:block">
         <span className="text-9xl font-black text-white uppercase tracking-tighter">
           Crafting Digital

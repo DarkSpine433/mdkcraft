@@ -39,11 +39,10 @@ export const SettingsForm: React.FC = () => {
     newsletter: user?.settings?.newsletter ?? false,
     marketing: user?.settings?.marketing ?? false,
     fontSize: (user?.settings?.fontSize as SettingsData['fontSize']) ?? 'medium',
-    layoutDensity: (user?.settings?.layoutDensity as SettingsData['layoutDensity']) ?? 'comfortable',
-    animationSpeed:
-      (user?.settings?.animationSpeed as SettingsData['animationSpeed']) ?? 'normal',
-    glassIntensity:
-      (user?.settings?.glassIntensity as SettingsData['glassIntensity']) ?? 'medium',
+    layoutDensity:
+      (user?.settings?.layoutDensity as SettingsData['layoutDensity']) ?? 'comfortable',
+    animationSpeed: (user?.settings?.animationSpeed as SettingsData['animationSpeed']) ?? 'normal',
+    glassIntensity: (user?.settings?.glassIntensity as SettingsData['glassIntensity']) ?? 'medium',
   }
 
   const [optimisticSettings, setOptimisticSettings] = useOptimistic(
@@ -244,7 +243,7 @@ export const SettingsForm: React.FC = () => {
         </div>
       </section>
       {/* SECTION 2: COMMUNICATION */}
-      <section className="space-y-8">
+      <section id="newsletter" className="space-y-8">
         <div className="flex items-center gap-3 border-b border-white/5 pb-4">
           <div className="p-2 bg-primary/10 rounded-lg">
             <Mail className="text-primary" size={20} />
